@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Izbornik from './components/Izbornik'
 import SlikaPregled from './pages/slike/SlikaPregled'
 import { Route, Routes } from 'react-router-dom'
+import OAplikaciji from './pages/OAplikaciji'
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
             <Route path={RouteNames.HOME} element={<Home />} />
 
             <Route path={RouteNames.SLIKE} element={<SlikaPregled />} />
+
+            <Route path={RouteNames.OAPLIKACIJI} element= {<OAplikaciji />} />
           </Routes>
           
         </Container>

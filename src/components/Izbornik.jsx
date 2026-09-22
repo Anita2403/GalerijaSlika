@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { IME_APLIKACIJE, RouteNames } from '../constanst';
 import { useNavigate } from 'react-router-dom';
+import { NavbarToggle } from 'react-bootstrap';
 
 
 export default function Izbornik(){
@@ -27,9 +28,14 @@ return (
               <NavDropdown.Item 
               onClick={()=>navigate(RouteNames.SLIKE)}
               > Slike</NavDropdown.Item>
-
-              
+            
             </NavDropdown>
+
+            <Nav.Link
+            onClick={()=>{navigate(RouteNames.OAPLIKACIJI)}}
+            >O Aplikaciji</Nav.Link>
+            
+
           </Nav>
         </Navbar.Collapse>
       </Container>
