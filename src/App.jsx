@@ -1,10 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Container } from 'react-bootstrap'
-
 import { IME_APLIKACIJE, RouteNames } from './constanst'
 import Home from './pages/Home'
-import Izbornik from './components/izbornik'
+import Izbornik from './components/Izbornik'
 import SlikaPregled from './pages/slike/SlikaPregled'
 import { Route, Routes } from 'react-router-dom'
 

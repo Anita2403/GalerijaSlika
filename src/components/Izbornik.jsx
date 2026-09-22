@@ -20,7 +20,7 @@ return (
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link 
-            onClick={()=>{RouteNames.HOME}}
+            onClick={()=>{navigate(RouteNames.HOME)}}
             >Početna</Nav.Link>
             
             <NavDropdown title="Programi" id="basic-nav-dropdown">
