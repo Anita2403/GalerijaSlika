@@ -3,5 +3,6 @@ export const IME_APLIKACIJE = 'Galerija Slika'
 export const RouteNames = {
     HOME: '/',
     SLIKE: '/slike',
-    OAPLIKACIJI:'/oaplikaciji'
+    OAPLIKACIJI:'/oaplikaciji',
+    SLIKE_DODAVANJE: '/slike/nove'
 }

@@ -23,7 +23,9 @@ function App() {
 
             <Route path={RouteNames.SLIKE} element={<SlikaPregled />} />
 
-            <Route path={RouteNames.OAPLIKACIJI} element= {<OAplikaciji />} />
+            <Route path={RouteNames.OAPLIKACIJI} element={<OAplikaciji />} />
+
+            <Route path={RouteNames.SLIKE_DODAVANJE} element={<SlikaNova />} />
           </Routes>
           
         </Container>

@@ -22,7 +22,13 @@ export default function SlikaPregled(){
     }
 
     return(
-        <>
+  <>
+          <Link to={RouteNames.SLIKE_DODAJ}>
+                Dodavanje novih slika
+            </Link>
+
+
+      
         <Table>
             <thead>
                 <tr>
