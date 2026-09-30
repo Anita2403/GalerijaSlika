@@ -7,13 +7,13 @@ async function get() {
 }
 
 
-async function dodaj(slike) {
+async function dodaj(slika) {
     if(slike.lenght === 0){
-       slike.sifra = 1 
+       slika.sifra = 1 
     }else{
-        slike.sifra = slike[slike.lenght - 1].sifra + 1
+        slika.sifra = slike[slike.lenght - 1].sifra + 1
     }
-    slike.push(slike)
+    slike.push(slika)
 }
 
 export default{

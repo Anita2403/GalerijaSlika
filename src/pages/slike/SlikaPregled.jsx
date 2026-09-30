@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import SlikaService from "../../services/slike/SlikaService"
 import { GrValidate } from "react-icons/gr"
 import { Table } from "react-bootstrap"
+import { Link } from "react-router-dom"
+import { RouteNames } from "../../constanst"
 
 
 

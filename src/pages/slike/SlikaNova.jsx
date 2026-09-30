@@ -1,56 +1,99 @@
-import { Await, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
-import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
-
-  
-  
+import { Button, Col, Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 
 
-  export default function SlikaNova (){
+
+
+
+export default function SlikaNova() {
 
     const navigate = useNavigate()
 
-    async function dodaj (slika){
-        await SlikaService.dodaj(slika).then(()=>{
+    async function dodaj(slika) {
+        await SlikaService.dodaj(slika).then(() => {
             navigate(RouteNames.SLIKE)
         })
-        
+
     }
-  }
-
-  function obradiSubmit(e){
-    e.preventDefault()
-    const podaci = new FormData(e.target)
-    dodaj({
-        naziv: podaci.get('naziv'),
-        godinaIzrade: 2026,
-        tehnika: podaci.get('tehnika'),
-        sirina: 50,
-        visina: 70,
-        dostupnost: podaci.get(dostupno) === 0,
-        image: '',
-    })
-  }
-
-  return(
-    <>
-    <h3>
-      Dodavanje nove slike  
-    </h3>
 
 
-    <Form onSubmit={obradiSubmit}>
+    function obradiSubmit(e) {
+        e.preventDefault()
+        const podaci = new FormData(e.target)
+        dodaj({
+            naziv: podaci.get('naziv'),
+            godinaIzrade: parseInt(podaci.get('godinaIzrade')),
+            tehnika: podaci.get('tehnika'),
+            sirina: parseInt(podaci.get('sirina')),
+            visina: parseInt(podaci.get('visina')),
+            dostupnost: podaci.get('dostupnost') === 'on',
+            image: '',
+        })
+    }
 
-        <Form.Group controlId="naziv">
-          <FormLabel>Naziv</FormLabel>
-          <FormControl type="text" name="naziv" required ></FormControl>
-        </Form.Group>
+    return (
+        <>
+            <h3>
+                Dodavanje nove slike
+            </h3>
 
-        
 
-    </Form>
-    
+            <Form onSubmit={obradiSubmit}>
 
-    </>
-  )
+                <Form.Group controlId="naziv">
+                    <Form.Label>Naziv</Form.Label>
+                    <Form.Control type="text" name="naziv" required />
+                </Form.Group>
+
+                <Form.Group controlId="godinaIzrade">
+                    <Form.Label>Godina izrade</Form.Label>
+                    <Form.Control type="number" name="godinaIzrade" step={1} />
+                </Form.Group>
+
+                <Form.Group controlId="tehnika">
+                    <Form.Label>Tehnika</Form.Label>
+                    <Form.Control type="text" name="tehnika" required />
+                </Form.Group>
+
+                <Form.Group controlId="sirina">
+                    <Form.Label>Širina</Form.Label>
+                    <Form.Control type="number" name="sirina" />
+                </Form.Group>
+
+                <Form.Group controlId="visina">
+                    <Form.Label>Visina</Form.Label>
+                    <Form.Control type="number" name="visina" />
+                </Form.Group>
+
+                <Form.Group controlId="dostupnost">
+                    <Form.Check label="Dostupno" name="dostupnost" />
+                </Form.Group>
+
+
+
+           
+
+            <hr />
+
+
+            <Row>
+                <Col>
+                    <Link to={RouteNames.SLIKE}>
+                        Odustani
+                    </Link>
+                </Col>
+
+                <Col>
+                <Button type="submit">
+                    Dodaj
+                </Button>
+                </Col>
+            </Row>
+            
+             </Form>
+        </>
+    )
+
+}

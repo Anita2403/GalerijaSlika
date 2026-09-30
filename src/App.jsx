@@ -7,6 +7,7 @@ import Izbornik from './components/Izbornik'
 import SlikaPregled from './pages/slike/SlikaPregled'
 import { Route, Routes } from 'react-router-dom'
 import OAplikaciji from './pages/OAplikaciji'
+import SlikaNova from './pages/slike/SlikaNova'
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
 
             <Route path={RouteNames.OAPLIKACIJI} element={<OAplikaciji />} />
 
-            <Route path={RouteNames.SLIKE_DODAVANJE} element={<SlikaNova />} />
+            <Route path={RouteNames.SLIKE_DODAJ} element={<SlikaNova />} />
           </Routes>
           
         </Container>
