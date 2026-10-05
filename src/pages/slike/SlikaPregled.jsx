@@ -47,7 +47,12 @@ export default function SlikaPregled(){
             <tbody>
                 {slike && slike.map((slika) => (
                         <tr key={slika.sifra}>
-                            <td>{slika.naziv}</td>
+                            <td>{slika.naziv}
+                                <br />
+                                <small>
+                                    {slika.opis}
+                                </small>
+                            </td>
                             <td>{slika.godinaIzrade}</td>
                             <td>{slika.tehnika}</td>
                             <td>{slika.sirina}x{slika.visina}</td>

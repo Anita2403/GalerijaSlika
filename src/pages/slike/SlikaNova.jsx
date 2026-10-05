@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
-import { Button, Col, Form, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 
 
 
@@ -30,6 +30,7 @@ export default function SlikaNova() {
             visina: parseInt(podaci.get('visina')),
             dostupnost: podaci.get('dostupnost') === 'on',
             image: '',
+            opis: podaci.get('opis'),
         })
     }
 
@@ -69,6 +70,11 @@ export default function SlikaNova() {
 
                 <Form.Group controlId="dostupnost">
                     <Form.Check label="Dostupno" name="dostupnost" />
+                </Form.Group>
+
+                <Form.Group controlId="opis">
+                    <Form.Label>Opis</Form.Label>
+                    <Form.Control as="textarea" rows={5} name="opis"/>
                 </Form.Group>
 
 

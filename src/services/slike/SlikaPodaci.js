@@ -1,13 +1,14 @@
 export const slike = [
     {
         sifra: 1,
-        naziv: 'Purle serenity',
+        naziv: 'Purple serenity',
         godinaIzrade: 2026,
         tehnika: 'mix media na medijapanu',
         sirina: 50,
         visina: 70,
         dostupnost: true,
         image: '',
+        opis:'slika',
     },
     {
         sifra: 2,
@@ -18,6 +19,7 @@ export const slike = [
         visina: 70,
         dostupnost: false,
         image: '',
+        opis: 'slika',
     },
     {
         sifra: 3,
@@ -28,6 +30,7 @@ export const slike = [
         visina:30,
         dostupnost: false,
         image: '',
+        opis: 'slika',
     },
     {
         sifra: 4,
@@ -38,6 +41,7 @@ export const slike = [
         visina: 100,
         dostupnost: false,
         image: '',
+        opis: 'Slika nastala kao zahvala osobi koja mi je bila kao svjetionik u izrazito mračnom periodu života. Slika prikazuje kip "Djevojka s galebom" koji se nalazi u Opatiji. ',
     },
     {
         sifra: 5,
@@ -48,16 +52,18 @@ export const slike = [
         visina: 100,
         dostupnost: false,
         image: '',
+        opis: 'Slika je bila narudžba, gdje sam dobila samo par informacija koje naručitelj želi. Feniks je podsjetnik da samo mi odlučujemo hoćemo li se kao feniks izdići nakon što nas životni problemi bace na koljena. Slika je došla "kao naručena" za mene, jer sam mogla prenijeti svoju emociju, s obzirom na događaje koji su me gotovo uništili.',
     },
     {
         sifra: 6,
         naziv: 'Svitanje u Kopačkom Ritu',
         godinaIzrade: 2025,
-        tehnika: 'akril na platnu',
+        tehnika: 'mix media na platnu',
         sirina: 70,
         visina: 100,
         dostupnost: false,
         image: '',
+        opis: 'Slika nastala nakon slikarske kolonije u Tikvešu, gdje smo usput sretali obitelji divljih svinja. Željela sam zabilježiti svitanje novog dana i gdje majka oprezno izvodi dijete na pojilište.',
     },
     {
         sifra: 7,
@@ -68,6 +74,7 @@ export const slike = [
         visina: 50,
         dostupnost: false,
         image: '',
+        opis: 'Slika je rađena prema tutorialu Michelle the Painter. Slika prikazuje tri male vile koje se igraju s maslačkom. Slika predstavlja čaroliju koju smo kao djeca vidjeli u sitnicama.',
     }
 
 ]

@@ -47,6 +47,7 @@ export default function SlikaPromjena() {
             visina: parseInt(podaci.get('visina')),
             dostupnost: dostupnost,
             image: '',
+            opis: podaci.get('opis'),
         })
     }
 
@@ -94,6 +95,12 @@ export default function SlikaPromjena() {
                     <Form.Check label="Dostupno" name="dostupnost"
                     checked={dostupnost} 
                     onChange={(e)=>{setDostupnost(e.target.checked)}}/>
+                </Form.Group>
+
+                <Form.Group controlId="opis">
+                    <Form.Label>Opis</Form.Label>
+                    <Form.Control as="textarea" rows={5} name="opis"
+                    defaultValue={slika.opis}/>
                 </Form.Group>
 
 
