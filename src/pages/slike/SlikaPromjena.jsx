@@ -1,7 +1,7 @@
 import { Await, Link, useNavigate, useParams } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
-import { Button, Col, Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import { Button, Col, Form, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
 
@@ -12,14 +12,15 @@ export default function SlikaPromjena() {
 
     const navigate = useNavigate()
     const params = useParams()
-    const[slike, setSlike] = useState({})
-    const[aktivan, setAktivan] = useState(false)
+    const[slika, setSlika] = useState({})
+    const[dostupnost, setDostupnost] = useState(false)
 
     async function ucitajSlike(){
         await SlikaService.getBySifra(params.sifra).then((odgovor)=>{
             const s = odgovor.data
-            setSlike(s)
-            setAktivan(s.aktivan)
+            setSlika(s)
+           // debugger
+            setDostupnost(s.dostupnost)
         })
     }
 
@@ -61,38 +62,38 @@ export default function SlikaPromjena() {
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv</Form.Label>
                     <Form.Control type="text" name="naziv" required 
-                    defaultValue={slike.naziv}/>
+                    defaultValue={slika.naziv}/>
                     
                 </Form.Group>
 
                 <Form.Group controlId="godinaIzrade">
                     <Form.Label>Godina izrade</Form.Label>
                     <Form.Control type="number" name="godinaIzrade" step={1}
-                    defaultValue={slike.godinaIzrade} />
+                    defaultValue={slika.godinaIzrade} />
                 </Form.Group>
 
                 <Form.Group controlId="tehnika">
                     <Form.Label>Tehnika</Form.Label>
                     <Form.Control type="text" name="tehnika" required 
-                    defaultValue={slike.tehnika}/>
+                    defaultValue={slika.tehnika}/>
                 </Form.Group>
 
                 <Form.Group controlId="sirina">
                     <Form.Label>Širina</Form.Label>
                     <Form.Control type="number" name="sirina" 
-                    defaultValue={slike.sirina}/>
+                    defaultValue={slika.sirina}/>
                 </Form.Group>
 
                 <Form.Group controlId="visina">
                     <Form.Label>Visina</Form.Label>
                     <Form.Control type="number" name="visina" 
-                    defaultValue={slike.visina}/>
+                    defaultValue={slika.visina}/>
                 </Form.Group>
 
                 <Form.Group controlId="dostupnost">
                     <Form.Check label="Dostupno" name="dostupnost"
-                    checked={aktivan} 
-                    onChange={(e)=>{setAktivan(e.target.checked)}}/>
+                    checked={dostupnost} 
+                    onChange={(e)=>{setDostupnost(e.target.checked)}}/>
                 </Form.Group>
 
 

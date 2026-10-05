@@ -64,7 +64,7 @@ export default function SlikaPregled(){
                               
                             </td>
                             <td>
-                                <Button onClick={()=>{navigate(`/slike/${slike.sifra}`)}}>
+                                <Button onClick={()=>{navigate(`/slike/${slika.sifra}`)}}>
                                     Promijeni
                                 </Button>
                             </td>
