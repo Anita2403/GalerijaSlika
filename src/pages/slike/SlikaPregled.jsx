@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import SlikaService from "../../services/slike/SlikaService"
 import { GrValidate } from "react-icons/gr"
-import { Table } from "react-bootstrap"
-import { Link } from "react-router-dom"
+import { Button, Table } from "react-bootstrap"
+import { Link, useNavigate, useNavigationType } from "react-router-dom"
 import { RouteNames } from "../../constanst"
 
 
@@ -10,14 +10,16 @@ import { RouteNames } from "../../constanst"
 export default function SlikaPregled(){
 
     const[slike, setSlike] = useState([])
+    const navigate = useNavigate()
+
 
     useEffect(()=>{
        
         ucitajSlike()
     },[])
 
-    async function ucitajSlike () {
-        await SlikaService.get().then((odgovor)=>{
+    async function ucitajSlike() {
+        await SlikaService.get().then((odgovor)=> {
            // console.table(odgovor.data)
            setSlike(odgovor.data)
         })
@@ -39,6 +41,7 @@ export default function SlikaPregled(){
                  <th>Tehnika</th>  
                  <th>Dimenzije</th>
                  <th>Dostupnost</th>
+                 <th>Akcija</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,10 +61,12 @@ export default function SlikaPregled(){
                                     color={slika.dostupnost ? 'green' : 'red'}
                                    
                                 />
-
-                                
-
-
+                              
+                            </td>
+                            <td>
+                                <Button onClick={()=>{navigate(`/slike/${slike.sifra}`)}}>
+                                    Promijeni
+                                </Button>
                             </td>
                         </tr>
                     ))}

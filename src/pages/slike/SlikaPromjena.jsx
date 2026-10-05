@@ -1,18 +1,34 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Await, Link, useNavigate, useParams } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
-import { Button, Col, Form, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
+import { Button, Col, Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import { useEffect, useState } from "react";
 
 
 
 
 
-export default function SlikaNova() {
+export default function SlikaPromjena() {
 
     const navigate = useNavigate()
+    const params = useParams()
+    const[slike, setSlike] = useState({})
+    const[aktivan, setAktivan] = useState(false)
 
-    async function dodaj(slika) {
-        await SlikaService.dodaj(slika).then(() => {
+    async function ucitajSlike(){
+        await SlikaService.getBySifra(params.sifra).then((odgovor)=>{
+            const s = odgovor.data
+            setSlike(s)
+            setAktivan(s.aktivan)
+        })
+    }
+
+    useEffect(()=>{
+        ucitajSlike()
+    },[])
+
+    async function dodaj(slike) {
+        await SlikaService.dodaj(slike).then(() => {
             navigate(RouteNames.SLIKE)
         })
 
@@ -36,7 +52,7 @@ export default function SlikaNova() {
     return (
         <>
             <h3>
-                Dodavanje nove slike
+                Promjena slike
             </h3>
 
 
@@ -44,31 +60,39 @@ export default function SlikaNova() {
 
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="naziv" required />
+                    <Form.Control type="text" name="naziv" required 
+                    defaultValue={slike.naziv}/>
+                    
                 </Form.Group>
 
                 <Form.Group controlId="godinaIzrade">
                     <Form.Label>Godina izrade</Form.Label>
-                    <Form.Control type="number" name="godinaIzrade" step={1} />
+                    <Form.Control type="number" name="godinaIzrade" step={1}
+                    defaultValue={slike.godinaIzrade} />
                 </Form.Group>
 
                 <Form.Group controlId="tehnika">
                     <Form.Label>Tehnika</Form.Label>
-                    <Form.Control type="text" name="tehnika" required />
+                    <Form.Control type="text" name="tehnika" required 
+                    defaultValue={slike.tehnika}/>
                 </Form.Group>
 
                 <Form.Group controlId="sirina">
                     <Form.Label>Širina</Form.Label>
-                    <Form.Control type="number" name="sirina" />
+                    <Form.Control type="number" name="sirina" 
+                    defaultValue={slike.sirina}/>
                 </Form.Group>
 
                 <Form.Group controlId="visina">
                     <Form.Label>Visina</Form.Label>
-                    <Form.Control type="number" name="visina" />
+                    <Form.Control type="number" name="visina" 
+                    defaultValue={slike.visina}/>
                 </Form.Group>
 
                 <Form.Group controlId="dostupnost">
-                    <Form.Check label="Dostupno" name="dostupnost" />
+                    <Form.Check label="Dostupno" name="dostupnost"
+                    checked={aktivan} 
+                    onChange={(e)=>{setAktivan(e.target.checked)}}/>
                 </Form.Group>
 
 
@@ -87,7 +111,7 @@ export default function SlikaNova() {
 
                 <Col>
                 <Button type="submit">
-                    Dodaj
+                    Promijeni
                 </Button>
                 </Col>
             </Row>

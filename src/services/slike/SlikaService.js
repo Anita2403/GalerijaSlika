@@ -6,6 +6,10 @@ async function get() {
 
 }
 
+async function getBySifra(sifra) {
+    return {data: slike.find(s => s.sifra === parseInt(sifra))}
+}
+
 
 async function dodaj(slika) {
     if(slike.lenght === 0){
@@ -18,5 +22,6 @@ async function dodaj(slika) {
 
 export default{
     get,
-    dodaj
+    getBySifra,
+    dodaj,
 }

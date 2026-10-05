@@ -4,5 +4,6 @@ export const RouteNames = {
     HOME: '/',
     SLIKE: '/slike',
     OAPLIKACIJI:'/oaplikaciji',
-    SLIKE_DODAJ: '/slike/nove'
+    SLIKE_DODAJ: '/slike/nove',
+    SLIKE_PROMJENA: '/slike/:sifra'
 }
