@@ -20,8 +20,18 @@ async function dodaj(slika) {
     slike.push(slika)
 }
 
+async function promijeni(sifra, slika) {
+    const index = nadiIndex(sifra)
+    slike[index] = {...slike[index], ...slika}
+}
+
+function nadiIndex(sifra){
+    return slike.findIndex(s => s.sifra === parseInt(sifra))
+}
+
 export default{
     get,
     getBySifra,
     dodaj,
+    promijeni
 }

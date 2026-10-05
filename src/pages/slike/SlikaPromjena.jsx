@@ -28,8 +28,8 @@ export default function SlikaPromjena() {
         ucitajSlike()
     },[])
 
-    async function dodaj(slike) {
-        await SlikaService.dodaj(slike).then(() => {
+    async function promijeni(slike) {
+        await SlikaService.promijeni(params.sifra, slike).then(() => {
             navigate(RouteNames.SLIKE)
         })
 
@@ -39,13 +39,13 @@ export default function SlikaPromjena() {
     function obradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
-        dodaj({
+        promijeni({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
             tehnika: podaci.get('tehnika'),
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
-            dostupnost: podaci.get('dostupnost') === 'on',
+            dostupnost: dostupnost,
             image: '',
         })
     }
