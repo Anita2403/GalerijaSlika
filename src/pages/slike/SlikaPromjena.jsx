@@ -112,7 +112,8 @@ export default function SlikaPromjena() {
 
             <Row>
                 <Col>
-                    <Link to={RouteNames.SLIKE}>
+                    <Link to={RouteNames.SLIKE}
+                    className="btn btn-danger">
                         Odustani
                     </Link>
                 </Col>

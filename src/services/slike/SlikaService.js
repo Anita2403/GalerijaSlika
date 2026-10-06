@@ -29,9 +29,15 @@ function nadiIndex(sifra){
     return slike.findIndex(s => s.sifra === parseInt(sifra))
 }
 
+async function obrisi(sifra){
+    const index = nadiIndex(sifra)
+    slike.splice(index, 1)
+}
+
 export default{
     get,
     getBySifra,
     dodaj,
-    promijeni
+    promijeni,
+    obrisi
 }

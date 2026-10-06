@@ -86,13 +86,14 @@ export default function SlikaNova() {
 
             <Row>
                 <Col>
-                    <Link to={RouteNames.SLIKE}>
+                    <Link to={RouteNames.SLIKE}
+                    className="btn btn-danger">
                         Odustani
                     </Link>
                 </Col>
 
                 <Col>
-                <Button type="submit">
+                <Button type="submit" variant="success">
                     Dodaj
                 </Button>
                 </Col>

@@ -18,6 +18,14 @@ export default function SlikaPregled(){
         ucitajSlike()
     },[])
 
+    async function obrisi(sifra){
+        if(!confirm('Sigurno obrisati')){
+            return
+        }
+        await SlikaService.obrisi(sifra)
+        ucitajSlike()
+    }
+
     async function ucitajSlike() {
         await SlikaService.get().then((odgovor)=> {
            // console.table(odgovor.data)
@@ -27,11 +35,11 @@ export default function SlikaPregled(){
 
     return(
   <>
-          <Link to={RouteNames.SLIKE_DODAJ}>
+          <Link to={RouteNames.SLIKE_DODAJ}
+          className="btn btn-success w-100 my-3" >
                 Dodavanje novih slika
             </Link>
-
-
+            
       
         <Table>
             <thead>
@@ -48,10 +56,10 @@ export default function SlikaPregled(){
                 {slike && slike.map((slika) => (
                         <tr key={slika.sifra}>
                             <td>{slika.naziv}
-                                <br />
+                                {/* <br />
                                 <small>
                                     {slika.opis}
-                                </small>
+                                </small> */}
                             </td>
                             <td>{slika.godinaIzrade}</td>
                             <td>{slika.tehnika}</td>
@@ -71,6 +79,10 @@ export default function SlikaPregled(){
                             <td>
                                 <Button onClick={()=>{navigate(`/slike/${slika.sifra}`)}}>
                                     Promijeni
+                                </Button>
+                                &nbsp;&nbsp;
+                                <Button variant="danger" onClick={()=>obrisi(slika.sifra)}>
+                                    Obriši
                                 </Button>
                             </td>
                         </tr>
