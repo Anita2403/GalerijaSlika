@@ -1,43 +1,34 @@
+import { DATA_SOURCE } from "../../constanst";
+import SlikaServiceLocalStorage from "./SlikaServiceLocalStorage";
+import SlikaServiceMemorija from "./SlikaServiceMemorija";
 
-import { slike } from "./SlikaPodaci";
+let Servis = null
 
-async function get() {
-    return {data:[...slike]}
-
+switch (DATA_SOURCE){
+    case 'memorija':
+        Servis = SlikaServiceMemorija
+        break
+    case 'localStorage':
+        Servis = SlikaServiceLocalStorage
+        break
+    default:
+        Servis = null
 }
 
-async function getBySifra(sifra) {
-    return {data: slike.find(s => s.sifra === parseInt(sifra))}
+const PrazanServis = {
+    get: async ()  => ({data: []}),
+    getBySifra: async(sifra) => ({data: {}}),
+    dodaj: async (slika) => {console.error('Servis nije implementiran')},
+    promijeni: async (sifra, slika) => {console.error('Servis nije implementiran')},
+    obrisi: async (sifra) => {console.error('Servis nije implementiran')}
 }
 
-
-async function dodaj(slika) {
-    if(slike.lenght === 0){
-       slika.sifra = 1 
-    }else{
-        slika.sifra = slike[slike.length - 1].sifra + 1
-    }
-    slike.push(slika)
-}
-
-async function promijeni(sifra, slika) {
-    const index = nadiIndex(sifra)
-    slike[index] = {...slike[index], ...slika}
-}
-
-function nadiIndex(sifra){
-    return slike.findIndex(s => s.sifra === parseInt(sifra))
-}
-
-async function obrisi(sifra){
-    const index = nadiIndex(sifra)
-    slike.splice(index, 1)
-}
+const AktivniServis = Servis || PrazanServis
 
 export default{
-    get,
-    getBySifra,
-    dodaj,
-    promijeni,
-    obrisi
+    get:() => AktivniServis.get(),
+    getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
+    dodaj: (sifra) => AktivniServis.dodaj(sifra),
+    promijeni: (sifra, slika) => AktivniServis.promijeni(sifra, slika),
+    obrisi: (sifra) => AktivniServis.obrisi(sifra),
 }

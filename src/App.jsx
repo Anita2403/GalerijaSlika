@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Container } from 'react-bootstrap'
-import { IME_APLIKACIJE, RouteNames } from './constanst'
+import { DATA_SOURCE, IME_APLIKACIJE, RouteNames } from './constanst'
 import Home from './pages/Home'
 import Izbornik from './components/Izbornik'
 import SlikaPregled from './pages/slike/SlikaPregled'
@@ -35,7 +35,7 @@ function App() {
           
         </Container>
         <hr />
-        &copy; {IME_APLIKACIJE}
+        &copy; {IME_APLIKACIJE}({DATA_SOURCE})
       </Container>
     </>
   )

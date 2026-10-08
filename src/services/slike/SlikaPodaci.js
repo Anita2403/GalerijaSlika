@@ -34,7 +34,7 @@ export const slike = [
     },
     {
         sifra: 4,
-        naziv: 'Guardian of horizonte',
+        naziv: 'A Guardian of Horizonte',
         godinaIzrade: 2026,
         tehnika: 'akril na platnu',
         sirina: 70,
@@ -67,7 +67,7 @@ export const slike = [
     },
     {
         sifra: 7,
-        naziv: 'vile na maslačku',
+        naziv: 'Vile na Maslačku',
         godinaIzrade: 2025,
         tehnika: 'akril na platnu',
         sirina: 70,

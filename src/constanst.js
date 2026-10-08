@@ -7,3 +7,5 @@ export const RouteNames = {
     SLIKE_DODAJ: '/slike/nove',
     SLIKE_PROMJENA: '/slike/:sifra'
 }
+// memorija, localStorage, firebase
+export const DATA_SOURCE = 'memorija'
