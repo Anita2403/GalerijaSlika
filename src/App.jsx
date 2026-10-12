@@ -9,6 +9,7 @@ import { Route, Routes } from 'react-router-dom'
 import OAplikaciji from './pages/OAplikaciji'
 import SlikaNova from './pages/slike/SlikaNova'
 import SlikaPromjena from './pages/slike/SlikaPromjena'
+import OstaliProizvodiPregled from './pages/ostaliproizvodi/OstaliProizvodiPregled'
 
 
 function App() {
@@ -22,14 +23,16 @@ function App() {
           <Routes>
             
             <Route path={RouteNames.HOME} element={<Home />} />
-
-            <Route path={RouteNames.SLIKE} element={<SlikaPregled />} />
-
             <Route path={RouteNames.OAPLIKACIJI} element={<OAplikaciji />} />
 
+            <Route path={RouteNames.SLIKE} element={<SlikaPregled />} />
             <Route path={RouteNames.SLIKE_DODAJ} element={<SlikaNova />} />
-
             <Route path={RouteNames.SLIKE_PROMJENA} element={<SlikaPromjena />} />
+
+            
+            <Route path={RouteNames.OSTALIPROIZVODI} element={<OstaliProizvodiPregled />} />
+
+
 
           </Routes>
           

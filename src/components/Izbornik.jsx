@@ -28,7 +28,11 @@ return (
               <NavDropdown.Item 
               onClick={()=>navigate(RouteNames.SLIKE)}
               > Slike</NavDropdown.Item>
-            
+
+               <NavDropdown.Item 
+              onClick={()=>navigate(RouteNames.OSTALIPROIZVODI)}
+              > Ostali Proizvodi</NavDropdown.Item>
+           
             </NavDropdown>
 
             <Nav.Link
