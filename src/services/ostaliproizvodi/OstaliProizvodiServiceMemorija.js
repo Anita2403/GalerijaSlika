@@ -11,19 +11,19 @@ async function getBySifra(sifra) {
 }
 
 
-async function dodaj(ostaliproizvodi) {
+async function dodaj(ostaliproizvod) {
     if (ostaliproizvodi.lenght === 0) {
-        ostaliproizvodi.sifra = 1
+        ostaliproizvod.sifra = 1
     } else {
-        ostaliproizvodi.sifra = ostaliproizvodi[ostaliproizvodi.length - 1].sifra + 1
+        ostaliproizvod.sifra = ostaliproizvodi[ostaliproizvodi.length - 1].sifra + 1
     }
-    ostaliproizvodi.push(ostaliproizvodi)
+    ostaliproizvodi.push(ostaliproizvod)
 }
 
 
-async function promijeni(sifra, ostaliproizvodi) {
+async function promijeni(sifra, ostaliproizvod) {
     const index = nadiIndex(sifra)
-    ostaliproizvodi[index] = { ...ostaliproizvodi[index], ...ostaliproizvodi }
+    ostaliproizvodi[index] = { ...ostaliproizvodi[index], ...ostaliproizvod }
 }
 
 

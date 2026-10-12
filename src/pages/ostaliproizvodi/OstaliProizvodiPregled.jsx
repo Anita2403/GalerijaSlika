@@ -9,7 +9,7 @@ import { RouteNames } from "../../constanst"
 
 export default function OstaliProizvodiPregled(){
 
-    const[ostaliproizvodi, setSlike] = useState([])
+    const[ostaliproizvodi, setOstaliProizvodi] = useState([])
     const navigate = useNavigate()
 
 

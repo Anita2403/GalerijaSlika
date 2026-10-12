@@ -23,23 +23,23 @@ async function getBySifra(sifra) {
 }
 
 
-async function dodaj(ostaliproizvodi) {
+async function dodaj(ostaliproizvod) {
     const ostaliproizvodi = dohvatiSveizStorage()
     if (ostaliproizvodi.length === 0) {
-        ostaliproizvodi.sifra = 1
+        ostaliproizvod.sifra = 1
     } else {
         const maxSifra = Math.max(...ostaliproizvodi.map(s => s.sifra))
-        ostaliproizvodi.sifra = maxSifra + 1
+        ostaliproizvod.sifra = maxSifra + 1
     }
-    ostaliproizvodi.push(ostaliproizvodi)
+    ostaliproizvodi.push(ostaliproizvod)
     spremiUStorage(ostaliproizvodi)
 }
 
 
-async function promijeni(sifra, ostaliproizvodi) {
+async function promijeni(sifra, ostaliproizvod) {
     const ostaliproizvodi = dohvatiSveizStorage()
     const index = ostaliproizvodi.findIndex(s => s.sifra === parseInt(sifra))
-    ostaliproizvodi[index] = { ...ostaliproizvodi[index], ...ostaliproizvodi }
+    ostaliproizvodi[index] = { ...ostaliproizvodi[index], ...ostaliproizvod }
     spremiUStorage(ostaliproizvodi)
 }
 
