@@ -7,19 +7,19 @@ import { RouteNames } from "../../constanst"
 
 
 
-export default function OstaliProizvodiPregled(){
+export default function OstaliProizvodiPregled() {
 
-    const[ostaliproizvodi, setOstaliProizvodi] = useState([])
+    const [ostaliproizvodi, setOstaliProizvodi] = useState([])
     const navigate = useNavigate()
 
 
-    useEffect(()=>{
-       
-        ucitajOstaliProizvodi()
-    },[])
+    useEffect(() => {
 
-    async function obrisi(sifra){
-        if(!confirm('Sigurno obrisati')){
+        ucitajOstaliProizvodi()
+    }, [])
+
+    async function obrisi(sifra) {
+        if (!confirm('Sigurno obrisati')) {
             return
         }
         await OstaliProizvodiService.obrisi(sifra)
@@ -27,33 +27,34 @@ export default function OstaliProizvodiPregled(){
     }
 
     async function ucitajOstaliProizvodi() {
-        await OstaliProizvodiService.get().then((odgovor)=> {
-           // console.table(odgovor.data)
-           setOstaliProizvodi(odgovor.data)
+        await OstaliProizvodiService.get().then((odgovor) => {
+            // console.table(odgovor.data)
+            // console.log(JSON.stringify(odgovor.data))
+            setOstaliProizvodi(odgovor.data)
         })
     }
 
-    return(
-  <>
-          <Link to={RouteNames.OSTALIPROIZVODI_DODAJ}
-          className="btn btn-success w-100 my-3" >
+    return (
+        <>
+            <Link to={RouteNames.OSTALIPROIZVODI_DODAJ}
+                className="btn btn-success w-100 my-3" >
                 Dodavanje novih ostalih proizvoda
             </Link>
-            
-      
-        <Table>
-            <thead>
-                <tr>
-                 <th>Naziv</th> 
-                 <th>Godina izrade</th>
-                 <th>Materijal</th>  
-                 <th>Dimenzije</th>
-                 <th>Dostupnost</th>
-                 <th>Akcija</th>
-                </tr>
-            </thead>
-            <tbody>
-                {ostaliproizvodi && ostaliproizvodi.map((ostaliproizvodi) => (
+
+
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Naziv</th>
+                        <th>Godina izrade</th>
+                        <th>Materijal</th>
+                        <th>Dimenzije</th>
+                        <th>Dostupnost</th>
+                        <th>Akcija</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {ostaliproizvodi && ostaliproizvodi.map((ostaliproizvodi) => (
                         <tr key={ostaliproizvodi.sifra}>
                             <td>{ostaliproizvodi.naziv}
                                 {/* <br />
@@ -65,32 +66,32 @@ export default function OstaliProizvodiPregled(){
                             <td>{ostaliproizvodi.materijal}</td>
                             <td>{ostaliproizvodi.sirina}x{ostaliproizvodi.visina}</td>
 
-                           
+
 
                             <td>
                                 {/* Primjer jedne ikone s različitim svojstvima u odnosu na boolean svojstvo */}
                                 <GrValidate
                                     size={25}
                                     color={ostaliproizvodi.dostupnost ? 'green' : 'red'}
-                                   
+
                                 />
-                              
+
                             </td>
                             <td>
-                                <Button onClick={()=>{navigate(`/ostaliproizvodi/${ostaliproizvodi.sifra}`)}}>
+                                <Button onClick={() => { navigate(`/ostaliproizvodi/${ostaliproizvodi.sifra}`) }}>
                                     Promijeni
                                 </Button>
                                 &nbsp;&nbsp;
-                                <Button variant="danger" onClick={()=>obrisi(ostaliproizvodi.sifra)}>
+                                <Button variant="danger" onClick={() => obrisi(ostaliproizvodi.sifra)}>
                                     Obriši
                                 </Button>
                             </td>
                         </tr>
                     ))}
-            </tbody>
-        </Table>
-        
-        
+                </tbody>
+            </Table>
+
+
         </>
     )
 }

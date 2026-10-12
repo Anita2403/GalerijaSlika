@@ -2,49 +2,62 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { IME_APLIKACIJE, RouteNames } from '../constanst';
+import { DATA_SOURCE, IME_APLIKACIJE, RouteNames } from '../constanst';
 import { useNavigate } from 'react-router-dom';
 import { NavbarToggle } from 'react-bootstrap';
+import { FaMemory } from 'react-icons/fa';
+import { GrStatusUnknown, GrVirtualStorage } from 'react-icons/gr';
 
 
-export default function Izbornik(){
+export default function Izbornik() {
 
   const navigate = useNavigate()
 
-return (
-     <Navbar expand="lg" className="bg-body-tertiary">
+  function izvor() {
+    switch (DATA_SOURCE) {
+      case 'memorija':
+        return <FaMemory title='Memorija' />
+      case 'localStorage':
+        return <GrVirtualStorage title='Local storage' />
+      default:
+        return <GrStatusUnknown title='Nepoznato' />
+    }
+  }
+
+  return (
+    <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="#home">
-            {IME_APLIKACIJE}
+          {izvor()} {IME_APLIKACIJE}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link 
-            onClick={()=>{navigate(RouteNames.HOME)}}
+            <Nav.Link
+              onClick={() => { navigate(RouteNames.HOME) }}
             >Početna</Nav.Link>
-            
+
             <NavDropdown title="Programi" id="basic-nav-dropdown">
-              <NavDropdown.Item 
-              onClick={()=>navigate(RouteNames.SLIKE)}
+              <NavDropdown.Item
+                onClick={() => navigate(RouteNames.SLIKE)}
               > Slike</NavDropdown.Item>
 
-               <NavDropdown.Item 
-              onClick={()=>navigate(RouteNames.OSTALIPROIZVODI)}
+              <NavDropdown.Item
+                onClick={() => navigate(RouteNames.OSTALIPROIZVODI)}
               > Ostali Proizvodi</NavDropdown.Item>
-           
+
             </NavDropdown>
 
             <Nav.Link
-            onClick={()=>{navigate(RouteNames.OAPLIKACIJI)}}
+              onClick={() => { navigate(RouteNames.OAPLIKACIJI) }}
             >O Aplikaciji</Nav.Link>
-            
+
 
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
-)
+  )
 
 
 

@@ -18,8 +18,8 @@ switch (DATA_SOURCE){
 const PrazanServis = {
     get: async ()  => ({data: []}),
     getBySifra: async(sifra) => ({data: {}}),
-    dodaj: async (slika) => {console.error('Servis nije implementiran')},
-    promijeni: async (sifra, slika) => {console.error('Servis nije implementiran')},
+    dodaj: async (ostaliproizvod) => {console.error('Servis nije implementiran')},
+    promijeni: async (sifra, ostaliproizvod) => {console.error('Servis nije implementiran')},
     obrisi: async (sifra) => {console.error('Servis nije implementiran')}
 }
 
@@ -29,6 +29,6 @@ export default{
     get:() => AktivniServis.get(),
     getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
     dodaj: (sifra) => AktivniServis.dodaj(sifra),
-    promijeni: (sifra, slika) => AktivniServis.promijeni(sifra, slika),
+    promijeni: (sifra, ostaliproizvod) => AktivniServis.promijeni(sifra, ostaliproizvod),
     obrisi: (sifra) => AktivniServis.obrisi(sifra),
 }

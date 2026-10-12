@@ -10,6 +10,8 @@ import OAplikaciji from './pages/OAplikaciji'
 import SlikaNova from './pages/slike/SlikaNova'
 import SlikaPromjena from './pages/slike/SlikaPromjena'
 import OstaliProizvodiPregled from './pages/ostaliproizvodi/OstaliProizvodiPregled'
+import OstaliProizvodiNovi from './pages/ostaliproizvodi/OstaliProizvodiNovi'
+import OstaliProizvodiPromjena from './pages/ostaliproizvodi/OstaliProizvodiPromjena'
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
 
             
             <Route path={RouteNames.OSTALIPROIZVODI} element={<OstaliProizvodiPregled />} />
+            <Route path={RouteNames.OSTALIPROIZVODI_DODAJ} element={<OstaliProizvodiNovi />} />
+            <Route path={RouteNames.OSTALIPROIZVODI_PROMJENA} element={<OstaliProizvodiPromjena />} />
 
 
 

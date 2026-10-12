@@ -1,6 +1,6 @@
 
 
-const STORAGE_KEY='ostalipolaznici'
+const STORAGE_KEY='ostaliproizvodi'
 
 function dohvatiSveizStorage(){
     const podaci = localStorage.getItem(STORAGE_KEY)

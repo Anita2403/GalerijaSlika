@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import SlikaService from "../../services/slike/SlikaService"
 import { GrValidate } from "react-icons/gr"
 import { Button, Table } from "react-bootstrap"
-import { Link, useNavigate, useNavigationType } from "react-router-dom"
+import { Link, useNavigate, } from "react-router-dom"
 import { RouteNames } from "../../constanst"
 
 
@@ -29,6 +29,8 @@ export default function SlikaPregled(){
     async function ucitajSlike() {
         await SlikaService.get().then((odgovor)=> {
            // console.table(odgovor.data)
+
+        //    console.log(JSON.stringify(odgovor.data))
            setSlike(odgovor.data)
         })
     }
