@@ -16,7 +16,7 @@ import TehnikaPregled from './pages/tehnike/TehnikaPregled'
 
 
 function App() {
-  
+
 
   return (
     <>
@@ -24,7 +24,7 @@ function App() {
         <Izbornik />
         <Container className='app'>
           <Routes>
-            
+
             <Route path={RouteNames.HOME} element={<Home />} />
             <Route path={RouteNames.OAPLIKACIJI} element={<OAplikaciji />} />
 
@@ -32,20 +32,20 @@ function App() {
             <Route path={RouteNames.SLIKE_DODAJ} element={<SlikaNova />} />
             <Route path={RouteNames.SLIKE_PROMJENA} element={<SlikaPromjena />} />
 
-            
+
             <Route path={RouteNames.OSTALIPROIZVODI} element={<OstaliProizvodiPregled />} />
             <Route path={RouteNames.OSTALIPROIZVODI_DODAJ} element={<OstaliProizvodiNovi />} />
             <Route path={RouteNames.OSTALIPROIZVODI_PROMJENA} element={<OstaliProizvodiPromjena />} />
 
             <Route path={RouteNames.TEHNIKE} element={<TehnikaPregled />} />
+            <Route path={RouteNames.TEHNIKE_DODAJ} element={<TehnikaNova />} />
+            <Route path={RouteNames.TEHNIKE_PROMJENA} element={<TehnikaPromjena />} />
 
-
-            
 
 
 
           </Routes>
-          
+
         </Container>
         <hr />
         &copy; {IME_APLIKACIJE}({DATA_SOURCE})
