@@ -9,9 +9,8 @@ import { RouteNames } from "../../constanst"
 export default function TehnikaPregled() {
 
     const [tehnike, setTehnike] = useState([])
+    
    
-
-
     const navigate = useNavigate()
 
     async function ucitajTehnike() {
@@ -22,6 +21,8 @@ export default function TehnikaPregled() {
             setTehnike(odgovor.data)
         })
     }
+
+  
 
     useEffect(() => {
             ucitajTehnike()

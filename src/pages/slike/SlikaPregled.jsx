@@ -10,6 +10,8 @@ import { RouteNames } from "../../constanst"
 export default function SlikaPregled(){
 
     const[slike, setSlike] = useState([])
+    const[tehnike, setTehnike] = useState([])
+    
     const navigate = useNavigate()
 
 
