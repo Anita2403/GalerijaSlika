@@ -54,7 +54,7 @@ export default function Izbornik() {
               > Tehnike</NavDropdown.Item>
 
               <NavDropdown.Item
-                onClick={() => navigate(RouteNames.OSTALIPROIZVODI)}
+                onClick={() => navigate(RouteNames.MATERIJALI)}
               > Materijali</NavDropdown.Item>
 
             </NavDropdown>

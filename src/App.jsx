@@ -15,6 +15,9 @@ import OstaliProizvodiPromjena from './pages/ostaliproizvodi/OstaliProizvodiProm
 import TehnikaPregled from './pages/tehnike/TehnikaPregled'
 import TehnikaPromjena from './pages/tehnike/TehnikaPromjena'
 import TehnikaNova from './pages/tehnike/TehnikaNova'
+import MaterijalPregled from './pages/materijali/MaterijaliPregled'
+import MaterijalNova from './pages/materijali/MaterijaliNova'
+import MaterijalPromjena from './pages/materijali/MaterijaliPromjena'
 
 
 function App() {
@@ -43,6 +46,9 @@ function App() {
             <Route path={RouteNames.TEHNIKE_DODAJ} element={<TehnikaNova />} />
             <Route path={RouteNames.TEHNIKE_PROMJENA} element={<TehnikaPromjena />} />
 
+            <Route path={RouteNames.MATERIJALI} element={<MaterijalPregled />} />
+            <Route path={RouteNames.MATERIJALI_DODAJ} element={<MaterijalNova />} />
+            <Route path={RouteNames.MATERIJALI_PROMJENA} element={<MaterijalPromjena />} />
 
 
 
