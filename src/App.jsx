@@ -13,6 +13,8 @@ import OstaliProizvodiPregled from './pages/ostaliproizvodi/OstaliProizvodiPregl
 import OstaliProizvodiNovi from './pages/ostaliproizvodi/OstaliProizvodiNovi'
 import OstaliProizvodiPromjena from './pages/ostaliproizvodi/OstaliProizvodiPromjena'
 import TehnikaPregled from './pages/tehnike/TehnikaPregled'
+import TehnikaPromjena from './pages/tehnike/TehnikaPromjena'
+import TehnikaNova from './pages/tehnike/TehnikaNova'
 
 
 function App() {

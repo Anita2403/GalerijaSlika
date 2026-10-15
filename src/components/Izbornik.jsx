@@ -50,7 +50,7 @@ export default function Izbornik() {
 
             <NavDropdown title="Šifrarnici" id="basic-nav-dropdown">
               <NavDropdown.Item
-                onClick={() => navigate(RouteNames.SLIKE)}
+                onClick={() => navigate(RouteNames.TEHNIKE)}
               > Tehnike</NavDropdown.Item>
 
               <NavDropdown.Item

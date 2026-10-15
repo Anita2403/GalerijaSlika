@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import TehnikaService from "../../services/tehnike/TehnikaService"
-import { GrValidate } from "react-icons/gr"
-import { Button, Table } from "react-bootstrap"
+import { Badge, Button, Table } from "react-bootstrap"
 import { Link, useNavigate, } from "react-router-dom"
 import { RouteNames } from "../../constanst"
 
@@ -9,7 +8,7 @@ import { RouteNames } from "../../constanst"
 
 export default function TehnikaPregled() {
 
-    const [tehnike, setSlike] = useState([])
+    const [tehnike, setTehnike] = useState([])
    
 
 
@@ -20,18 +19,11 @@ export default function TehnikaPregled() {
             // console.table(odgovor.data)
 
             //    console.log(JSON.stringify(odgovor.data))
-            setSlike(odgovor.data)
+            setTehnike(odgovor.data)
         })
     }
 
-    async function ucitajSlike() {
-        await SlikaService.get().then((o) => {
-            setSlike(o.data)
-        })
-  }
-
     useEffect(() => {
-            ucitajSlike()
             ucitajTehnike()
         }, [])
 
@@ -43,13 +35,6 @@ export default function TehnikaPregled() {
                 await TehnikaService.obrisi(sifra)
                 ucitajTehnike()
      }
-
-    function dohvatiNazivSlike(sifraSlike) {
-                const slika = slike.find(s => s.slika === sifraSlike)
-                return slika.naziv
-            }
-
-
 
     return (
             <>
@@ -72,12 +57,6 @@ export default function TehnikaPregled() {
                                 <td>
                                     {tehnika.naziv}
                                 </td>
-                                <td>
-                                    {dohvatiNazivSlike(tehnika.slika)}
-                                </td>
-
-
-
 
                                 <td>
                                     <Button onClick={() => { navigate(`/tehnike/${tehnika.sifra}`) }}>
@@ -94,7 +73,7 @@ export default function TehnikaPregled() {
                 </Table>
                       Ukupno tehnika: &nbsp;
                       <Badge pill bg="success">
-                        (tehnike&&tehnike.length)
+                        {tehnike&&tehnike.length}
                         </Badge>     
 
             </>
