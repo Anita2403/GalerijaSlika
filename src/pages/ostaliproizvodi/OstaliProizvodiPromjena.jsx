@@ -61,86 +61,95 @@ export default function OstaliProizvodiPromjena() {
     }
 
     return (
-        <>
-            <h3>
-                Promjena ostalih proizvoda
-            </h3>
+
+        <Form onSubmit={obradiSubmit}>
+
+            <Container className="visinaAkcija">
+                <Card style={{ padding: '1rem' }}>
+
+                    <Card.Title>
+                        Promjena ostalih proizvoda
+                    </Card.Title>
+
+                    <Row>
+                        <Col xs={12} className="mt-3">
+                            <Form.Group controlId="naziv">
+                                <Form.Label>Naziv</Form.Label>
+                                <Form.Control type="text" name="naziv" required
+                                    defaultValue={ostaliproizvod.naziv} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs={6} className="mt-3">
+                            <Form.Group controlId="godinaIzrade">
+                                <Form.Label>Godina izrade</Form.Label>
+                                <Form.Control type="number" name="godinaIzrade" step={1}
+                                    defaultValue={ostaliproizvod.godinaIzrade} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs={6} className="mt-3">
+                            <Form.Group controlId="materijal">
+                                <Form.Label>Materijal</Form.Label>
+                                <Form.Select name="materijal" required>
+                                    value={ostaliproizvod.materijal} onChange={(e) => setOstaliProizvodi({ ...ostaliproizvod, materijal: parseInt(e.target.value) })}>
+                                    <option value="">Odaberi materijal</option>
+                                    {materijali && materijali.map((t) => (
+                                        <option key={t.sifra} value={t.sifra}>{t.naziv}</option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col xs={4} className="mt-3">
+                            <Form.Group controlId="sirina">
+                                <Form.Label>Širina</Form.Label>
+                                <Form.Control type="number" name="sirina"
+                                    defaultValue={ostaliproizvod.sirina} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs={4} className="mt-3">
+                            <Form.Group controlId="visina">
+                                <Form.Label>Visina</Form.Label>
+                                <Form.Control type="number" name="visina"
+                                    defaultValue={ostaliproizvod.visina} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs={4} className="mt-3">
+                            <Form.Group controlId="dostupnost">
+                                <Form.Check label="Dostupno" name="dostupnost"
+                                    checked={dostupnost}
+                                    onChange={(e) => { setDostupnost(e.target.checked) }} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs={12} className="mt-3">
+                            <Form.Group controlId="opis">
+                                <Form.Label>Opis</Form.Label>
+                                <Form.Control as="textarea" rows={5} name="opis"
+                                    defaultValue={ostaliproizvod.opis} />
+                            </Form.Group>
+                        </Col>
+
+                        <Col xs={6} className="visinaAkcija">
+                            <Link to={RouteNames.OSTALIPROIZVODI}
+                                className="btn btn-danger">
+                                Odustani
+                            </Link>
+                        </Col>
+
+                        <Col  xs={6} className="visinaAkcija" style={{ textAlign: 'right' }}>
+                            <Button type="submit" variant="success">
+                                Promijeni
+                            </Button>
+                        </Col>
+
+                    </Row>
 
 
-            <Form onSubmit={obradiSubmit}>
+                </Card>
 
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="naziv" required
-                        defaultValue={ostaliproizvod.naziv} />
+            </Container>
+           
 
-                </Form.Group>
+        </Form>
 
-                <Form.Group controlId="godinaIzrade">
-                    <Form.Label>Godina izrade</Form.Label>
-                    <Form.Control type="number" name="godinaIzrade" step={1}
-                        defaultValue={ostaliproizvod.godinaIzrade} />
-                </Form.Group>
-
-                <Form.Group controlId="materijal">
-                    <Form.Label>Materijal</Form.Label>
-                    <Form.Select name="materijal" required>
-                        value={ostaliproizvod.materijal} onChange={(e) => setOstaliProizvodi({ ...ostaliproizvod, materijal: parseInt(e.target.value) })}>
-                        <option value="">Odaberi materijal</option>
-                        {materijali && materijali.map((t) => (
-                            <option key={t.sifra} value={t.sifra}>{t.naziv}</option>
-                        ))}
-                    </Form.Select>
-                </Form.Group>
-
-                <Form.Group controlId="sirina">
-                    <Form.Label>Širina</Form.Label>
-                    <Form.Control type="number" name="sirina"
-                        defaultValue={ostaliproizvod.sirina} />
-                </Form.Group>
-
-                <Form.Group controlId="visina">
-                    <Form.Label>Visina</Form.Label>
-                    <Form.Control type="number" name="visina"
-                        defaultValue={ostaliproizvod.visina} />
-                </Form.Group>
-
-                <Form.Group controlId="dostupnost">
-                    <Form.Check label="Dostupno" name="dostupnost"
-                        checked={dostupnost}
-                        onChange={(e) => { setDostupnost(e.target.checked) }} />
-                </Form.Group>
-
-                <Form.Group controlId="opis">
-                    <Form.Label>Opis</Form.Label>
-                    <Form.Control as="textarea" rows={5} name="opis"
-                        defaultValue={ostaliproizvod.opis} />
-                </Form.Group>
-
-
-
-
-
-                <hr />
-
-
-                <Row>
-                    <Col>
-                        <Link to={RouteNames.OSTALIPROIZVODI}
-                            className="btn btn-danger">
-                            Odustani
-                        </Link>
-                    </Col>
-
-                    <Col>
-                        <Button type="submit">
-                            Promijeni
-                        </Button>
-                    </Col>
-                </Row>
-
-            </Form>
-        </>
     )
 
 }

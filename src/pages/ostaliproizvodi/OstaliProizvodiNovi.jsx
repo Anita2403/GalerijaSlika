@@ -10,15 +10,15 @@ import MaterijalService from "../../services/materijali/MaterijalService";
 
 
 export default function OstaliProizvodiNovi() {
-    const [materijali, setMaterijali]=useState([])
+    const [materijali, setMaterijali] = useState([])
 
-    async function ucitajMaterijali(){
+    async function ucitajMaterijali() {
         await MaterijalService.get().then((odgovor) => {
             setMaterijali(odgovor.data)
         })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         ucitajMaterijali()
     }, [])
 
@@ -48,77 +48,86 @@ export default function OstaliProizvodiNovi() {
     }
 
     return (
-        <>
-            <h3>
-                Dodavanje novih proizvoda
-            </h3>
-
-
+               
             <Form onSubmit={obradiSubmit}>
 
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="naziv" required />
-                </Form.Group>
+                <Container className="visinaAkcija">
+                    <Card style={{ padding: '1rem' }}>
 
-                <Form.Group controlId="godinaIzrade">
-                    <Form.Label>Godina izrade</Form.Label>
-                    <Form.Control type="number" name="godinaIzrade" step={1} />
-                </Form.Group>
-
-                <Form.Group controlId="materijal">
-                    <Form.Label>Materijal</Form.Label>
-                    <Form.Select name="materijal" required>
-                        <option value="">Odaberi materijal</option>
-                        {materijali&materijali.map((t)=>(
-                         <option key={t.sifra} value={t.sifra}>t.naziv</option>
-                        ))}
-                    </Form.Select>
-                </Form.Group>
-
-                <Form.Group controlId="sirina">
-                    <Form.Label>Širina</Form.Label>
-                    <Form.Control type="number" name="sirina" />
-                </Form.Group>
-
-                <Form.Group controlId="visina">
-                    <Form.Label>Visina</Form.Label>
-                    <Form.Control type="number" name="visina" />
-                </Form.Group>
-
-                <Form.Group controlId="dostupnost">
-                    <Form.Check label="Dostupno" name="dostupnost" />
-                </Form.Group>
-
-                <Form.Group controlId="opis">
-                    <Form.Label>Opis</Form.Label>
-                    <Form.Control as="textarea" rows={5} name="opis"/>
-                </Form.Group>
+                        <Card.Title>
+                            Dodavanje ostalih proizvoda
+                        </Card.Title>
 
 
+                        <Row>
+                            <Col xs={12} className="mt-3">
+                                <Form.Group controlId="naziv">
+                                    <Form.Label>Naziv</Form.Label>
+                                    <Form.Control type="text" name="naziv" required />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={6} className="mt-3">
+                                <Form.Group controlId="godinaIzrade">
+                                    <Form.Label>Godina izrade</Form.Label>
+                                    <Form.Control type="number" name="godinaIzrade" step={1} />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={6} className="mt-3">
+                                <Form.Group controlId="materijal">
+                                    <Form.Label>Materijal</Form.Label>
+                                    <Form.Select name="materijal" required>
+                                        <option value="">Odaberi materijal</option>
+                                        {materijali & materijali.map((t) => (
+                                            <option key={t.sifra} value={t.sifra}>t.naziv</option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col xs={4} className="mt-3">
+                                <Form.Group controlId="sirina">
+                                    <Form.Label>Širina</Form.Label>
+                                    <Form.Control type="number" name="sirina" />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={4} className="mt-3">
+                                <Form.Group controlId="visina">
+                                    <Form.Label>Visina</Form.Label>
+                                    <Form.Control type="number" name="visina" />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={4} className="mt-3">
+                                <Form.Group controlId="dostupnost">
+                                    <Form.Check label="Dostupno" name="dostupnost" />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={12} className="mt-3">
+                                <Form.Group controlId="opis">
+                                    <Form.Label>Opis</Form.Label>
+                                    <Form.Control as="textarea" rows={5} name="opis" />
+                                </Form.Group>
+                            </Col>
 
-           
+                            <Col xs={6} className="visinaAkcija">
+                                <Link to={RouteNames.OSTALIPROIZVODI}
+                                    className="btn btn-danger">
+                                    Odustani
+                                </Link>
+                            </Col>
 
-            <hr />
+                            <Col xs={6} className="visinaAkcija">
+                                <Button type="submit" variant="success">
+                                    Dodaj
+                                </Button>
+                            </Col>
+
+                        </Row>
+                    </Card>
+
+                </Container>
 
 
-            <Row>
-                <Col>
-                    <Link to={RouteNames.OSTALIPROIZVODI}
-                    className="btn btn-danger">
-                        Odustani
-                    </Link>
-                </Col>
+            </Form>
 
-                <Col>
-                <Button type="submit" variant="success">
-                    Dodaj
-                </Button>
-                </Col>
-            </Row>
-            
-             </Form>
-        </>
-    )
+            )
 
 }

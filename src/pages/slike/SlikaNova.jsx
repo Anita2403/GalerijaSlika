@@ -49,10 +49,7 @@ export default function SlikaNova() {
     }
 
     return (
-        
-
-
-
+       
             <Form onSubmit={obradiSubmit}>
 
                 <Container className="visinaAkcija">

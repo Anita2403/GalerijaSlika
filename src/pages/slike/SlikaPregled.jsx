@@ -33,7 +33,6 @@ export default function SlikaPregled(){
     async function ucitajSlike() {
         await SlikaService.get().then((odgovor)=> {
            // console.table(odgovor.data)
-
         //    console.log(JSON.stringify(odgovor.data))
            setSlike(odgovor.data)
         })

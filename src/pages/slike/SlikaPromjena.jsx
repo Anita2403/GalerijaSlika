@@ -1,4 +1,4 @@
-import { Await, Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
 import { Button, Card, Col, Container, Form, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
@@ -144,7 +144,7 @@ export default function SlikaPromjena() {
 
                         <Col xs={6} className="visinaAkcija" style={{ textAlign: 'right' }}>
                             <Button type="submit" variant="success">
-                                Dodaj
+                                Promijeni
                             </Button>
                         </Col>
 
