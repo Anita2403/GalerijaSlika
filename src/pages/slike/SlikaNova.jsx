@@ -1,13 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
-import { Button, Card, CardTitle, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import TehnikaService from "../../services/tehnike/TehnikaService";
 
 
 
 
 
 export default function SlikaNova() {
+
+    const [tehnike, setTehnike] = useState([])
+
+     async function ucitajTehnike() {
+        await TehnikaService.get().then((odgovor) => {
+            setTehnike(odgovor.data)
+        })
+    }
+
+    useEffect(()=>{
+        ucitajTehnike()
+    },[])
 
     const navigate = useNavigate()
 
@@ -25,7 +39,7 @@ export default function SlikaNova() {
         dodaj({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
-            tehnika: podaci.get('tehnika'),
+            tehnika: parseInt(podaci.get('tehnika')),
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: podaci.get('dostupnost') === 'on',
@@ -66,7 +80,12 @@ export default function SlikaNova() {
                             <Col xs={6} className="mt-3">
                                 <Form.Group controlId="tehnika">
                                     <Form.Label>Tehnika</Form.Label>
-                                    <Form.Control type="text" name="tehnika" required />
+                                    <Form.Select name="tehnika" required>
+                                        <option value="">Odaberi tehniku</option>
+                                        {tehnike && tehnike.map((t)=>(
+                                            <option key={t.sifra} value={t.sifra}>{t.naziv}</option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col xs={4} className="mt-3">

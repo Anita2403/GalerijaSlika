@@ -3,6 +3,7 @@ import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
 import { Button, Card, Col, Container, Form, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import TehnikaService from "../../services/tehnike/TehnikaService";
 
 
 
@@ -14,6 +15,13 @@ export default function SlikaPromjena() {
     const params = useParams()
     const [slika, setSlika] = useState({})
     const [dostupnost, setDostupnost] = useState(false)
+    const [tehnike, setTehnike] = useState([])
+    
+         async function ucitajTehnike() {
+            await TehnikaService.get().then((odgovor) => {
+                setTehnike(odgovor.data)
+            })
+        }
 
     async function ucitajSlike() {
         await SlikaService.getBySifra(params.sifra).then((odgovor) => {
@@ -25,6 +33,7 @@ export default function SlikaPromjena() {
     }
 
     useEffect(() => {
+        ucitajTehnike()
         ucitajSlike()
     }, [])
 
@@ -42,7 +51,7 @@ export default function SlikaPromjena() {
         promijeni({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
-            tehnika: podaci.get('tehnika'),
+            tehnika: parseInt(podaci.get('tehnika')),
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: dostupnost,
@@ -82,8 +91,13 @@ export default function SlikaPromjena() {
                         <Col xs={6} className="mt-3">
                             <Form.Group controlId="tehnika">
                                 <Form.Label>Tehnika</Form.Label>
-                                <Form.Control type="text" name="tehnika" required
-                                    defaultValue={slika.tehnika} />
+                                <Form.Select name="tehnika" required
+                                value={slika.tehnika} onChange={(e)=>setSlika({...slika, tehnika: parseInt(e.target.value)})}>
+                                        <option value="">Odaberi tehniku</option>
+                                        {tehnike && tehnike.map((t)=>(
+                                            <option key={t.sifra} value={t.sifra}>{t.naziv}</option>
+                                        ))}
+                                    </Form.Select>
                             </Form.Group>
                         </Col>
                         <Col xs={4} className="mt-3">
