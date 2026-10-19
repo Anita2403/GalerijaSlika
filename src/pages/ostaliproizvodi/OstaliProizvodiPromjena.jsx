@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import OstaliProizvodiService from "../../services/ostaliproizvodi/OstaliProizvodiService";
 import { RouteNames } from "../../constanst";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import MaterijalService from "../../services/materijali/MaterijalService";
 
@@ -89,7 +89,7 @@ export default function OstaliProizvodiPromjena() {
                         <Col xs={6} className="mt-3">
                             <Form.Group controlId="materijal">
                                 <Form.Label>Materijal</Form.Label>
-                                <Form.Select name="materijal" required>
+                                <Form.Select name="materijal" required
                                     value={ostaliproizvod.materijal} onChange={(e) => setOstaliProizvodi({ ...ostaliproizvod, materijal: parseInt(e.target.value) })}>
                                     <option value="">Odaberi materijal</option>
                                     {materijali && materijali.map((t) => (
