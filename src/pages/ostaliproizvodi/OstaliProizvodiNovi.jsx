@@ -2,12 +2,25 @@ import { Link, useNavigate } from "react-router-dom";
 import OstaliProizvodiService from "../../services/ostaliproizvodi/OstaliProizvodiService";
 import { RouteNames } from "../../constanst";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import MaterijalService from "../../services/materijali/MaterijalService";
 
 
 
 
 
 export default function OstaliProizvodiNovi() {
+    const [materijali, setMaterijali]=useState([])
+
+    async function ucitajMaterijali(){
+        await MaterijalService.get().then((odgovor) => {
+            setMaterijali(odgovor.data)
+        })
+    }
+
+    useEffect(()=>{
+        ucitajMaterijali()
+    }, [])
 
     const navigate = useNavigate()
 
@@ -25,7 +38,7 @@ export default function OstaliProizvodiNovi() {
         dodaj({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
-            materijal: podaci.get('materijal'),
+            materijal: parseInt(podaci.get('materijal')),
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: podaci.get('dostupnost') === 'on',
@@ -55,7 +68,12 @@ export default function OstaliProizvodiNovi() {
 
                 <Form.Group controlId="materijal">
                     <Form.Label>Materijal</Form.Label>
-                    <Form.Control type="text" name="materijal" required />
+                    <Form.Select name="materijal" required>
+                        <option value="">Odaberi materijal</option>
+                        {materijali&materijali.map((t)=>(
+                         <option key={t.sifra} value={t.sifra}>t.naziv</option>
+                        ))}
+                    </Form.Select>
                 </Form.Group>
 
                 <Form.Group controlId="sirina">
