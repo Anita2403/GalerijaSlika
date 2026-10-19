@@ -4,18 +4,22 @@ import { GrValidate } from "react-icons/gr"
 import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate, useNavigationType } from "react-router-dom"
 import { RouteNames } from "../../constanst"
+import MaterijalService from "../../services/materijali/MaterijalService"
 
 
 
 export default function OstaliProizvodiPregled() {
 
     const [ostaliproizvodi, setOstaliProizvodi] = useState([])
+    const [materijali, SetMaterijali] = useState([])
+
     const navigate = useNavigate()
 
 
     useEffect(() => {
 
         ucitajOstaliProizvodi()
+        ucitajMaterijali()
     }, [])
 
     async function obrisi(sifra) {
@@ -32,6 +36,18 @@ export default function OstaliProizvodiPregled() {
             // console.log(JSON.stringify(odgovor.data))
             setOstaliProizvodi(odgovor.data)
         })
+    }
+
+    async function ucitajMaterijali(){
+        await MaterijalService.get().then((odgovor) =>{
+
+            SetMaterijali(odgovor.data)
+        })
+    }
+
+    function dohvatiNazivMaterijal(sifraMaterijal){
+        const materijal = materijali.find(s => s.sifra === sifraMaterijal)
+        return materijal.naziv
     }
 
     return (
@@ -63,7 +79,7 @@ export default function OstaliProizvodiPregled() {
                                 </small> */}
                             </td>
                             <td>{ostaliproizvodi.godinaIzrade}</td>
-                            <td>{ostaliproizvodi.materijal}</td>
+                            <td>{dohvatiNazivMaterijal(ostaliproizvodi.materijal)}</td>
                             <td>{ostaliproizvodi.sirina}x{ostaliproizvodi.visina}</td>
 
 

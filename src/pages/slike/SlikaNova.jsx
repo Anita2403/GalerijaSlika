@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, CardTitle, Col, Container, Form, Row } from "react-bootstrap";
 
 
 
@@ -35,72 +35,94 @@ export default function SlikaNova() {
     }
 
     return (
-        <>
-            <h3>
-                Dodavanje nove slike
-            </h3>
+        
+
 
 
             <Form onSubmit={obradiSubmit}>
 
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="naziv" required />
-                </Form.Group>
+                <Container className="visinaAkcija">
+                    <Card style={{ padding: '1rem' }}>
 
-                <Form.Group controlId="godinaIzrade">
-                    <Form.Label>Godina izrade</Form.Label>
-                    <Form.Control type="number" name="godinaIzrade" step={1} />
-                </Form.Group>
+                        <Card.Title>
+                            Dodavanje nove slike
+                        </Card.Title>
 
-                <Form.Group controlId="tehnika">
-                    <Form.Label>Tehnika</Form.Label>
-                    <Form.Control type="text" name="tehnika" required />
-                </Form.Group>
+                        <Row>
+                            <Col xs={12} className="mt-3">
+                                <Form.Group controlId="naziv">
+                                    <Form.Label>Naziv</Form.Label>
+                                    <Form.Control type="text" name="naziv" required />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={6} className="mt-3">
+                                <Form.Group controlId="godinaIzrade">
+                                    <Form.Label>Godina izrade</Form.Label>
+                                    <Form.Control type="number" 
+                                    style={{textAlign:'right'}}
+                                    name="godinaIzrade" step={1} />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={6} className="mt-3">
+                                <Form.Group controlId="tehnika">
+                                    <Form.Label>Tehnika</Form.Label>
+                                    <Form.Control type="text" name="tehnika" required />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={4} className="mt-3">
+                                <Form.Group controlId="sirina">
+                                    <Form.Label>Širina</Form.Label>
+                                    <Form.Control type="number" 
+                                    style={{textAlign:'right'}}
+                                    name="sirina" />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={4} className="mt-3">
+                                <Form.Group controlId="visina">
+                                    <Form.Label>Visina</Form.Label>
+                                    <Form.Control type="number" 
+                                    style={{textAlign:'right'}}
+                                    name="visina" />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={4} className="mt-3">
+                            <Form.Label>Dostupno</Form.Label>
+                                <Form.Group controlId="dostupnost">
+                                    <Form.Check label="" name="dostupnost" />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={12} className="mt-3">
+                                <Form.Group controlId="opis">
+                                    <Form.Label>Opis</Form.Label>
+                                    <Form.Control as="textarea" rows={5} name="opis" />
+                                </Form.Group>
+                            </Col>
 
-                <Form.Group controlId="sirina">
-                    <Form.Label>Širina</Form.Label>
-                    <Form.Control type="number" name="sirina" />
-                </Form.Group>
+                            
+                            <Col xs={6} className="visinaAkcija">
+                                <Link to={RouteNames.SLIKE}
+                                    className="btn btn-danger">
+                                    Odustani
+                                </Link>
+                            </Col>
 
-                <Form.Group controlId="visina">
-                    <Form.Label>Visina</Form.Label>
-                    <Form.Control type="number" name="visina" />
-                </Form.Group>
+                            <Col xs={6} className="visinaAkcija" style={{textAlign:'right'}}>
+                                <Button type="submit" variant="success">
+                                    Dodaj
+                                </Button>
+                            </Col>
 
-                <Form.Group controlId="dostupnost">
-                    <Form.Check label="Dostupno" name="dostupnost" />
-                </Form.Group>
+                        </Row>
 
-                <Form.Group controlId="opis">
-                    <Form.Label>Opis</Form.Label>
-                    <Form.Control as="textarea" rows={5} name="opis"/>
-                </Form.Group>
+                    </Card>
 
-
-
-           
-
-            <hr />
+                </Container>
 
 
-            <Row>
-                <Col>
-                    <Link to={RouteNames.SLIKE}
-                    className="btn btn-danger">
-                        Odustani
-                    </Link>
-                </Col>
 
-                <Col>
-                <Button type="submit" variant="success">
-                    Dodaj
-                </Button>
-                </Col>
-            </Row>
-            
-             </Form>
-        </>
+
+            </Form>
+        
     )
 
 }

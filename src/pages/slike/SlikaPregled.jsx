@@ -4,6 +4,7 @@ import { GrValidate } from "react-icons/gr"
 import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate, } from "react-router-dom"
 import { RouteNames } from "../../constanst"
+import TehnikaService from "../../services/tehnike/TehnikaService"
 
 
 
@@ -18,6 +19,7 @@ export default function SlikaPregled(){
     useEffect(()=>{
        
         ucitajSlike()
+        ucitajTehnike()
     },[])
 
     async function obrisi(sifra){
@@ -36,6 +38,19 @@ export default function SlikaPregled(){
            setSlike(odgovor.data)
         })
     }
+
+    async function ucitajTehnike(){
+        await TehnikaService.get().then((odgovor) => {
+
+            setTehnike(odgovor.data)
+        })
+    }
+    
+    function dohvatiNazivTehnika(sifraTehnika){
+        const tehnika = tehnike.find(s => s.sifra === sifraTehnika)
+        return tehnika.naziv
+    }
+
 
     return(
   <>
@@ -66,7 +81,10 @@ export default function SlikaPregled(){
                                 </small> */}
                             </td>
                             <td>{slika.godinaIzrade}</td>
-                            <td>{slika.tehnika}</td>
+                            
+                            <td>{dohvatiNazivTehnika(slika.tehnika)}</td>
+                                
+
                             <td>{slika.sirina}x{slika.visina}</td>
 
                            
