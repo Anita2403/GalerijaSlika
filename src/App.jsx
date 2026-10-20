@@ -18,6 +18,7 @@ import TehnikaNova from './pages/tehnike/TehnikaNova'
 import MaterijalPregled from './pages/materijali/MaterijaliPregled'
 import MaterijalNova from './pages/materijali/MaterijaliNova'
 import MaterijalPromjena from './pages/materijali/MaterijaliPromjena'
+import GeneriranjePodataka from './pages/GeneriranjePodataka'
 
 
 function App() {

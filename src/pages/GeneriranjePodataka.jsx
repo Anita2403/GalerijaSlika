@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Button, Form, Alert, Container, Row, Col } from 'react-bootstrap';
 import { Faker, hr } from '@faker-js/faker';
-import SlikaService from '../services/slike/SService';
+import SlikaService from '../services/slike/SlikaService';
 import OstaliProizvodiService from '../services/ostaliproizvodi/OstaliProizvodiService';
 import TehnikaService from '../services/tehnike/TehnikaService';
 import MaterijalService from '../services/materijali/MaterijalService';
 
 
 export default function GeneriranjePodataka() {
-    const [brojSlike, setBrojSlike] = useState(10);
+    const [brojSlika, setBrojSlika] = useState(10);
     const [brojOstaliProizvodi, setBrojOstaliProizvodi] = useState(10);
     const [brojTehnika, setBrojTehnika] = useState(5);
     const [brojMaterijali, setBrojMaterijali] = useState(5)
@@ -45,9 +45,10 @@ export default function GeneriranjePodataka() {
                 godinaizrade: faker.number.int({ min: 2022, max: 2026 }),
                 sirina: faker.number.int({ min: 20, max: 140 }),
                 visina: faker.number.int({ min: 20, max: 140 }),
-                dostupnost: faker.datatype.boolean()
-                image:
-                    opis:
+                tehnika: faker.number.int({ min: 1, max: 10 }), // ovo preraditi iz postojećih tehnika, sada je fiksno
+                dostupnost: faker.datatype.boolean(),
+                image: faker.image.personPortrait,
+                opis: faker.commerce.productDescription
             });
         }
     };
@@ -77,9 +78,11 @@ export default function GeneriranjePodataka() {
                 godinaizrade: faker.number.int({ min: 2022, max: 2026 }),
                 sirina: faker.number.int({ min: 20, max: 140 }),
                 visina: faker.number.int({ min: 20, max: 140 }),
-                dostupnost: faker.datatype.boolean()
-                image:
-                    opis:
+                dostupnost: faker.datatype.boolean(),
+                materijal: faker.number.int({ min: 1, max: 10 }), // ovo preraditi iz postojećih tehnika, sada je fiksno
+                dostupnost: faker.datatype.boolean(),
+                image: faker.image.personPortrait,
+                opis: faker.commerce.productDescription
             });
         }
     };
@@ -290,7 +293,7 @@ export default function GeneriranjePodataka() {
         }
     };
 
-    const handleGenerirajMaterijali = async (e) => {
+    const handleGenerirajMaterijale = async (e) => {
         e.preventDefault();
         setLoading(true);
         setPoruka(null);
@@ -312,7 +315,7 @@ export default function GeneriranjePodataka() {
         }
     };
 
-    const handleObrisiMaterijali = async () => {
+    const handleObrisiMaterijale = async () => {
         if (!window.confirm('Jeste li sigurni da želite obrisati sve materijale?')) {
             return;
         }

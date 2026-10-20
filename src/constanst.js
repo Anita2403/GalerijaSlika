@@ -22,9 +22,9 @@ export const RouteNames = {
     MATERIJALI_PROMJENA: '/materijali/:sifra',
 
 
-    
+    GENERIRANJE_PODATAKA: '/generiranje-podataka',
 
    
 }
 // memorija, localStorage, firebase
-export const DATA_SOURCE = 'memorija'
+export const DATA_SOURCE = 'localStorage'

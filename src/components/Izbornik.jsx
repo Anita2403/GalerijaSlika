@@ -60,9 +60,9 @@ export default function Izbornik() {
 
             <NavDropdown.Divider />
 
-            <NavDropdown>
-              <NavDropdown.Item>
-                onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
+            <NavDropdown title="Servisno">
+              <NavDropdown.Item
+                onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}>
                 Generiraj podatke</NavDropdown.Item>
             </NavDropdown>
 
