@@ -50,7 +50,7 @@ function App() {
             <Route path={RouteNames.MATERIJALI_DODAJ} element={<MaterijalNova />} />
             <Route path={RouteNames.MATERIJALI_PROMJENA} element={<MaterijalPromjena />} />
 
-
+            <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
 
           </Routes>
 
