@@ -142,11 +142,11 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
-            await generirajSlike(brojSlike);
+            await generirajSlike(brojSlika);
 
             setPoruka({
                 tip: 'success',
-                tekst: `Uspješno generirano ${brojSlike} slika!`
+                tekst: `Uspješno generirano ${brojSlika} slika!`
             });
         } catch (error) {
             setPoruka({
