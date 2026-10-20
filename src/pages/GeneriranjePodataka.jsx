@@ -22,21 +22,16 @@ export default function GeneriranjePodataka() {
 
     const generirajSlike = async (broj) => {
         const naziviSlika = [
-            'Web programiranje',
-            'Java programiranje',
-            'Python programiranje',
-            'Frontend razvoj',
-            'Backend razvoj',
-            'Full Stack razvoj',
-            'Mobile razvoj',
-            'DevOps',
-            'Data Science',
-            'Cyber Security',
-            'UI/UX dizajn',
-            'Digital Marketing',
-            'Grafički dizajn',
-            'Video produkcija',
-            'Fotografija'
+            'Sjene sjećanja',
+            'Šapat kiše',
+            'Zlatni sat',
+            'Eho tišine',
+            'Snovi u boji',
+            'Jutarnja magla',
+            'Vremenski trag',
+            'Krhka ravnoteža',
+            'Sjaj zvijezda',
+            'Skriveni put',
         ];
 
         for (let i = 0; i < broj; i++) {
@@ -55,21 +50,16 @@ export default function GeneriranjePodataka() {
 
     const generirajOstaleProizvodi = async (broj) => {
         const naziviOstaliProizvodi = [
-            'Web programiranje',
-            'Java programiranje',
-            'Python programiranje',
-            'Frontend razvoj',
-            'Backend razvoj',
-            'Full Stack razvoj',
-            'Mobile razvoj',
-            'DevOps',
-            'Data Science',
-            'Cyber Security',
-            'UI/UX dizajn',
-            'Digital Marketing',
-            'Grafički dizajn',
-            'Video produkcija',
-            'Fotografija'
+            'Sjaj svijeće',
+            'Ponoćna torba',
+            'Zlatni plamen',
+            'Krhka elegancija',
+            'Šapat kože',
+            'Sjenoviti sjaj',
+            'Jutarnja šetnja',
+            'Vremenski trag',
+            'Snovi u plamenu',
+            'Skriveni džep',
         ];
 
         for (let i = 0; i < broj; i++) {
