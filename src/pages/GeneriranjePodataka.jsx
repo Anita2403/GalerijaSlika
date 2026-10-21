@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Form, Alert, Container, Row, Col } from 'react-bootstrap';
-import { Faker, hr } from '@faker-js/faker';
+import { Faker, hr, en } from '@faker-js/faker';
 import SlikaService from '../services/slike/SlikaService';
 import OstaliProizvodiService from '../services/ostaliproizvodi/OstaliProizvodiService';
 import TehnikaService from '../services/tehnike/TehnikaService';
@@ -17,7 +17,7 @@ export default function GeneriranjePodataka() {
 
     // Postavi faker na hrvatski jezik
     const faker = new Faker({
-        locale: [hr]
+        locale: [en]
     });
 
     const generirajSlike = async (broj) => {
@@ -53,8 +53,8 @@ export default function GeneriranjePodataka() {
                 visina: faker.number.int({ min: 20, max: 140 }),
                 tehnika: randomtehnika.sifra,
                 dostupnost: faker.datatype.boolean(),
-                image: faker.image.personPortrait,
-                opis: faker.commerce.productDescription
+                image: faker.image.personPortrait(),
+                opis: faker.commerce.productDescription()
             });
         }
     };
@@ -73,14 +73,25 @@ export default function GeneriranjePodataka() {
             'Skriveni džep',
         ];
 
+        const rezultatMaterijali = await MaterijalService.get();
+        const materijali = rezultatMaterijali.data;
+
+        
+        if (materijali.length === 0) {
+            throw new Error('Nema dostupnih materijala. Prvo generirajte materijale.');
+        }
+        
+
         for (let i = 0; i < broj; i++) {
+            const randommaterijal = materijali[faker.number.int({min: 0, max: materijali.length - 1})];
+
             await OstaliProizvodiService.dodaj({
                 naziv: naziviOstaliProizvodi[i % naziviOstaliProizvodi.length] + (i >= naziviOstaliProizvodi.length ? ` ${Math.floor(i / naziviOstaliProizvodi.length) + 1}` : ''),
-                godinaizrade: faker.number.int({ min: 2022, max: 2026 }),
+                godinaIzrade: faker.number.int({ min: 2022, max: 2026 }),
                 sirina: faker.number.int({ min: 20, max: 140 }),
                 visina: faker.number.int({ min: 20, max: 140 }),
                 dostupnost: faker.datatype.boolean(),
-                materijal: faker.number.int({ min: 1, max: 10 }), // ovo preraditi iz postojećih tehnika, sada je fiksno
+                materijal: randommaterijal.sifra,
                 dostupnost: faker.datatype.boolean(),
                 image: faker.image.personPortrait,
                 opis: faker.commerce.productDescription
@@ -203,7 +214,7 @@ export default function GeneriranjePodataka() {
             const slike = rezultat.data;
 
             for (const slika of slike) {
-                await SlikaService.obrisi(smjer.sifra);
+                await SlikaService.obrisi(slika.sifra);
             }
 
             setPoruka({
