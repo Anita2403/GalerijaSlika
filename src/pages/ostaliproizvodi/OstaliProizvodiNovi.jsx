@@ -71,9 +71,10 @@ export default function OstaliProizvodiNovi() {
             return 
         }
 
-    
-        if (podaci.get('opis').trim().length < 3 || podaci.get('opis').trim().length > 30) {
-            alert("Opis ostalih proizvoda mora imati najmanje 3 znaka i najviše 500!")
+        const min = 3
+        const max=500
+        if (podaci.get('opis').trim().length < min || podaci.get('opis').trim().length > max) {
+            alert(`Opis ostalih proizvoda mora imati najmanje ${min} znaka i najviše ${max}!`)
             return 
         }
 
@@ -119,8 +120,8 @@ export default function OstaliProizvodiNovi() {
                                     <Form.Label>Materijal</Form.Label>
                                     <Form.Select name="materijal" required>
                                         <option value="">Odaberi materijal</option>
-                                        {materijali & materijali.map((t) => (
-                                            <option key={t.sifra} value={t.sifra}>t.naziv</option>
+                                        {materijali && materijali.map((t) => (
+                                            <option key={t.sifra} value={t.sifra}>{t.naziv}</option>
                                         ))}
                                     </Form.Select>
                                 </Form.Group>
