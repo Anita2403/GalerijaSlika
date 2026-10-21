@@ -183,8 +183,8 @@ export default function GeneriranjePodataka() {
             const rezultat = await OstaliProizvodiService.get();
             const ostaliproizvodi = rezultat.data;
 
-            for (const ostaliproizvodi of ostaliproizvodi) {
-                await OstaliProizvodiService.obrisi(ostaliproizvodi.sifra);
+            for (const ostaliproizvod of ostaliproizvodi) {
+                await OstaliProizvodiService.obrisi(ostaliproizvod.sifra);
             }
 
             setPoruka({
