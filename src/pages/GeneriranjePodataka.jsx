@@ -34,13 +34,24 @@ export default function GeneriranjePodataka() {
             'Skriveni put',
         ];
 
+        const rezultatTehnike = await TehnikaService.get();
+        const tehnike = rezultatTehnike.data;
+
+        
+        if (tehnike.length === 0) {
+            throw new Error('Nema dostupnih tehnika. Prvo generirajte tehnike.');
+        }
+        
+
         for (let i = 0; i < broj; i++) {
+            const randomtehnika = tehnike[faker.number.int({ min: 0, max: tehnike.length - 1 })];
+  
             await SlikaService.dodaj({
                 naziv: naziviSlika[i % naziviSlika.length] + (i >= naziviSlika.length ? ` ${Math.floor(i / naziviSlika.length) + 1}` : ''),
-                godinaizrade: faker.number.int({ min: 2022, max: 2026 }),
+                godinaIzrade: faker.number.int({ min: 2022, max: 2026 }),
                 sirina: faker.number.int({ min: 20, max: 140 }),
                 visina: faker.number.int({ min: 20, max: 140 }),
-                tehnika: faker.number.int({ min: 1, max: 10 }), // ovo preraditi iz postojećih tehnika, sada je fiksno
+                tehnika: randomtehnika.sifra,
                 dostupnost: faker.datatype.boolean(),
                 image: faker.image.personPortrait,
                 opis: faker.commerce.productDescription
@@ -79,22 +90,10 @@ export default function GeneriranjePodataka() {
 
     const generirajTehnike = async (broj) => {
 
-        // Dohvati sve smjerove
-        const rezultatSlike = await SlikaService.get();
-        const slike = rezultatSlike.data;
-
-
-        if (slike.length === 0) {
-            throw new Error('Nema dostupnih slika. Prvo generirajte slike.');
-        }
-
         for (let i = 0; i < broj; i++) {
-            // Odaberi nasumični smjer
-            const randomSlika = slike[faker.number.int({ min: 0, max: slike.length - 1 })];
 
             const tehnika = {
-                naziv: randomSlika.naziv.trim().split(/\s+/).slice(0, 2).map(rijec => rijec[0]).join('').toUpperCase(),
-                smjer: randomSlika.sifra
+                naziv: 'Tehnika ' + faker.person.firstName(),
             };
 
             await TehnikaService.dodaj(tehnika);
@@ -103,22 +102,12 @@ export default function GeneriranjePodataka() {
 
     const generirajMaterijali = async (broj) => {
 
-        // Dohvati sve smjerove
-        const rezultatOstaliProizvodi = await OstaliProizvodiService.get();
-        const ostaliproizvodi = rezultatOstaliProizvodi.data;
 
-
-        if (ostaliproizvodi.length === 0) {
-            throw new Error('Nema dostupnih ostalih proizvoda. Prvo generirajte ostale proizvode.');
-        }
 
         for (let i = 0; i < broj; i++) {
-            // Odaberi nasumični smjer
-            const randomOstaliProizvodi = ostaliproizvodi[faker.number.int({ min: 0, max: ostaliproizvodi.length - 1 })];
-
+   
             const materijali = {
-                naziv: randomOstaliProizvodi.naziv.trim().split(/\s+/).slice(0, 2).map(rijec => rijec[0]).join('').toUpperCase(),
-                smjer: randomOstaliProizvodi.sifra
+                naziv: faker.person.firstName() + ' materijal'
             };
 
             await MaterijalService.dodaj(materijali);
@@ -353,6 +342,58 @@ export default function GeneriranjePodataka() {
             )}
 
             <Row>
+            <Col md={4}>
+                    <Form onSubmit={handleGenerirajTehnike}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Broj tehnika</Form.Label>
+                            <Form.Control
+                                type="number"
+                                min="1"
+                                max="10"
+                                value={brojTehnika}
+                                onChange={(e) => setBrojTehnika(parseInt(e.target.value))}
+                                disabled={loading}
+                            />
+                            <Form.Text className="text-muted">
+                                Unesite broj tehnika (1-10)
+                            </Form.Text>
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                            className="w-100"
+                        >
+                            {loading ? 'Generiranje...' : 'Generiraj tehnike'}
+                        </Button>
+                    </Form>
+                </Col>
+                <Col md={4}>
+                    <Form onSubmit={handleGenerirajMaterijale}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Broj materijala</Form.Label>
+                            <Form.Control
+                                type="number"
+                                min="1"
+                                max="10"
+                                value={brojMaterijali}
+                                onChange={(e) => setBrojMaterijali(parseInt(e.target.value))}
+                                disabled={loading}
+                            />
+                            <Form.Text className="text-muted">
+                                Unesite broj materijala (1-10)
+                            </Form.Text>
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                            className="w-100"
+                        >
+                            {loading ? 'Generiranje...' : 'Generiraj materijale'}
+                        </Button>
+                    </Form>
+                </Col>
                 <Col md={4}>
                     <Form onSubmit={handleGenerirajSlike}>
                         <Form.Group className="mb-3">
@@ -405,58 +446,7 @@ export default function GeneriranjePodataka() {
                         </Button>
                     </Form>
                 </Col>
-                <Col md={4}>
-                    <Form onSubmit={handleGenerirajTehnike}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Broj tehnika</Form.Label>
-                            <Form.Control
-                                type="number"
-                                min="1"
-                                max="10"
-                                value={brojTehnika}
-                                onChange={(e) => setBrojTehnika(parseInt(e.target.value))}
-                                disabled={loading}
-                            />
-                            <Form.Text className="text-muted">
-                                Unesite broj tehnika (1-10)
-                            </Form.Text>
-                        </Form.Group>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                            className="w-100"
-                        >
-                            {loading ? 'Generiranje...' : 'Generiraj tehnike'}
-                        </Button>
-                    </Form>
-                </Col>
-                <Col md={4}>
-                    <Form onSubmit={handleGenerirajMaterijale}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Broj materijala</Form.Label>
-                            <Form.Control
-                                type="number"
-                                min="1"
-                                max="10"
-                                value={brojMaterijali}
-                                onChange={(e) => setBrojMaterijali(parseInt(e.target.value))}
-                                disabled={loading}
-                            />
-                            <Form.Text className="text-muted">
-                                Unesite broj materijala (1-10)
-                            </Form.Text>
-                        </Form.Group>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                            className="w-100"
-                        >
-                            {loading ? 'Generiranje...' : 'Generiraj materijale'}
-                        </Button>
-                    </Form>
-                </Col>
+                
 
             </Row>
 
