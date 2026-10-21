@@ -48,6 +48,48 @@ export default function OstaliProizvodiPromjena() {
     function obradiSubmit(e) {
         e.preventDefault()
         const podaci = new FormData(e.target)
+
+        
+         if (!podaci.get('naziv') || podaci.get('naziv').trim().length === 0) {
+            alert("Naziv je obavezan i ne smije sadržavati samo razmake!")
+            return 
+        }
+
+    
+        if (podaci.get('naziv').trim().length < 3 || podaci.get('naziv').trim().length > 30) {
+            alert("Naziv ostalih proizvoda mora imati najmanje 3 znaka i najviše 30!")
+            return 
+        }
+
+   
+      
+        if (isNaN(podaci.get('godinaIzrade')) || podaci.get('godinaIzrade') < 2022 || podaci.get('godinaIzrade') > 2026) {
+            alert("Godina izrade mora biti godina između 2022 i 2026 godine!")
+            return 
+        }
+
+        
+        if (isNaN(podaci.get('sirina')) || podaci.get('sirina') < 20 || podaci.get('sirina') > 140) {
+            alert("Širina mora biti između 20 i 140 centimetara!")
+            return 
+        }
+
+         if (isNaN(podaci.get('visina')) || podaci.get('visina') < 20 || podaci.get('visina') > 140) {
+            alert("Visina mora biti između 20 i 140 centimetara!")
+            return 
+        }
+
+         if (!podaci.get('opis') || podaci.get('opis').trim().length === 0) {
+            alert("Opis je obavezan i ne smije sadržavati samo razmake!")
+            return 
+        }
+
+    
+        if (podaci.get('opis').trim().length < 3 || podaci.get('opis').trim().length > 30) {
+            alert("Opis ostalih proizvoda mora imati najmanje 3 znaka i najviše 500!")
+            return 
+        }
+
         promijeni({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
