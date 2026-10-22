@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import { Card, Col, Row } from "react-bootstrap";
+import { IME_APLIKACIJE } from "../constanst";
+import OstaliProizvodiService from "../services/ostaliproizvodi/OstaliProizvodiService";
+import SlikaService from "../services/slike/SlikaService";
+import TehnikaService from "../services/tehnike/TehnikaService";
+import MaterijalService from "../services/materijali/MaterijalService";
 
 
 export default function Home() {
@@ -18,6 +24,7 @@ export default function Home() {
                 const slikeRezultat = await SlikaService.get();
                 const ostaliproizvodi = await OstaliProizvodiService.get();
                 const tehnike = await TehnikaService.get();
+                const brojMaterijali = await MaterijalService.get();
 
                 setBrojSlike(slikeRezultat.data.length);
                 setBrojOstalihProizvoda(ostaliproizvodi.data.length);
@@ -81,41 +88,56 @@ export default function Home() {
 
                 <Col className="d-flex align-items-center justify-content-center">
                     <div style={{ width: '100%', maxWidth: '400px' }}>
-                        <Card className="mb-3 shadow-lg border-0 statistikaPanel">
-                            <Card.Body className="text-center">
-                                <p className="text-white">Slike</p>
-                                <div className="statistikaTekst">
-                                    {animatedSlike}
-                                </div>
-                            </Card.Body>
-                        </Card>
+                        <Row>
+                            <Col>
+                                <Card className="mb-3 shadow-lg border-0 statistikaPanel">
+                                    <Card.Body className="text-center">
+                                        <p className="text-white">Slike</p>
+                                        <div className="statistikaTekst">
+                                            {animatedSlike}
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="mb-3 shadow-lg border-0 statistikaPanel">
+                                    <Card.Body className="text-center">
+                                        <p className="text-white">Ostali proizvodi</p>
+                                        <div className="statistikaTekst">
+                                            {animatedOstaliProizvodi}
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
 
-                        <Card className="mb-3 shadow-lg border-0 statistikaPanel">
-                            <Card.Body className="text-center">
-                                <p className="text-white">Ostali proizvodi</p>
-                                <div className="statistikaTekst">
-                                    {animatedOstaliProizvodi}
-                                </div>
-                            </Card.Body>
-                        </Card>
 
-                        <Card className="shadow-lg border-0 statistikaPanel">
-                            <Card.Body className="text-center">
-                                <p className="text-white">Tehnike</p>
-                                <div className="statistikaTekst">
-                                    {animatedTehnike}
-                                </div>
-                            </Card.Body>
-                        </Card>
+                        <Row>
+                            <Col>
+                                <Card className="shadow-lg border-0 statistikaPanel">
+                                    <Card.Body className="text-center">
+                                        <p className="text-white">Tehnike</p>
+                                        <div className="statistikaTekst">
+                                            {animatedTehnike}
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="shadow-lg border-0 statistikaPanel">
+                                    <Card.Body className="text-center">
+                                        <p className="text-white">Materijali</p>
+                                        <div className="statistikaTekst">
+                                            {animatedMaterijali}
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
 
-                        <Card className="shadow-lg border-0 statistikaPanel">
-                            <Card.Body className="text-center">
-                                <p className="text-white">Materijali</p>
-                                <div className="statistikaTekst">
-                                    {animatedMaterijali}
-                                </div>
-                            </Card.Body>
-                        </Card>
+
+
+
                     </div>
                 </Col>
             </Row>
