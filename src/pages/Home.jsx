@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import { IME_APLIKACIJE } from "../constanst";
 import OstaliProizvodiService from "../services/ostaliproizvodi/OstaliProizvodiService";
 import SlikaService from "../services/slike/SlikaService";
@@ -142,11 +142,41 @@ export default function Home() {
                 </Col>
             </Row>
 
+         
+            <div className="bg-white py-5 shadow-sm my-5">
+                <Container>
+                    <Row className="align-items-center g-5">
+                        {/* Ovdje možeš staviti svoju sliku */}
+                        <Col lg={5} className="text-center">
+                            <div
+                                className="bg-light rounded-3 shadow-sm d-flex align-items-center justify-content-center text-muted"
+                                style={{ height: '350px', border: '2px dashed #dee2e6' }}
+                            >
+                                <span>[ Ovdje ide tvoja slika ]</span>
+                            </div>
+                        </Col>
 
-            <div style={{ textAlign: 'left' }}>
-                <h3>O meni</h3>
+                        {/* Tekst o tebi */}
+                        <Col lg={7}>
+                            <h2 className="fw-bold mb-3">O meni</h2>
+                            <h5 className="text-primary fw-semibold mb-3">
+                                Pozdrav, ja sam Anita!
+                            </h5>
+                            <p className="text-muted mb-3">
+                                Dobrodošli u moj kreativni svijet. U užurbanoj svakodnevici, slikanje je moj osobni bijeg – prostor u kojem sam istinski svoja i prisutna u trenutku.
+                            </p>
+                            <p className="text-muted mb-3">
+                                Samouka sam umjetnica, a svoje vještine i izričaj razvijam uz pomoć kreativnog učenja i četverogodišnjeg stvaranja u sklopu osječke udruge "Likar". Moje slike nastaju spontano, no svaka s vremenom dobije svoju dublju priču i razlog postojanja.
+                            </p>
+                            <p className="text-muted mb-0">
+                                Tu istu strast prema detaljima prenosim i na ručno rađene torbe, svijećnjake i dekoracije. Vjerujem da unikatni ručni rad unosi toplinu u svaki prostor. Hvala ti što podržavaš moj rad!
+                            </p>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
-        </>
+          
+      </>
 
 
     )
