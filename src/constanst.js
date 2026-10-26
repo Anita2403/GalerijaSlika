@@ -21,6 +21,10 @@ export const RouteNames = {
     MATERIJALI_DODAJ: '/materijali/nove',
     MATERIJALI_PROMJENA: '/materijali/:sifra',
 
+    OZNAKE: '/oznake',
+    OZNAKE_DODAJ: '/oznake/nove',
+    OZNAKE_PROMJENA: '/oznake/:sifra',
+
 
     GENERIRANJE_PODATAKA: '/generiranje-podataka',
 

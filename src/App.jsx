@@ -19,6 +19,9 @@ import MaterijalPregled from './pages/materijali/MaterijaliPregled'
 import MaterijalNova from './pages/materijali/MaterijaliNova'
 import MaterijalPromjena from './pages/materijali/MaterijaliPromjena'
 import GeneriranjePodataka from './pages/GeneriranjePodataka'
+import OznakaPregled from './pages/oznake/OznakaPregled'
+import OznakaNova from './pages/oznake/OznakaNova'
+import OznakaPromjena from './pages/oznake/OznakaPromjena'
 
 
 function App() {
@@ -52,6 +55,11 @@ function App() {
             <Route path={RouteNames.MATERIJALI_PROMJENA} element={<MaterijalPromjena />} />
 
             <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
+
+            <Route path={RouteNames.OZNAKE} element={<OznakaPregled />} />
+            <Route path={RouteNames.OZNAKE_DODAJ} element={<OznakaNova />} />
+            <Route path={RouteNames.OZNAKE_PROMJENA} element={<OznakaPromjena />} />
+
 
           </Routes>
 

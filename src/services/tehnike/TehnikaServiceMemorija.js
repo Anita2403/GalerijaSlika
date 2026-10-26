@@ -12,7 +12,7 @@ async function getBySifra(sifra) {
 
 
 async function dodaj(tehnika) {
-    if (tehnike.lenght === 0) {
+    if (tehnike.length === 0) {
         tehnika.sifra = 1
     } else {
         tehnika.sifra = tehnike[tehnike.length - 1].sifra + 1

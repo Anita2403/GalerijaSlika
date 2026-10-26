@@ -5,17 +5,18 @@ import SlikaService from '../services/slike/SlikaService';
 import OstaliProizvodiService from '../services/ostaliproizvodi/OstaliProizvodiService';
 import TehnikaService from '../services/tehnike/TehnikaService';
 import MaterijalService from '../services/materijali/MaterijalService';
-
+import OznakaService from '../services/oznake/OznakaService';
 
 export default function GeneriranjePodataka() {
     const [brojSlika, setBrojSlika] = useState(10);
     const [brojOstaliProizvodi, setBrojOstaliProizvodi] = useState(10);
     const [brojTehnika, setBrojTehnika] = useState(5);
-    const [brojMaterijali, setBrojMaterijali] = useState(5)
+    const [brojMaterijali, setBrojMaterijali] = useState(5);
+    const [brojOznaka, setBrojOznaka] = useState(5);
     const [poruka, setPoruka] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Postavi faker na hrvatski jezik
+    // Postavi faker na engleski/hrvatski jezik
     const faker = new Faker({
         locale: [en]
     });
@@ -36,12 +37,10 @@ export default function GeneriranjePodataka() {
 
         const rezultatTehnike = await TehnikaService.get();
         const tehnike = rezultatTehnike.data;
-
         
         if (tehnike.length === 0) {
             throw new Error('Nema dostupnih tehnika. Prvo generirajte tehnike.');
         }
-        
 
         for (let i = 0; i < broj; i++) {
             const randomtehnika = tehnike[faker.number.int({ min: 0, max: tehnike.length - 1 })];
@@ -75,12 +74,10 @@ export default function GeneriranjePodataka() {
 
         const rezultatMaterijali = await MaterijalService.get();
         const materijali = rezultatMaterijali.data;
-
         
         if (materijali.length === 0) {
             throw new Error('Nema dostupnih materijala. Prvo generirajte materijale.');
         }
-        
 
         for (let i = 0; i < broj; i++) {
             const randommaterijal = materijali[faker.number.int({min: 0, max: materijali.length - 1})];
@@ -92,7 +89,6 @@ export default function GeneriranjePodataka() {
                 visina: faker.number.int({ min: 20, max: 140 }),
                 dostupnost: faker.datatype.boolean(),
                 materijal: randommaterijal.sifra,
-                dostupnost: faker.datatype.boolean(),
                 image: faker.image.personPortrait,
                 opis: faker.commerce.productDescription
             });
@@ -100,9 +96,7 @@ export default function GeneriranjePodataka() {
     };
 
     const generirajTehnike = async (broj) => {
-
         for (let i = 0; i < broj; i++) {
-
             const tehnika = {
                 naziv: 'Tehnika ' + faker.person.firstName(),
             };
@@ -111,12 +105,8 @@ export default function GeneriranjePodataka() {
         }
     };
 
-    const generirajMaterijali = async (broj) => {
-
-
-
+    const generirajMaterijale = async (broj) => {
         for (let i = 0; i < broj; i++) {
-   
             const materijali = {
                 naziv: faker.person.firstName() + ' materijal'
             };
@@ -125,6 +115,16 @@ export default function GeneriranjePodataka() {
         }
     };
 
+    const generirajOznake = async (broj) => {
+        const primjeriOznaka = ['Portret', 'Ljubavna', 'Životinje', 'Pejzaž', 'Apstrakcija', 'Mrtva priroda', 'Arhitektura', 'Morski motivi', 'Cvijeće i biljke', 'Mitologija'];
+        for (let i = 0; i < broj; i++) {
+            const oznaka = {
+                naziv: primjeriOznaka[i % primjeriOznaka.length] + (i >= primjeriOznaka.length ? ` ${Math.floor(i / primjeriOznaka.length) + 1}` : '') + ' ' + faker.person.firstName(),
+            };
+
+            await OznakaService.dodaj(oznaka);
+        }
+    };
 
     const handleGenerirajSlike = async (e) => {
         e.preventDefault();
@@ -154,7 +154,6 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
-
             await generirajOstaleProizvodi(brojOstaliProizvodi);
 
             setPoruka({
@@ -289,7 +288,7 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
-            await generirajMaterijali(brojMaterijali);
+            await generirajMaterijale(brojMaterijali);
 
             setPoruka({
                 tip: 'success',
@@ -335,9 +334,57 @@ export default function GeneriranjePodataka() {
         }
     };
 
+    const handleGenerirajOznake = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setPoruka(null);
 
+        try {
+            await generirajOznake(brojOznaka);
 
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno generirano ${brojOznaka} oznaka!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri generiranju oznaka: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    const handleObrisiOznake = async () => {
+        if (!window.confirm('Jeste li sigurni da želite obrisati sve oznake?')) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            const rezultat = await OznakaService.get();
+            const oznake = rezultat.data;
+
+            for (const oznaka of oznake) {
+                await OznakaService.obrisi(oznaka.sifra);
+            }
+
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno obrisano ${oznake.length} oznaka!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri brisanju oznaka: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <Container className="mt-4">
@@ -353,7 +400,7 @@ export default function GeneriranjePodataka() {
             )}
 
             <Row>
-            <Col md={4}>
+                <Col md={4} className="mb-3">
                     <Form onSubmit={handleGenerirajTehnike}>
                         <Form.Group className="mb-3">
                             <Form.Label>Broj tehnika</Form.Label>
@@ -379,7 +426,8 @@ export default function GeneriranjePodataka() {
                         </Button>
                     </Form>
                 </Col>
-                <Col md={4}>
+
+                <Col md={4} className="mb-3">
                     <Form onSubmit={handleGenerirajMaterijale}>
                         <Form.Group className="mb-3">
                             <Form.Label>Broj materijala</Form.Label>
@@ -405,7 +453,35 @@ export default function GeneriranjePodataka() {
                         </Button>
                     </Form>
                 </Col>
-                <Col md={4}>
+
+                <Col md={4} className="mb-3">
+                    <Form onSubmit={handleGenerirajOznake}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Broj oznaka</Form.Label>
+                            <Form.Control
+                                type="number"
+                                min="1"
+                                max="10"
+                                value={brojOznaka}
+                                onChange={(e) => setBrojOznaka(parseInt(e.target.value))}
+                                disabled={loading}
+                            />
+                            <Form.Text className="text-muted">
+                                Unesite broj oznaka (1-10)
+                            </Form.Text>
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={loading}
+                            className="w-100"
+                        >
+                            {loading ? 'Generiranje...' : 'Generiraj oznake'}
+                        </Button>
+                    </Form>
+                </Col>
+
+                <Col md={4} className="mb-3">
                     <Form onSubmit={handleGenerirajSlike}>
                         <Form.Group className="mb-3">
                             <Form.Label>Broj slika</Form.Label>
@@ -431,7 +507,8 @@ export default function GeneriranjePodataka() {
                         </Button>
                     </Form>
                 </Col>
-                <Col md={4}>
+
+                <Col md={4} className="mb-3">
                     <Form onSubmit={handleGenerirajOstaliProizvodi}>
                         <Form.Group className="mb-3">
                             <Form.Label>Broj ostalih proizvoda</Form.Label>
@@ -457,8 +534,6 @@ export default function GeneriranjePodataka() {
                         </Button>
                     </Form>
                 </Col>
-                
-
             </Row>
 
             <Alert variant="warning" className="mt-3">
@@ -514,7 +589,16 @@ export default function GeneriranjePodataka() {
                         {loading ? 'Brisanje...' : 'Obriši sve materijale'}
                     </Button>
                 </Col>
-
+                <Col md={4}>
+                    <Button
+                        variant="danger"
+                        onClick={handleObrisiOznake}
+                        disabled={loading}
+                        className="w-100 mb-2"
+                    >
+                        {loading ? 'Brisanje...' : 'Obriši sve oznake'}
+                    </Button>
+                </Col>
             </Row>
 
             <Alert variant="danger" className="mt-3">
