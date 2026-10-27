@@ -74,6 +74,7 @@ export default function SlikaPregled(){
                 {slike && slike.map((slika) => (
                         <tr key={slika.sifra}>
                             <td>{slika.naziv}
+                             <span title="Broj oznaka"> ({slika.oznake.length}) </span>
                                 {/* <br />
                                 <small>
                                     {slika.opis}

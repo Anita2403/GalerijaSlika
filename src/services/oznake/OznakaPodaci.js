@@ -1,7 +1,7 @@
 export const oznake = [
-    {
+  {
         sifra: 1,
-        naziv: 'portret',
+        naziv: 'portret',        
     },
     {
         sifra: 2,
@@ -25,7 +25,7 @@ export const oznake = [
     },
     {
         sifra: 7,
-        naziv: 'arhitektura',
+        naziv: 'predmeti',
     },
     {
         sifra: 8,
@@ -38,5 +38,61 @@ export const oznake = [
     {
         sifra: 10,
         naziv: 'mitologija',
+    },
+    {
+        sifra: 11,
+        naziv: 'religija',
+    },
+    {
+        sifra: 12,
+        naziv: 'romantična',
+    },
+    {
+        sifra: 13,
+        naziv: 'gradski pejzaž',
+    },
+    {
+        sifra: 14,
+        naziv: 'surrealizam',
+    },
+    {
+        sifra: 15,
+        naziv: 'minimalizam',
+    },
+    {
+        sifra: 16,
+        naziv: 'pop art',
+    },
+    {
+        sifra: 17,
+        naziv: 'fantazija',
+    },
+    {
+        sifra: 18,
+        naziv: 'strast',
+    },
+    {
+        sifra: 19,
+        naziv: 'svemir',
+    },
+    {
+        sifra: 20,
+        naziv: 'industrijski motivi',
+    },
+    {
+        sifra: 21,
+        naziv: 'senzualnost',
+    },
+    {
+        sifra: 22,
+        naziv: 'ljudska figura',
+    },
+    {
+        sifra: 23,
+        naziv: 'akt',
+    },
+    {
+        sifra: 24,
+        naziv: 'intima',
     },
 ];
