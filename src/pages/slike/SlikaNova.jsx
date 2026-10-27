@@ -154,22 +154,19 @@ export default function SlikaNova() {
                     </Card.Title>
 
                     <Row>
-                        <Col xs={12} className="mt-3">
-                            <Form.Group controlId="naziv">
+                         {/* Lijeva strana  */}
+                        <Col xs={6} className="mt-3">
+                        <Form.Group controlId="naziv">
                                 <Form.Label>Naziv</Form.Label>
                                 <Form.Control type="text" name="naziv" required />
                             </Form.Group>
-                        </Col>
-                        <Col xs={6} className="mt-3">
-                            <Form.Group controlId="godinaIzrade">
+                             <Form.Group controlId="godinaIzrade">
                                 <Form.Label>Godina izrade</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
                                     name="godinaIzrade" step={1} />
                             </Form.Group>
-                        </Col>
-                        <Col xs={6} className="mt-3">
-                            <Form.Group controlId="tehnika">
+                             <Form.Group controlId="tehnika">
                                 <Form.Label>Tehnika</Form.Label>
                                 <Form.Select name="tehnika" required>
                                     <option value="">Odaberi tehniku</option>
@@ -178,38 +175,31 @@ export default function SlikaNova() {
                                     ))}
                                 </Form.Select>
                             </Form.Group>
-                        </Col>
-                        <Col xs={4} className="mt-3">
-                            <Form.Group controlId="sirina">
+                             <Form.Group controlId="sirina">
                                 <Form.Label>Širina</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
                                     name="sirina" />
                             </Form.Group>
-                        </Col>
-                        <Col xs={4} className="mt-3">
-                            <Form.Group controlId="visina">
+                             <Form.Group controlId="visina">
                                 <Form.Label>Visina</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
                                     name="visina" />
                             </Form.Group>
-                        </Col>
-                        <Col xs={4} className="mt-3">
-                            <Form.Label>Dostupno</Form.Label>
+                              <Form.Label>Dostupno</Form.Label>
                             <Form.Group controlId="dostupnost">
                                 <Form.Check label="" name="dostupnost" />
                             </Form.Group>
-                        </Col>
-                        <Col xs={12} className="mt-3">
-                            <Form.Group controlId="opis">
+                             <Form.Group controlId="opis">
                                 <Form.Label>Opis</Form.Label>
                                 <Form.Control as="textarea" rows={5} name="opis" />
                             </Form.Group>
                         </Col>
 
-                        <Col xs={12} className="mt-3">
-                            <Card className="shadow-sm">
+                        {/* Desna strana */}
+                        <Col xs={6} className="mt-3">
+                         <Card className="shadow-sm">
                                 <Card.Body>
                                     <Card.Title className="mb-4">Oznake</Card.Title>
 
@@ -286,6 +276,7 @@ export default function SlikaNova() {
                         </Col>
                     </Row>
 
+                    
                     <Row className="mt-3">
                         <Col xs={6} className="visinaAkcija">
                             <Link to={RouteNames.SLIKE} className="btn btn-danger">

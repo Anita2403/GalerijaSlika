@@ -95,4 +95,12 @@ export const oznake = [
         sifra: 24,
         naziv: 'intima',
     },
+     {
+        sifra: 25,
+        naziv: 'drveno',
+    },
+     {
+        sifra: 26,
+        naziv: 'mekano',
+    },
 ];

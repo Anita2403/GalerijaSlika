@@ -63,7 +63,7 @@ export default function SlikaPromjena() {
 
     function filtrirajOznake() {
         if (!pretragaOznaka) return []
-        return oznake.filter(p => 
+        return oznake.filter(p =>
             !odabraniOznake.find(op => op.sifra === p.sifra) &&
             (p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase()))
         )
@@ -71,7 +71,7 @@ export default function SlikaPromjena() {
 
     function handleKeyDown(e) {
         const filtriraniOznake = filtrirajOznake()
-        
+
         if (e.key === 'ArrowDown') {
             e.preventDefault()
             setOdabraniIndex(prev => {
@@ -141,7 +141,7 @@ export default function SlikaPromjena() {
             alert("Opis slike mora imati najmanje 3 znaka i najviše 500!")
             return
         }
-        
+
         if (odabraniOznake.length === 0) {
             alert("Morate odabrati barem jednu oznaku!");
             return;
@@ -169,14 +169,13 @@ export default function SlikaPromjena() {
                     </Card.Title>
 
                     <Row>
-                        <Col xs={12} className="mt-3">
+                        {/* Lijeva strana */}
+                        <Col xs={6} className="mt-3">
                             <Form.Group controlId="naziv">
                                 <Form.Label>Naziv</Form.Label>
                                 <Form.Control type="text" name="naziv" required
                                     defaultValue={slika.naziv} />
                             </Form.Group>
-                        </Col>
-                        <Col xs={6} className="mt-3">
                             <Form.Group controlId="godinaIzrade">
                                 <Form.Label>Godina izrade</Form.Label>
                                 <Form.Control type="number"
@@ -184,8 +183,6 @@ export default function SlikaPromjena() {
                                     name="godinaIzrade" step={1}
                                     defaultValue={slika.godinaIzrade} />
                             </Form.Group>
-                        </Col>
-                        <Col xs={6} className="mt-3">
                             <Form.Group controlId="tehnika">
                                 <Form.Label>Tehnika</Form.Label>
                                 <Form.Select name="tehnika" required
@@ -196,8 +193,6 @@ export default function SlikaPromjena() {
                                     ))}
                                 </Form.Select>
                             </Form.Group>
-                        </Col>
-                        <Col xs={4} className="mt-3">
                             <Form.Group controlId="sirina">
                                 <Form.Label>Širina</Form.Label>
                                 <Form.Control type="number"
@@ -205,8 +200,6 @@ export default function SlikaPromjena() {
                                     name="sirina"
                                     defaultValue={slika.sirina} />
                             </Form.Group>
-                        </Col>
-                        <Col xs={4} className="mt-3">
                             <Form.Group controlId="visina">
                                 <Form.Label>Visina</Form.Label>
                                 <Form.Control type="number"
@@ -214,16 +207,12 @@ export default function SlikaPromjena() {
                                     name="visina"
                                     defaultValue={slika.visina} />
                             </Form.Group>
-                        </Col>
-                        <Col xs={4} className="mt-3">
                             <Form.Label>Dostupno</Form.Label>
                             <Form.Group controlId="dostupnost">
                                 <Form.Check label="" name="dostupnost"
                                     checked={dostupnost}
                                     onChange={(e) => { setDostupnost(e.target.checked) }} />
                             </Form.Group>
-                        </Col>
-                        <Col xs={12} className="mt-3">
                             <Form.Group controlId="opis">
                                 <Form.Label>Opis</Form.Label>
                                 <Form.Control as="textarea" rows={5} name="opis"
@@ -231,7 +220,8 @@ export default function SlikaPromjena() {
                             </Form.Group>
                         </Col>
 
-                        <Col xs={12} className="mt-3">
+                        {/* Desna strana */}
+                        <Col xs={6} className="mt-3">
                             <Card className="shadow-sm">
                                 <Card.Body>
                                     <Card.Title className="mb-4">Oznake</Card.Title>
