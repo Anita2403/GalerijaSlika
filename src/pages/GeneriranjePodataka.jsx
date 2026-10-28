@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Button, Form, Alert, Container, Row, Col } from 'react-bootstrap';
-import { Faker, hr, en } from '@faker-js/faker';
+import { Faker, en } from '@faker-js/faker';
 import SlikaService from '../services/slike/SlikaService';
 import OstaliProizvodiService from '../services/ostaliproizvodi/OstaliProizvodiService';
 import TehnikaService from '../services/tehnike/TehnikaService';
 import MaterijalService from '../services/materijali/MaterijalService';
 import OznakaService from '../services/oznake/OznakaService';
+import { slike } from '../services/slike/SlikaPodaci';
+import { oznake } from '../services/oznake/OznakaPodaci';
 
 export default function GeneriranjePodataka() {
     const [brojSlika, setBrojSlika] = useState(10);
@@ -16,7 +18,7 @@ export default function GeneriranjePodataka() {
     const [poruka, setPoruka] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Postavi faker na engleski/hrvatski jezik
+    // Postavi faker na engleski jezik
     const faker = new Faker({
         locale: [en]
     });
@@ -37,24 +39,42 @@ export default function GeneriranjePodataka() {
 
         const rezultatTehnike = await TehnikaService.get();
         const tehnike = rezultatTehnike.data;
-        
+
+        const rezultatOznake = await OznakaService.get();
+        const dohvaceneOznake = rezultatOznake.data;
+
+        if (dohvaceneOznake.length === 0) {
+            throw new Error('Nema dostupnih oznaka. Prvo generirajte oznake.');
+        }
+
         if (tehnike.length === 0) {
             throw new Error('Nema dostupnih tehnika. Prvo generirajte tehnike.');
         }
 
         for (let i = 0; i < broj; i++) {
             const randomtehnika = tehnike[faker.number.int({ min: 0, max: tehnike.length - 1 })];
-  
-            await SlikaService.dodaj({
+            const randomSlika = slike[faker.number.int({ min: 0, max: slike.length - 1 })];
+            const brojZaOdabrati = faker.number.int({ min: 2, max: 5 });
+
+            const randomOznake = faker.helpers.arrayElements(
+                dohvaceneOznake.map(p => p.sifra),
+                brojZaOdabrati
+            );
+
+            const slika = {
                 naziv: naziviSlika[i % naziviSlika.length] + (i >= naziviSlika.length ? ` ${Math.floor(i / naziviSlika.length) + 1}` : ''),
                 godinaIzrade: faker.number.int({ min: 2022, max: 2026 }),
                 sirina: faker.number.int({ min: 20, max: 140 }),
                 visina: faker.number.int({ min: 20, max: 140 }),
                 tehnika: randomtehnika.sifra,
                 dostupnost: faker.datatype.boolean(),
+                slika: randomSlika.sifra,
                 image: faker.image.personPortrait(),
-                opis: faker.commerce.productDescription()
-            });
+                opis: faker.commerce.productDescription(),
+                oznake: randomOznake
+            };
+
+            await SlikaService.dodaj(slika);
         }
     };
 
@@ -74,13 +94,13 @@ export default function GeneriranjePodataka() {
 
         const rezultatMaterijali = await MaterijalService.get();
         const materijali = rezultatMaterijali.data;
-        
+
         if (materijali.length === 0) {
             throw new Error('Nema dostupnih materijala. Prvo generirajte materijale.');
         }
 
         for (let i = 0; i < broj; i++) {
-            const randommaterijal = materijali[faker.number.int({min: 0, max: materijali.length - 1})];
+            const randommaterijal = materijali[faker.number.int({ min: 0, max: materijali.length - 1 })];
 
             await OstaliProizvodiService.dodaj({
                 naziv: naziviOstaliProizvodi[i % naziviOstaliProizvodi.length] + (i >= naziviOstaliProizvodi.length ? ` ${Math.floor(i / naziviOstaliProizvodi.length) + 1}` : ''),
@@ -89,8 +109,8 @@ export default function GeneriranjePodataka() {
                 visina: faker.number.int({ min: 20, max: 140 }),
                 dostupnost: faker.datatype.boolean(),
                 materijal: randommaterijal.sifra,
-                image: faker.image.personPortrait,
-                opis: faker.commerce.productDescription
+                image: faker.image.personPortrait(),
+                opis: faker.commerce.productDescription()
             });
         }
     };
@@ -100,18 +120,16 @@ export default function GeneriranjePodataka() {
             const tehnika = {
                 naziv: 'Tehnika ' + faker.person.firstName(),
             };
-
             await TehnikaService.dodaj(tehnika);
         }
     };
 
     const generirajMaterijale = async (broj) => {
         for (let i = 0; i < broj; i++) {
-            const materijali = {
+            const materijal = {
                 naziv: faker.person.firstName() + ' materijal'
             };
-
-            await MaterijalService.dodaj(materijali);
+            await MaterijalService.dodaj(materijal);
         }
     };
 
@@ -121,7 +139,6 @@ export default function GeneriranjePodataka() {
             const oznaka = {
                 naziv: primjeriOznaka[i % primjeriOznaka.length] + (i >= primjeriOznaka.length ? ` ${Math.floor(i / primjeriOznaka.length) + 1}` : '') + ' ' + faker.person.firstName(),
             };
-
             await OznakaService.dodaj(oznaka);
         }
     };
@@ -133,7 +150,6 @@ export default function GeneriranjePodataka() {
 
         try {
             await generirajSlike(brojSlika);
-
             setPoruka({
                 tip: 'success',
                 tekst: `Uspješno generirano ${brojSlika} slika!`
@@ -155,7 +171,6 @@ export default function GeneriranjePodataka() {
 
         try {
             await generirajOstaleProizvodi(brojOstaliProizvodi);
-
             setPoruka({
                 tip: 'success',
                 tekst: `Uspješno generirano ${brojOstaliProizvodi} ostalih proizvoda!`
@@ -210,15 +225,15 @@ export default function GeneriranjePodataka() {
 
         try {
             const rezultat = await SlikaService.get();
-            const slike = rezultat.data;
+            const slikeBaza = rezultat.data;
 
-            for (const slika of slike) {
+            for (const slika of slikeBaza) {
                 await SlikaService.obrisi(slika.sifra);
             }
 
             setPoruka({
                 tip: 'success',
-                tekst: `Uspješno obrisano ${slike.length} slika!`
+                tekst: `Uspješno obrisano ${slikeBaza.length} slika!`
             });
         } catch (error) {
             setPoruka({
@@ -237,7 +252,6 @@ export default function GeneriranjePodataka() {
 
         try {
             await generirajTehnike(brojTehnika);
-
             setPoruka({
                 tip: 'success',
                 tekst: `Uspješno generirano ${brojTehnika} tehnika!`
@@ -289,7 +303,6 @@ export default function GeneriranjePodataka() {
 
         try {
             await generirajMaterijale(brojMaterijali);
-
             setPoruka({
                 tip: 'success',
                 tekst: `Uspješno generirano ${brojMaterijali} materijala!`
@@ -341,7 +354,6 @@ export default function GeneriranjePodataka() {
 
         try {
             await generirajOznake(brojOznaka);
-
             setPoruka({
                 tip: 'success',
                 tekst: `Uspješno generirano ${brojOznaka} oznaka!`
@@ -366,15 +378,15 @@ export default function GeneriranjePodataka() {
 
         try {
             const rezultat = await OznakaService.get();
-            const oznake = rezultat.data;
+            const dohvaceneOznake = rezultat.data;
 
-            for (const oznaka of oznake) {
+            for (const oznaka of dohvaceneOznake) {
                 await OznakaService.obrisi(oznaka.sifra);
             }
 
             setPoruka({
                 tip: 'success',
-                tekst: `Uspješno obrisano ${oznake.length} oznaka!`
+                tekst: `Uspješno obrisano ${dohvaceneOznake.length} oznaka!`
             });
         } catch (error) {
             setPoruka({
@@ -390,7 +402,7 @@ export default function GeneriranjePodataka() {
         <Container className="mt-4">
             <h1>Generiranje podataka</h1>
             <p className="text-muted">
-                Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima na hrvatskom jeziku.
+                Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima.
             </p>
 
             {poruka && (
@@ -412,16 +424,8 @@ export default function GeneriranjePodataka() {
                                 onChange={(e) => setBrojTehnika(parseInt(e.target.value))}
                                 disabled={loading}
                             />
-                            <Form.Text className="text-muted">
-                                Unesite broj tehnika (1-10)
-                            </Form.Text>
                         </Form.Group>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                            className="w-100"
-                        >
+                        <Button variant="primary" type="submit" disabled={loading} className="w-100">
                             {loading ? 'Generiranje...' : 'Generiraj tehnike'}
                         </Button>
                     </Form>
@@ -439,16 +443,8 @@ export default function GeneriranjePodataka() {
                                 onChange={(e) => setBrojMaterijali(parseInt(e.target.value))}
                                 disabled={loading}
                             />
-                            <Form.Text className="text-muted">
-                                Unesite broj materijala (1-10)
-                            </Form.Text>
                         </Form.Group>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                            className="w-100"
-                        >
+                        <Button variant="primary" type="submit" disabled={loading} className="w-100">
                             {loading ? 'Generiranje...' : 'Generiraj materijale'}
                         </Button>
                     </Form>
@@ -466,16 +462,8 @@ export default function GeneriranjePodataka() {
                                 onChange={(e) => setBrojOznaka(parseInt(e.target.value))}
                                 disabled={loading}
                             />
-                            <Form.Text className="text-muted">
-                                Unesite broj oznaka (1-10)
-                            </Form.Text>
                         </Form.Group>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                            className="w-100"
-                        >
+                        <Button variant="primary" type="submit" disabled={loading} className="w-100">
                             {loading ? 'Generiranje...' : 'Generiraj oznake'}
                         </Button>
                     </Form>
@@ -493,16 +481,8 @@ export default function GeneriranjePodataka() {
                                 onChange={(e) => setBrojSlika(parseInt(e.target.value))}
                                 disabled={loading}
                             />
-                            <Form.Text className="text-muted">
-                                Unesite broj slika (1-10)
-                            </Form.Text>
                         </Form.Group>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                            className="w-100"
-                        >
+                        <Button variant="primary" type="submit" disabled={loading} className="w-100">
                             {loading ? 'Generiranje...' : 'Generiraj slike'}
                         </Button>
                     </Form>
@@ -520,90 +500,44 @@ export default function GeneriranjePodataka() {
                                 onChange={(e) => setBrojOstaliProizvodi(parseInt(e.target.value))}
                                 disabled={loading}
                             />
-                            <Form.Text className="text-muted">
-                                Unesite broj ostalih proizvoda (1-10)
-                            </Form.Text>
                         </Form.Group>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                            className="w-100"
-                        >
+                        <Button variant="primary" type="submit" disabled={loading} className="w-100">
                             {loading ? 'Generiranje...' : 'Generiraj ostale proizvode'}
                         </Button>
                     </Form>
                 </Col>
             </Row>
 
-            <Alert variant="warning" className="mt-3">
-                <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće.
-                Ako želite početi ispočetka, prvo obrišite postojeće podatke.
-            </Alert>
-
             <hr className="my-4" />
 
             <h3>Brisanje podataka</h3>
-            <p className="text-muted">
-                Koristite ove opcije za brisanje svih podataka iz baze.
-            </p>
-
             <Row className="mt-3">
-                <Col md={4}>
-                    <Button
-                        variant="danger"
-                        onClick={handleObrisiSlike}
-                        disabled={loading}
-                        className="w-100 mb-2"
-                    >
-                        {loading ? 'Brisanje...' : 'Obriši sve slike'}
+                <Col md={4} className="mb-2">
+                    <Button variant="danger" onClick={handleObrisiSlike} disabled={loading} className="w-100">
+                        Obriši sve slike
                     </Button>
                 </Col>
-                <Col md={4}>
-                    <Button
-                        variant="danger"
-                        onClick={handleObrisiOstaliProizvodi}
-                        disabled={loading}
-                        className="w-100 mb-2"
-                    >
-                        {loading ? 'Brisanje...' : 'Obriši sve ostale proizvode'}
+                <Col md={4} className="mb-2">
+                    <Button variant="danger" onClick={handleObrisiOstaliProizvodi} disabled={loading} className="w-100">
+                        Obriši sve ostale proizvode
                     </Button>
                 </Col>
-                <Col md={4}>
-                    <Button
-                        variant="danger"
-                        onClick={handleObrisiTehnike}
-                        disabled={loading}
-                        className="w-100 mb-2"
-                    >
-                        {loading ? 'Brisanje...' : 'Obriši sve tehnike'}
+                <Col md={4} className="mb-2">
+                    <Button variant="danger" onClick={handleObrisiTehnike} disabled={loading} className="w-100">
+                        Obriši sve tehnike
                     </Button>
                 </Col>
-                <Col md={4}>
-                    <Button
-                        variant="danger"
-                        onClick={handleObrisiMaterijale}
-                        disabled={loading}
-                        className="w-100 mb-2"
-                    >
-                        {loading ? 'Brisanje...' : 'Obriši sve materijale'}
+                <Col md={4} className="mb-2">
+                    <Button variant="danger" onClick={handleObrisiMaterijale} disabled={loading} className="w-100">
+                        Obriši sve materijale
                     </Button>
                 </Col>
-                <Col md={4}>
-                    <Button
-                        variant="danger"
-                        onClick={handleObrisiOznake}
-                        disabled={loading}
-                        className="w-100 mb-2"
-                    >
-                        {loading ? 'Brisanje...' : 'Obriši sve oznake'}
+                <Col md={4} className="mb-2">
+                    <Button variant="danger" onClick={handleObrisiOznake} disabled={loading} className="w-100">
+                        Obriši sve oznake
                     </Button>
                 </Col>
             </Row>
-
-            <Alert variant="danger" className="mt-3">
-                <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
-            </Alert>
         </Container>
     );
 }
