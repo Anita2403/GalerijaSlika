@@ -84,6 +84,30 @@ export const slike = [
         image: '',
         opis: 'Slika je rađena prema tutorialu Michelle the Painter. Slika prikazuje tri male vile koje se igraju s maslačkom. Slika predstavlja čaroliju koju smo kao djeca vidjeli u sitnicama.',
         oznake:[4,9,10,12,17,]
-    }
+    },
+     {
+        sifra: 8,
+        naziv: 'La Vasa',
+        godinaIzrade: 2025,
+        tehnika: 2,
+        sirina: 50,
+        visina: 70,
+        dostupnost: true,
+        image: '',
+        opis:'slika',
+        oznake:[5,7,9,12,]
+    },
+     {
+        sifra: 9,
+        naziv: 'Čuvarica grimiznog sna',
+        godinaIzrade: 2026,
+        tehnika: 1,
+        sirina: 50,
+        visina: 70,
+        dostupnost: true,
+        image: '',
+        opis:'slika',
+        oznake:[22,17,12,10,9,]
+    },
 
 ]
