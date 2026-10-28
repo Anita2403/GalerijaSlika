@@ -7,7 +7,8 @@ import TehnikaService from '../services/tehnike/TehnikaService';
 import MaterijalService from '../services/materijali/MaterijalService';
 import OznakaService from '../services/oznake/OznakaService';
 import { slike } from '../services/slike/SlikaPodaci';
-import { oznake } from '../services/oznake/OznakaPodaci';
+import { DATA_SOURCE } from '../constanst';
+import slika_generiranje_podataka from '../assets/slika_generiranje_podataka.jpg'
 
 export default function GeneriranjePodataka() {
     const [brojSlika, setBrojSlika] = useState(10);
@@ -415,9 +416,18 @@ export default function GeneriranjePodataka() {
     return (
         <Container className="mt-4">
             <h1>Generiranje podataka</h1>
-            <p className="text-muted">
-                Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima.
-            </p>
+
+            {DATA_SOURCE === 'memorija' ? (
+                <>
+                      <p>Na memoriji ne mogu se generirati podaci</p>
+                    <img src={slika_generiranje_podataka} alt="" style={{ display: 'block', margin: '0 auto' }}/>
+                </>
+          
+            ) : (
+                <>
+                <p className="text-muted">
+                    Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima.
+                </p>
 
             {poruka && (
                 <Alert variant={poruka.tip} dismissible onClose={() => setPoruka(null)}>
@@ -552,6 +562,9 @@ export default function GeneriranjePodataka() {
                     </Button>
                 </Col>
             </Row>
+            </>
+            )}
+
         </Container>
     );
 }

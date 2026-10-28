@@ -170,7 +170,7 @@ export default function SlikaPromjena() {
 
                     <Row>
                         {/* Lijeva strana */}
-                        <Col xs={6} className="mt-3">
+                        <Col xs={4} className="mt-3">
                             <Form.Group controlId="naziv">
                                 <Form.Label>Naziv</Form.Label>
                                 <Form.Control type="text" name="naziv" required
@@ -220,8 +220,8 @@ export default function SlikaPromjena() {
                             </Form.Group>
                         </Col>
 
-                        {/* Desna strana */}
-                        <Col xs={6} className="mt-3">
+                        {/* Sredina */}
+                        <Col xs={4} className="mt-3">
                             <Card className="shadow-sm">
                                 <Card.Body>
                                     <Card.Title className="mb-4">Oznake</Card.Title>
@@ -295,9 +295,14 @@ export default function SlikaPromjena() {
                                         <p className="text-muted">Nema odabranih oznaka</p>
                                     )}
 
-                                    <img src={slika.image} alt="Ovo ti Anita" />
                                 </Card.Body>
                             </Card>
+                        </Col>
+
+                        {/* Desna strana */}
+
+                        <Col xs={4} className="mt-3">
+                            <img src={slika.image} alt="Ovo ti Anita" />
                         </Col>
                     </Row>
 

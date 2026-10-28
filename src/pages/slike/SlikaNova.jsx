@@ -155,7 +155,7 @@ export default function SlikaNova() {
 
                     <Row>
                          {/* Lijeva strana  */}
-                        <Col xs={6} className="mt-3">
+                        <Col xs={4} className="mt-3">
                         <Form.Group controlId="naziv">
                                 <Form.Label>Naziv</Form.Label>
                                 <Form.Control type="text" name="naziv" required />
@@ -197,8 +197,8 @@ export default function SlikaNova() {
                             </Form.Group>
                         </Col>
 
-                        {/* Desna strana */}
-                        <Col xs={6} className="mt-3">
+                        {/* Sredina */}
+                        <Col xs={4} className="mt-3">
                          <Card className="shadow-sm">
                                 <Card.Body>
                                     <Card.Title className="mb-4">Oznake</Card.Title>
@@ -273,6 +273,17 @@ export default function SlikaNova() {
                                     )}
                                 </Card.Body>
                             </Card>
+                        </Col>
+
+                         {/* Desna strana */}
+
+                        <Col xs={4} className="mt-3">
+                             <div
+                                className="bg-light rounded-3 shadow-sm d-flex align-items-center justify-content-center text-muted"
+                                style={{ height: '350px', border: '2px dashed #dee2e6' }}
+                            >
+                                <span>[ Ovdje ide tvoja slika ]</span>
+                            </div>
                         </Col>
                     </Row>
 
