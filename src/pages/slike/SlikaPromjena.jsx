@@ -294,6 +294,8 @@ export default function SlikaPromjena() {
                                     {odabraniOznake.length === 0 && (
                                         <p className="text-muted">Nema odabranih oznaka</p>
                                     )}
+
+                                    <img src={slika.image} alt="Ovo ti Anita" />
                                 </Card.Body>
                             </Card>
                         </Col>

@@ -73,7 +73,9 @@ export default function SlikaPregled(){
             <tbody>
                 {slike && slike.map((slika) => (
                         <tr key={slika.sifra}>
-                            <td>{slika.naziv}
+                            <td>
+                            <img style={{maxWidth: '30px'}} src={slika.image} alt={'Slika ' + slika.naziv} />
+                            {slika.naziv}
                              <span title="Broj oznaka"> ({slika.oznake.length}) </span>
                                 {/* <br />
                                 <small>
