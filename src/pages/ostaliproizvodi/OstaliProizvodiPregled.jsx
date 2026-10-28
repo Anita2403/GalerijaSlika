@@ -73,6 +73,7 @@ export default function OstaliProizvodiPregled() {
                     {ostaliproizvodi && ostaliproizvodi.map((ostaliproizvodi) => (
                         <tr key={ostaliproizvodi.sifra}>
                             <td>{ostaliproizvodi.naziv}
+                              <span title="Broj oznaka"> ({ostaliproizvodi.oznake.length}) </span>
                                 {/* <br />
                                 <small>
                                     {ostaliproizvodi.opis}

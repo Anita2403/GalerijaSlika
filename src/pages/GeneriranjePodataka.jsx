@@ -95,12 +95,25 @@ export default function GeneriranjePodataka() {
         const rezultatMaterijali = await MaterijalService.get();
         const materijali = rezultatMaterijali.data;
 
+        const rezultatOznake = await OznakaService.get();
+        const dohvaceneOznake = rezultatOznake.data;
+
+        if (dohvaceneOznake.length === 0) {
+            throw new Error('Nema dostupnih oznaka. Prvo generirajte oznake.');
+        }
+
         if (materijali.length === 0) {
             throw new Error('Nema dostupnih materijala. Prvo generirajte materijale.');
         }
 
         for (let i = 0; i < broj; i++) {
             const randommaterijal = materijali[faker.number.int({ min: 0, max: materijali.length - 1 })];
+            const brojZaOdabrati = faker.number.int({ min: 2, max: 5 });
+
+            const randomOznake = faker.helpers.arrayElements(
+                dohvaceneOznake.map(p => p.sifra),
+                brojZaOdabrati
+            );
 
             await OstaliProizvodiService.dodaj({
                 naziv: naziviOstaliProizvodi[i % naziviOstaliProizvodi.length] + (i >= naziviOstaliProizvodi.length ? ` ${Math.floor(i / naziviOstaliProizvodi.length) + 1}` : ''),
@@ -110,7 +123,8 @@ export default function GeneriranjePodataka() {
                 dostupnost: faker.datatype.boolean(),
                 materijal: randommaterijal.sifra,
                 image: faker.image.personPortrait(),
-                opis: faker.commerce.productDescription()
+                opis: faker.commerce.productDescription(),
+                oznake: randomOznake
             });
         }
     };
