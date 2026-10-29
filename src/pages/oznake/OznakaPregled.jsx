@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import OznakaService from "../../services/oznake/OznakaService"
-import { Badge, Button, Table } from "react-bootstrap"
+import { Badge, Button, Card, Col, Row, Table } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constanst"
+import { BiEdit, BiRecycle } from "react-icons/bi"
 
 export default function OznakaPregled() {
 
@@ -36,7 +37,40 @@ export default function OznakaPregled() {
                 Dodavanje novih oznaka
             </Link>
 
-            <Table>
+
+            <Row>
+                 {oznake && oznake.map((oznaka) => (
+                        <Col key={oznaka.sifra}>
+                            <Card className="p-4 m-1 kartica" style={{minHeight: '7rem', minWidth: '10rem'}}>
+{oznaka.naziv}
+                                <hr />
+                                <Row style={{textAlign: 'center'}}>
+                                    <Col>
+                                    <BiEdit title="Promijeni" onClick={() => { navigate(`/oznake/${oznaka.sifra}`) }}
+                                    style={{cursor: 'hand', color:'#0d6eff'}}/> 
+                                    </Col>
+                                    <Col>
+                                    <BiRecycle title="Obriši" onClick={() => obrisi(oznaka.sifra)}
+                                    style={{cursor: 'hand', color: '#dc3545'}} />
+                                    </Col>
+                                </Row>
+                            </Card>
+                                
+                                
+                                    
+                                
+                           
+                             
+                           
+                        </Col>
+                        
+                    ))}
+            </Row>
+
+
+
+
+            {/* <Table>
                 <thead>
                     <tr>
                         <th>Naziv</th>
@@ -62,7 +96,7 @@ export default function OznakaPregled() {
                         </tr>
                     ))}
                 </tbody>
-            </Table>
+            </Table> */}
             Ukupno oznaka: &nbsp;
             <Badge pill bg="success">
                 {oznake && oznake.length}
