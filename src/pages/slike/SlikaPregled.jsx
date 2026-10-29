@@ -1,29 +1,26 @@
 import { useEffect, useState } from "react"
 import SlikaService from "../../services/slike/SlikaService"
 import { GrValidate } from "react-icons/gr"
-import { Button, Table } from "react-bootstrap"
-import { Link, useNavigate, } from "react-router-dom"
+import { Button, Card, Col, Row } from "react-bootstrap"
+import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constanst"
 import TehnikaService from "../../services/tehnike/TehnikaService"
+import { FaEdit, FaTrash } from "react-icons/fa"
 
+export default function SlikaPregled() {
 
+    const [slike, setSlike] = useState([])
+    const [tehnike, setTehnike] = useState([])
 
-export default function SlikaPregled(){
-
-    const[slike, setSlike] = useState([])
-    const[tehnike, setTehnike] = useState([])
-    
     const navigate = useNavigate()
 
-
-    useEffect(()=>{
-       
+    useEffect(() => {
         ucitajSlike()
         ucitajTehnike()
-    },[])
+    }, [])
 
-    async function obrisi(sifra){
-        if(!confirm('Sigurno obrisati')){
+    async function obrisi(sifra) {
+        if (!confirm('Sigurno obrisati?')) {
             return
         }
         await SlikaService.obrisi(sifra)
@@ -31,90 +28,87 @@ export default function SlikaPregled(){
     }
 
     async function ucitajSlike() {
-        await SlikaService.get().then((odgovor)=> {
-           // console.table(odgovor.data)
-        //    console.log(JSON.stringify(odgovor.data))
-           setSlike(odgovor.data)
+        await SlikaService.get().then((odgovor) => {
+            setSlike(odgovor.data)
         })
     }
 
-    async function ucitajTehnike(){
+    async function ucitajTehnike() {
         await TehnikaService.get().then((odgovor) => {
-
             setTehnike(odgovor.data)
         })
     }
-    
-    function dohvatiNazivTehnika(sifraTehnika){
+
+    function dohvatiNazivTehnika(sifraTehnika) {
         const tehnika = tehnike.find(s => s.sifra === sifraTehnika)
-        return tehnika.naziv
+        return tehnika ? tehnika.naziv : ''
     }
 
-
-    return(
-  <>
-          <Link to={RouteNames.SLIKE_DODAJ}
-          className="btn btn-success w-100 my-3" >
+    return (
+        <>
+            <Link to={RouteNames.SLIKE_DODAJ}
+                className="btn btn-success w-100 my-3" >
                 Dodavanje novih slika
             </Link>
-            
-      
-        <Table>
-            <thead>
-                <tr>
-                 <th>Naziv</th> 
-                 <th>Godina izrade</th>
-                 <th>Tehnika</th>  
-                 <th>Dimenzije</th>
-                 <th>Dostupnost</th>
-                 <th>Akcija</th>
-                </tr>
-            </thead>
-            <tbody>
+
+            <Row>
                 {slike && slike.map((slika) => (
-                        <tr key={slika.sifra}>
-                            <td>
-                            <img style={{maxWidth: '30px'}} src={slika.image} alt={'Slika ' + slika.naziv} />
-                            {slika.naziv}
-                             <span title="Broj oznaka"> ({slika.oznake.length}) </span>
-                                {/* <br />
-                                <small>
-                                    {slika.opis}
-                                </small> */}
-                            </td>
-                            <td>{slika.godinaIzrade}</td>
-                            
-                            <td>{dohvatiNazivTehnika(slika.tehnika)}</td>
-                                
+                    <Col key={slika.sifra} xs={12} sm={6} lg={4} xl={3} className="mb-4">
+                        <Card className="shadow-sm h-100 border-0">
+                            <div style={{ height: "200px", overflow: "hidden", backgroundColor: "#f8f9fa" }} className="d-flex align-items-center justify-content-center">
+                                {slika.image ? (
+                                    <Card.Img
+                                        variant="top"
+                                        src={slika.image}
+                                        style={{
+                                            objectFit: "cover",
+                                            height: "100%",
+                                            width: "100%"
+                                        }}
+                                    />
+                                ) : (
+                                    <span className="text-muted">Nema slike</span>
+                                )}
+                            </div>
 
-                            <td>{slika.sirina}x{slika.visina}</td>
+                            <Card.Body className="d-flex flex-column">
+                                <Card.Title>
+                                    {slika.naziv} {slika.godinaIzrade}
+                                </Card.Title>
 
-                           
+                                <Card.Text className="text-muted small mb-3">
+                                    <strong>Tehnika:</strong> {dohvatiNazivTehnika(slika.tehnika)} <br />
+                                    <strong>Dimenzije:</strong> {slika.sirina}x{slika.visina} <br />
+                                    <span className="d-flex align-items-center gap-1 mt-1">
+                                        <strong>Dostupnost:</strong> 
+                                        <GrValidate
+                                            size={18}
+                                            color={slika.dostupnost ? 'green' : 'red'}
+                                        />
+                                    </span>
+                                </Card.Text>
 
-                            <td>
-                                {/* Primjer jedne ikone s različitim svojstvima u odnosu na boolean svojstvo */}
-                                <GrValidate
-                                    size={25}
-                                    color={slika.dostupnost ? 'green' : 'red'}
-                                   
-                                />
-                              
-                            </td>
-                            <td>
-                                <Button onClick={()=>{navigate(`/slike/${slika.sifra}`)}}>
-                                    Promijeni
-                                </Button>
-                                &nbsp;&nbsp;
-                                <Button variant="danger" onClick={()=>obrisi(slika.sifra)}>
-                                    Obriši
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
-            </tbody>
-        </Table>
-        
-        
+                                <div className="mt-auto d-flex gap-2">
+                                    <Button
+                                        variant="outline-primary"
+                                        className="flex-fill"
+                                        onClick={() => navigate(`/slike/${slika.sifra}`)}
+                                        title="Promijeni">
+                                        <FaEdit />
+                                    </Button>
+                                    <Button
+                                        variant="outline-danger"
+                                        onClick={() => obrisi(slika.sifra)}
+                                        title="Obriši"
+                                    >
+                                        <FaTrash />
+                                    </Button>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
         </>
     )
 }
