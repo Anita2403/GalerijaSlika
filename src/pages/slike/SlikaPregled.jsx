@@ -5,7 +5,9 @@ import { Button, Card, Col, Row } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constanst"
 import TehnikaService from "../../services/tehnike/TehnikaService"
-import { FaEdit, FaTrash } from "react-icons/fa"
+import { FaEdit, FaFilePdf, FaTrash } from "react-icons/fa"
+import OznakaService from "../../services/oznake/OznakaService"
+
 
 export default function SlikaPregled() {
 
@@ -44,6 +46,37 @@ export default function SlikaPregled() {
         return tehnika ? tehnika.naziv : ''
     }
 
+    async function generirajPDFZaSliku(slika) {
+        // Dohvati slike
+        const slika = slike.find(s => s.sifra === slika.naziv)
+        if (!slika) {
+            alert('Slika nije pronađena')
+            return
+        }
+
+        // Dohvati sve oznake
+        const odgovorOznaka = await OznakaService.get()
+
+        // Filtriraj oznake koji pripadaju ovoj slici
+        const oznakeSlike = odgovorOznaka.data.filter(p =>
+            slika.oznake && slika.oznake.includes(p.sifra)
+        )
+
+        const odgovorTehnike = await TehnikaService.get()
+
+        // Generiraj PDF
+        const generiraj = GrupaPDFGenerator({
+            slika,
+            tehnike,
+            oznake: oznakeSlike
+        })
+        await generiraj()
+    }
+
+
+
+
+
     return (
         <>
             <Link to={RouteNames.SLIKE_DODAJ}
@@ -73,6 +106,10 @@ export default function SlikaPregled() {
 
                             <Card.Body className="d-flex flex-column">
                                 <Card.Title>
+                                       <FaFilePdf
+                                    color="#cb72dd"
+                                    style={{ cursor: 'hand' }}
+                                    onClick={() => generirajPDFZaSliku(slika)} title="Generiraj PDF" />
                                     {slika.naziv} {slika.godinaIzrade}
                                 </Card.Title>
 
