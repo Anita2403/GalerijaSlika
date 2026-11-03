@@ -5,7 +5,7 @@ import { Button, Card, Col, Row } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constanst"
 import MaterijalService from "../../services/materijali/MaterijalService"
-import { FaEdit, FaTrash } from "react-icons/fa"
+import { FaEdit, FaFilePdf, FaTrash } from "react-icons/fa"
 import OstaliProizvodiPDFGenerator from "../../components/OstaliProizvodiPDFGenerator"
 import OznakaService from "../../services/oznake/OznakaService"
 
@@ -47,32 +47,32 @@ export default function OstaliProizvodiPregled() {
     }
 
     async function generirajPDFZaOstaliProizvodi(ostaliproizvod) {
-        
-            // Dohvati sve oznake
-            const odgovorOznaka = await OznakaService.get()
-    
-            // Filtriraj oznake koji pripadaju ovoj slici
-            const oznakeOstaliProizvodi = odgovorOznaka.data.filter(p =>
-                ostaliproizvodi.oznake && ostaliproizvodi.oznake.includes(p.sifra)
-            )
-    
-            const odgovorMaterijali = await MaterijalService.get()
-    
-            const materijalOstaliProizvodi = odgovorMaterijali.data.find(p =>
-                ostaliproizvod.materijal === p.sifra
-            )
-    
-            // Generiraj PDF
-            const generiraj = OstaliProizvodiPDFGenerator({
-                ostaliproizvod,
-                materijal: materijalOstaliProizvodi,
-                oznake: oznakeOstaliProizvodi
-            })
-            await generiraj()
-        }
-    
-    
-    
+
+        // Dohvati sve oznake
+        const odgovorOznaka = await OznakaService.get()
+
+        // Filtriraj oznake koji pripadaju ovoj slici
+        const oznakeOstaliProizvodi = odgovorOznaka.data.filter(p =>
+            ostaliproizvodi.oznake && ostaliproizvodi.oznake.includes(p.sifra)
+        )
+
+        const odgovorMaterijali = await MaterijalService.get()
+
+        const materijalOstaliProizvodi = odgovorMaterijali.data.find(p =>
+            ostaliproizvod.materijal === p.sifra
+        )
+
+        // Generiraj PDF
+        const generiraj = OstaliProizvodiPDFGenerator({
+            ostaliproizvod,
+            materijal: materijalOstaliProizvodi,
+            oznake: oznakeOstaliProizvodi
+        })
+        await generiraj()
+    }
+
+
+
 
 
 
@@ -84,14 +84,14 @@ export default function OstaliProizvodiPregled() {
             </Link>
 
             <Row>
-                {ostaliproizvodi && ostaliproizvodi.map((ostaliproizvodi) => (
-                    <Col key={ostaliproizvodi.sifra} xs={12} sm={6} lg={4} xl={3} className="mb-4">
+                {ostaliproizvodi && ostaliproizvodi.map((op) => (
+                    <Col key={op.sifra} xs={12} sm={6} lg={4} xl={3} className="mb-4">
                         <Card className="shadow-sm h-100 border-0">
                             <div style={{ height: "200px", overflow: "hidden", backgroundColor: "#f8f9fa" }} className="d-flex align-items-center justify-content-center">
-                                {ostaliproizvodi.image ? (
+                                {op.image ? (
                                     <Card.Img
                                         variant="top"
-                                        src={ostaliproizvodi.image}
+                                        src={op.image}
                                         style={{
                                             objectFit: "cover",
                                             height: "100%",
@@ -105,17 +105,21 @@ export default function OstaliProizvodiPregled() {
 
                             <Card.Body className="d-flex flex-column">
                                 <Card.Title>
-                                    {ostaliproizvodi.naziv} {ostaliproizvodi.godinaIzrade}
+                                    <FaFilePdf
+                                        color="#cb72dd"
+                                        style={{ cursor: 'hand' }}
+                                        onClick={() => generirajPDFZaOstaliProizvodi(op)} title="Generiraj PDF" />
+                                    {op.naziv} {op.godinaIzrade}
                                 </Card.Title>
 
                                 <Card.Text className="text-muted small mb-3">
-                                    <strong>Materijal:</strong> {dohvatiNazivMaterijal(ostaliproizvodi.materijal)} <br />
-                                    <strong>Dimenzije:</strong> {ostaliproizvodi.sirina}x{ostaliproizvodi.visina} <br />
+                                    <strong>Materijal:</strong> {dohvatiNazivMaterijal(op.materijal)} <br />
+                                    <strong>Dimenzije:</strong> {op.sirina}x{op.visina} <br />
                                     <span className="d-flex align-items-center gap-1 mt-1">
-                                        <strong>Dostupnost:</strong> 
+                                        <strong>Dostupnost:</strong>
                                         <GrValidate
                                             size={18}
-                                            color={ostaliproizvodi.dostupnost ? 'green' : 'red'}
+                                            color={op.dostupnost ? 'green' : 'red'}
                                         />
                                     </span>
                                 </Card.Text>
@@ -124,13 +128,13 @@ export default function OstaliProizvodiPregled() {
                                     <Button
                                         variant="outline-primary"
                                         className="flex-fill"
-                                        onClick={() => navigate(`/ostaliproizvodi/${ostaliproizvodi.sifra}`)}
+                                        onClick={() => navigate(`/ostaliproizvodi/${op.sifra}`)}
                                         title="Promijeni">
                                         <FaEdit />
                                     </Button>
                                     <Button
                                         variant="outline-danger"
-                                        onClick={() => obrisi(ostaliproizvodi.sifra)}
+                                        onClick={() => obrisi(op.sifra)}
                                         title="Obriši"
                                     >
                                         <FaTrash />
