@@ -7,6 +7,7 @@ import { RouteNames } from "../../constanst"
 import TehnikaService from "../../services/tehnike/TehnikaService"
 import { FaEdit, FaFilePdf, FaTrash } from "react-icons/fa"
 import OznakaService from "../../services/oznake/OznakaService"
+import SlikePDFGenerator from "../../components/SlikePDFGenerator"
 
 
 export default function SlikaPregled() {
@@ -47,13 +48,7 @@ export default function SlikaPregled() {
     }
 
     async function generirajPDFZaSliku(slika) {
-        // Dohvati slike
-        const slika = slike.find(s => s.sifra === slika.naziv)
-        if (!slika) {
-            alert('Slika nije pronađena')
-            return
-        }
-
+    
         // Dohvati sve oznake
         const odgovorOznaka = await OznakaService.get()
 
@@ -64,10 +59,14 @@ export default function SlikaPregled() {
 
         const odgovorTehnike = await TehnikaService.get()
 
+        const tehnikaSlike = odgovorTehnike.data.find(p =>
+            slika.tehnika === p.sifra
+        )
+
         // Generiraj PDF
-        const generiraj = GrupaPDFGenerator({
+        const generiraj = SlikePDFGenerator({
             slika,
-            tehnike,
+            tehnika: tehnikaSlike,
             oznake: oznakeSlike
         })
         await generiraj()

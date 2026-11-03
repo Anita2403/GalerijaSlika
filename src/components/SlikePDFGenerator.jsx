@@ -23,6 +23,7 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake}) {
         ]);
 
         const doc = new jsPDF();
+        console.log('Krenuo PDF')
 
         doc.addFileToVFS('Roboto-Regular.ttf', regBase64);
         doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
@@ -55,6 +56,11 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake}) {
         doc.setTextColor(...textColor);
         doc.text(`Izvješće za sliku: ${slika?.naziv || 'N/A'}`, 15, 42);
 
+        doc.setFont('Roboto', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(...textColor);
+        doc.text(`Tehnika: ${tehnika?.naziv || '-'}`, 15, 47);
+
 
         let currentY = 52;
 
@@ -67,7 +73,7 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake}) {
                 0: { fontStyle: 'bold', textColor: primaryColor, width: 85 },
                 1: { fontStyle: 'bold', textColor: primaryColor, width: 85 }
             },
-            head: [['PODACI O SLICI']],
+            head: [['PODACI O SLICI','PODACI O TEHNICI']],
             body: [
                 [
                     `Naziv: ${slika?.naziv || '-'}`,
@@ -99,6 +105,10 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake}) {
                 }
             }
         });
+
+        const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
 
     };
     return generirajPDF;
