@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constanst"
 import MaterijalService from "../../services/materijali/MaterijalService"
 import { FaEdit, FaTrash } from "react-icons/fa"
+import OstaliProizvodiPDFGenerator from "../../components/OstaliProizvodiPDFGenerator"
+import OznakaService from "../../services/oznake/OznakaService"
 
 export default function OstaliProizvodiPregled() {
 
@@ -43,6 +45,36 @@ export default function OstaliProizvodiPregled() {
         const materijal = materijali.find(s => s.sifra === sifraMaterijal)
         return materijal ? materijal.naziv : ''
     }
+
+    async function generirajPDFZaOstaliProizvodi(ostaliproizvod) {
+        
+            // Dohvati sve oznake
+            const odgovorOznaka = await OznakaService.get()
+    
+            // Filtriraj oznake koji pripadaju ovoj slici
+            const oznakeOstaliProizvodi = odgovorOznaka.data.filter(p =>
+                ostaliproizvodi.oznake && ostaliproizvodi.oznake.includes(p.sifra)
+            )
+    
+            const odgovorMaterijali = await MaterijalService.get()
+    
+            const materijalOstaliProizvodi = odgovorMaterijali.data.find(p =>
+                ostaliproizvod.materijal === p.sifra
+            )
+    
+            // Generiraj PDF
+            const generiraj = OstaliProizvodiPDFGenerator({
+                ostaliproizvod,
+                materijal: materijalOstaliProizvodi,
+                oznake: oznakeOstaliProizvodi
+            })
+            await generiraj()
+        }
+    
+    
+    
+
+
 
     return (
         <>
