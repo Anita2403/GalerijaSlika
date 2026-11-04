@@ -217,3 +217,7 @@ body{
   background-color: #f9dade;
 }
 
+.bg-body-tertiary, .dropdown-menu {
+    background-color: #faaed1 !important;
+    border-color: #880746;
+}
