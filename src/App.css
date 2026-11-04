@@ -197,7 +197,7 @@
 }
 
 .statistikaPanel{
-  background: linear-gradient(135deg, #cb72dd 0%, #663a94 100%);
+  background: linear-gradient(135deg, #cb72dd 0%, #e1d3f0 100%);
   transform: translateY(0);
   transition: transform 0.3s ease;
 }
@@ -212,3 +212,8 @@
 .kartica:hover{
   background-color: beige;
 }
+
+body{
+  background-color: #f9dade;
+}
+

@@ -81,7 +81,10 @@ export default function Home() {
                     <div style={{ textAlign: 'center' }}>
 
                     </div>
-                    <p className="lead m-5 text-center">Dobrodošli na {IME_APLIKACIJE}</p>
+                    <p 
+                    className="lead m-5 text-center"
+                    style={{ fontWeight: 'bold', fontSize: '2rem' }}
+                    >Dobrodošli na "{IME_APLIKACIJE}"</p>
                     <div style={{ maxWidth: '500px', margin: 'auto' }}>
                     </div>
                 </Col>
@@ -111,7 +114,7 @@ export default function Home() {
                             </Col>
                         </Row>
 
-
+{/* 
                         <Row>
                             <Col>
                                 <Card className="shadow-lg border-0 statistikaPanel">
@@ -133,7 +136,7 @@ export default function Home() {
                                     </Card.Body>
                                 </Card>
                             </Col>
-                        </Row>
+                        </Row> */}
 
 
 
