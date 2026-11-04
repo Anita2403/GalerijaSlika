@@ -218,6 +218,20 @@ body{
 }
 
 .bg-body-tertiary, .dropdown-menu {
-    background-color: #faaed1 !important;
-    border-color: #880746;
+    background-color: #eec2d7 !important;
+    border-color: #bc7a9a;
+}
+
+.btn-success, .btn-primary, .bg-success{
+  background-color: #cb72dd !important;
+}
+
+.btn-danger{
+  background-color: rgb(194, 70, 124);
+}
+.container{
+  background-color: #f9dade !important;
+}
+.bg-white, .bg-light {
+  background-color: #f9dade !important;
 }
