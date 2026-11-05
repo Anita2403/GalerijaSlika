@@ -62,11 +62,13 @@ export default function OAplikaciji() {
           <h2 className="text-center fw-bold mb-4">Zašto odabrati Galeriju slika?</h2>
           <Row className="g-4">
             {benefits.map((benefit, idx) => (
-              <Col md={4} key={idx} className="text-center">
-                <div className="p-3">
-                  <h4 className="fw-bold text-primary mb-2">{benefit.title}</h4>
-                  <p className="text-muted">{benefit.desc}</p>
-                </div>
+              <Col md={4} key={idx}>
+                <Card className="h-100 border-0 shadow-sm text-center p-4">
+                  <Card.Body>
+                    <Card.Title className="fw-bold mb-3">{benefit.title}</Card.Title>
+                    <Card.Text className="text-muted">{benefit.desc}</Card.Text>
+                  </Card.Body>
+                </Card>
               </Col>
             ))}
           </Row>
