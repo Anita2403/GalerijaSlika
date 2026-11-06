@@ -1,186 +1,107 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { IME_APLIKACIJE } from "../constanst";
-import OstaliProizvodiService from "../services/ostaliproizvodi/OstaliProizvodiService";
 import SlikaService from "../services/slike/SlikaService";
-import TehnikaService from "../services/tehnike/TehnikaService";
-import MaterijalService from "../services/materijali/MaterijalService";
-
+import OstaliProizvodiService from "../services/ostaliproizvodi/OstaliProizvodiService";
 
 export default function Home() {
-
-    const [brojSlike, setBrojSlike] = useState(0);
-    const [brojOstalihProizvoda, setBrojOstalihProizvoda] = useState(0);
-    const [brojTehnika, setBrojTehnika] = useState(0);
-    const [brojMaterijali, setBrojMaterijali] = useState(0);
-    const [animatedSlike, setAnimatedSlike] = useState(0);
-    const [animatedOstaliProizvodi, setAnimatedOstaliProizvodi] = useState(0);
-    const [animatedTehnike, setAnimatedTehnike] = useState(0);
-    const [animatedMaterijali, setAnimatedMaterijali] = useState(0);
+    const [statistika, setStatistika] = useState({ slike: 0, proizvodi: 0 });
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchStats = async () => {
             try {
                 const slikeRezultat = await SlikaService.get();
                 const ostaliproizvodi = await OstaliProizvodiService.get();
-                const tehnike = await TehnikaService.get();
-                const brojMaterijali = await MaterijalService.get();
-
-                setBrojSlike(slikeRezultat.data.length);
-                setBrojOstalihProizvoda(ostaliproizvodi.data.length);
-                setBrojTehnika(tehnike.data.length);
-                setBrojMaterijali(brojMaterijali.data.length);
+                setStatistika({
+                    slike: slikeRezultat.data.length,
+                    proizvodi: ostaliproizvodi.data.length
+                });
             } catch (error) {
                 console.error('Greška pri dohvaćanju podataka:', error);
             }
         };
-
-        fetchData();
+        fetchStats();
     }, []);
 
-    useEffect(() => {
-        if (animatedSlike < brojSlike) {
-            const timer = setTimeout(() => {
-                setAnimatedSlike(prev => Math.min(prev + 1, brojSlike));
-            }, 300);
-            return () => clearTimeout(timer);
-        }
-    }, [animatedSlike, brojSlike]);
-
-    useEffect(() => {
-        if (animatedOstaliProizvodi < brojOstalihProizvoda) {
-            const timer = setTimeout(() => {
-                setAnimatedOstaliProizvodi(prev => Math.min(prev + 1, brojOstalihProizvoda));
-            }, 100);
-            return () => clearTimeout(timer);
-        }
-    }, [animatedOstaliProizvodi, brojOstalihProizvoda]);
-
-    useEffect(() => {
-        if (animatedTehnike < brojTehnika) {
-            const timer = setTimeout(() => {
-                setAnimatedTehnike(prev => Math.min(prev + 1, brojTehnika));
-            }, 200);
-            return () => clearTimeout(timer);
-        }
-    }, [animatedTehnike, brojTehnika]);
-
-    useEffect(() => {
-        if (animatedMaterijali < brojMaterijali) {
-            const timer = setTimeout(() => {
-                setAnimatedMaterijali(prev => Math.min(prev + 1, brojMaterijali));
-            }, 200);
-            return () => clearTimeout(timer);
-        }
-    }, [animatedMaterijali, brojMaterijali]);
-
     return (
-        <>
-            <Row>
-                <Col md={6}>
-                    <div style={{ textAlign: 'center' }}>
+        <div className="home-page">
+            {/* HERO SEKCIJA */}
+            <Container className="py-5 my-md-5">
+                <Row className="align-items-center g-5">
+                    <Col lg={6}>
+                        <span className="text-uppercase tracking-widest text-muted small fw-semibold d-block mb-3">
+                            Umjetnički Portfolio & Galerija
+                        </span>
+                        <h1 className="display-4 fw-light mb-4" style={{ letterSpacing: '-0.02em', lineHeight: '1.2' }}>
+                            Dobrodošli u svijet <span className="fw-semibold fst-italic">kreativnosti</span>
+                        </h1>
+                        <p className="lead text-secondary mb-4 fw-light" style={{ lineHeight: '1.8' }}>
+                            Mjesto gdje se svakodnevica pretvara u platno, a ručni rad unosi dušu i toplinu u svaki prostor.
+                        </p>
+                        
+                        {/* Minimalistička statistika umjesto teških kartica */}
+                        <div className="d-flex gap-5 pt-3 border-top border-light">
+                            <div>
+                                <h3 className="fw-bold mb-0">{statistika.slike}</h3>
+                                <small className="text-muted text-uppercase tracking-wider">Autorskih slika</small>
+                            </div>
+                            <div>
+                                <h3 className="fw-bold mb-0">{statistika.proizvodi}</h3>
+                                <small className="text-muted text-uppercase tracking-wider">Unikatnih proizvoda</small>
+                            </div>
+                        </div>
+                    </Col>
+                    
+                    <Col lg={6}>
+                        <div 
+                            className="position-relative overflow-hidden shadow-sm"
+                            style={{ 
+                                height: '480px', 
+                                backgroundColor: '#f4f4f4',
+                                borderRadius: '4px' 
+                            }}
+                        >
+                            {/* Ovdje umjesto placeholder-a ide prava istaknuta slika galerije */}
+                            <div className="d-flex align-items-center justify-content-center h-100 text-muted fw-light">
+                                <span className="small tracking-widest">[ Istaknuto Umjetničko Djelo ]</span>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
 
-                    </div>
-                    <p 
-                    className="lead m-5 text-center"
-                    style={{ fontWeight: 'bold', fontSize: '2rem' }}
-                    >Dobrodošli na "{IME_APLIKACIJE}"</p>
-                    <div style={{ maxWidth: '500px', margin: 'auto' }}>
-                    </div>
-                </Col>
-
-                <Col className="d-flex align-items-center justify-content-center">
-                    <div style={{ width: '100%', maxWidth: '400px' }}>
-                        <Row>
-                            <Col>
-                                <Card className="mb-3 shadow-lg border-0 statistikaPanel">
-                                    <Card.Body className="text-center">
-                                        <p className="text-white">Slike</p>
-                                        <div className="statistikaTekst">
-                                            {animatedSlike}
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col>
-                                <Card className="mb-3 shadow-lg border-0 statistikaPanel">
-                                    <Card.Body className="text-center">
-                                        <p className="text-white">Ostali proizvodi</p>
-                                        <div className="statistikaTekst">
-                                            {animatedOstaliProizvodi}
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-
-{/* 
-                        <Row>
-                            <Col>
-                                <Card className="shadow-lg border-0 statistikaPanel">
-                                    <Card.Body className="text-center">
-                                        <p className="text-white">Tehnike</p>
-                                        <div className="statistikaTekst">
-                                            {animatedTehnike}
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col>
-                                <Card className="shadow-lg border-0 statistikaPanel">
-                                    <Card.Body className="text-center">
-                                        <p className="text-white">Materijali</p>
-                                        <div className="statistikaTekst">
-                                            {animatedMaterijali}
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row> */}
-
-
-
-
-                    </div>
-                </Col>
-            </Row>
-
-         
-            <div className="bg-white py-5 shadow-sm my-5">
-                <Container>
+            {/* SEKCIJA O MENI - GALERIJSKI STIL */}
+            <section className="bg-light py-5 my-5">
+                <Container className="py-4">
                     <Row className="align-items-center g-5">
-                        {/* Ovdje možeš staviti svoju sliku */}
-                        <Col lg={5} className="text-center">
-                            <div
-                                className="bg-light rounded-3 shadow-sm d-flex align-items-center justify-content-center text-muted"
-                                style={{ height: '350px', border: '2px dashed #dee2e6' }}
+                        <Col lg={5}>
+                            <div 
+                                className="bg-white shadow-sm position-relative"
+                                style={{ height: '420px', borderRadius: '4px' }}
                             >
-                                <span>[ Ovdje ide tvoja slika ]</span>
+                                <div className="d-flex align-items-center justify-content-center h-100 text-muted fw-light">
+                                    <span className="small tracking-widest">[ Fotografija Umjetnice ]</span>
+                                </div>
                             </div>
                         </Col>
-
-                        {/* Tekst o tebi */}
-                        <Col lg={7}>
-                            <h2 className="fw-bold mb-3">O meni</h2>
-                            <h5 className="text-primary fw-semibold mb-3">
-                                Pozdrav, ja sam Anita!
-                            </h5>
-                            <p className="text-muted mb-3">
-                                Dobrodošli u moj kreativni svijet. U užurbanoj svakodnevici, slikanje je moj osobni bijeg – prostor u kojem sam istinski svoja i prisutna u trenutku.
+                        
+                        <Col lg={7} className="px-lg-5">
+                            <h6 className="text-uppercase text-muted small tracking-widest mb-2">O autorici</h6>
+                            <h2 className="fw-light mb-4 display-6">Pozdrav, ja sam Anita.</h2>
+                            
+                            <p className="text-secondary mb-3" style={{ lineHeight: '1.8' }}>
+                                U užurbanoj svakodnevici, slikanje je moj osobni bijeg – prostor u kojem sam istinski svoja i prisutna u trenutku.
                             </p>
-                            <p className="text-muted mb-3">
-                                Samouka sam umjetnica, a svoje vještine i izričaj razvijam uz pomoć kreativnog učenja i četverogodišnjeg stvaranja u sklopu osječke udruge "Likar". Moje slike nastaju spontano, no svaka s vremenom dobije svoju dublju priču i razlog postojanja.
+                            <p className="text-secondary mb-3" style={{ lineHeight: '1.8' }}>
+                                Samouka sam umjetnica, a svoje vještine i izričaj razvijam uz pomoć kreativnog učenja i četverogodišnjeg stvaranja u sklopu osječke udruge "Likar". Moje slike nastaju spontano, no svaka s vremenom dobije svoju dublju priču.
                             </p>
-                            <p className="text-muted mb-0">
-                                Tu istu strast prema detaljima prenosim i na ručno rađene torbe, svijećnjake i dekoracije. Vjerujem da unikatni ručni rad unosi toplinu u svaki prostor. Hvala ti što podržavaš moj rad!
+                            <p className="text-secondary mb-0" style={{ lineHeight: '1.8' }}>
+                                Tu istu strast prema detaljima prenosim i na ručno rađene torbe, svijećnjake i dekoracije. Vjerujem da unikatni ručni rad unosi toplinu u svaki prostor.
                             </p>
                         </Col>
                     </Row>
                 </Container>
-            </div>
-          
-      </>
-
-
-    )
+            </section>
+        </div>
+    );
 }

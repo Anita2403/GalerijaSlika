@@ -28,9 +28,9 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake }) {
             doc.addFileToVFS('Roboto-Bold.ttf', boldBase64);
             doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold');
 
-            const primaryColor = [30, 86, 49];     // Zelena
+            const primaryColor = [30, 86, 49];    // Zelena
             const secondaryColor = [100, 116, 139]; // Siva
-            const textColor = [30, 41, 59];         // Tamno plava/siva
+            const textColor = [30, 41, 59];        // Tamno plava/siva
 
             // Zaglavlje dokumenta
             doc.setFont('Roboto', 'bold');
@@ -66,7 +66,7 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake }) {
 
             let currentY = 56;
 
-            // Tablica s podacima
+            // Tablica s podacima (bez opisa unutar tablice)
             autoTable(doc, {
                 startY: currentY,
                 margin: { left: 15, right: 15 },
@@ -97,7 +97,7 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake }) {
                     ],
                     [
                         `Oznake / Motivi: ${oznakeText}`,
-                        `Aktivnost: ${slika?.aktivan ? 'Aktivan' : 'Neaktivan'}`
+                        ''
                     ]
                 ],
                 didParseCell: (data) => {
@@ -109,13 +109,29 @@ export default function SlikePDFGenerator({ slika, tehnika, oznake }) {
                 }
             });
 
-            // Dohvaćanje Y pozicije *nakon* tablice kako se slika ne bi preklopila s tablicom
-            const finalY = doc.lastAutoTable.finalY + 10;
+            // Pozicija nakon tablice
+            let nextY = doc.lastAutoTable.finalY + 8;
 
-            // Dodavanje slike ako postoji (slika?.image sadrži Base64 string)
+            // ISPIS OPISA ISPOD TABLICE (Automatski prelama tekst ako je dugačak)
+            doc.setFont('Roboto', 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(...primaryColor);
+            doc.text('Opis:', 15, nextY);
+
+            doc.setFont('Roboto', 'normal');
+            doc.setFontSize(9.5);
+            doc.setTextColor(...textColor);
+            
+            const opisTekst = slika?.opis || 'Nema unesenog opisa za ovo djelo.';
+            const splitOpis = doc.splitTextToSize(opisTekst, 180); // 180mm širina teksta
+            doc.text(splitOpis, 15, nextY + 5);
+
+            // Izračunaj novu poziciju za sliku ovisno o tome koliko redaka ima opis
+            const imageY = nextY + 5 + (splitOpis.length * 5) + 5;
+
+            // Dodavanje slike ako postoji
             if (slika?.image) {
-                // Možeš prilagoditi širinu (ovdje je 80 mm) a visina se automatski prilagođava prema omjeru (JPEG/PNG)
-                doc.addImage(slika.image, 'PNG', 15, finalY, 80, 0); 
+                doc.addImage(slika.image, 'PNG', 15, imageY, 80, 0); 
             }
 
             // Otvaranje PDF-a u novom tabu

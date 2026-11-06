@@ -1,83 +1,86 @@
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
-
+import { Container, Row, Col } from "react-bootstrap";
+import { IME_APLIKACIJE } from "../constanst";
 
 export default function OAplikaciji() {
-
-
   const features = [
     {
       title: 'Umjetničke slike',
-      text: 'Unikatni vizuali s pričom i opisom koji oživljavaju svaki zid.'
+      text: 'Unikatni vizuali s pričom i dubinom koji oživljavaju svaki prostor.'
     },
     {
-      title: 'Ručno šivane torbe',
-      text: 'Statement komadi stvoreni s naglaskom na stil i unikatnost.'
+      title: 'Ručno rađene torbe',
+      text: 'Statement komadi stvoreni s naglaskom na stil, kvalitetu i unikatnost.'
     },
     {
       title: 'Domaći dekor & svijećnjaci',
-      text: 'Detalji koji stvaraju savršeni ugođaj u tvojoj sobi.'
+      text: 'Pažljivo birani detalji koji unose toplinu i osobni pečat u interijer.'
     }
   ];
 
   const benefits = [
-    { title: '100% Unikatno', desc: 'Svaki komad je poseban, ručno rađen i neponovljiv.' },
-    { title: 'Inspiracija na dlanu', desc: 'Jednostavno sučelje s detaljnim pričama iza svakog artikla.' },
-    { title: 'Podrška kreativnosti', desc: 'Kupnjom podržavaš trud, strast i autentični ručni rad.' }
+    { title: '100% Unikatno', desc: 'Svaki komad je poseban, autorski rađen i neponovljiv.' },
+    { title: 'Inspiracija na dlanu', desc: 'Jednostavno sučelje s pričama koje stoje iza svakog artikla.' },
+    { title: 'Podrška kreativnosti', desc: 'Kupnjom i pregledom podržavate trud, strast i autentični rad.' }
   ];
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-column justify-content-between">
+    <div className="about-page bg-white min-vh-100 d-flex flex-column justify-content-between py-5">
+      
       {/* Hero / Header sekcija */}
-      <div className="bg-white shadow-sm py-5 mb-5 text-center">
-        <Container>
-          <h1 className="display-4 fw-bold text-dark mb-3">
-            Galerija slika
-          </h1>
-          <p className="lead text-muted mx-auto" style={{ maxWidth: '700px' }}>
-            Mjesto gdje se umjetnost susreće s ručnom izradom. Uroni u našu digitalnu oazu kreativnosti i otkrij pomno birane komade koji daju dušu svakom prostoru.
-          </p>
-        </Container>
-      </div>
+      <Container className="py-md-5 text-center">
+        <Row className="justify-content-center">
+          <Col lg={8}>
+            <span className="text-uppercase tracking-widest text-muted small fw-semibold d-block mb-3">
+              O projektu
+            </span>
+            <h1 className="display-4 fw-light mb-4" style={{ letterSpacing: '-0.02em' }}>
+              Dobrodošli u <span className="fw-semibold fst-italic">"{IME_APLIKACIJE}"</span>
+            </h1>
+            <p className="lead text-secondary fw-light mx-auto" style={{ maxWidth: '650px', lineHeight: '1.8' }}>
+              Mjesto gdje se umjetnost susreće s ručnom izradom. Uronite u kreativnu oazu i otkrijte pomno birane komade koji daju dušu svakom prostoru.
+            </p>
+          </Col>
+        </Row>
+      </Container>
 
-      {/* Što te čeka? Kartice */}
-      <Container className="mb-5">
-        <h2 className="text-center fw-bold mb-4">Što te čeka?</h2>
-        <Row className="g-4">
+      {/* Što te čeka? - Minimalistički raspored umjesto klasičnih kartica */}
+      <Container className="py-5 my-3 border-top border-light">
+        <div className="text-center mb-5">
+          <h6 className="text-uppercase text-muted small tracking-widest mb-2">Kolekcija</h6>
+          <h2 className="fw-light display-6">Što se sve ovdje nalazi?</h2>
+        </div>
+        <Row className="g-5">
           {features.map((item, idx) => (
-            <Col md={4} key={idx}>
-              <Card className="h-100 border-0 shadow-sm text-center p-4">
-                <Card.Body>
-                  <Card.Title className="fw-bold mb-3">{item.title}</Card.Title>
-                  <Card.Text className="text-muted">{item.text}</Card.Text>
-                </Card.Body>
-              </Card>
+            <Col md={4} key={idx} className="text-center px-lg-4">
+              <div className="h-100 p-2">
+                <h5 className="fw-semibold mb-3">{item.title}</h5>
+                <p className="text-secondary fw-light" style={{ lineHeight: '1.7' }}>{item.text}</p>
+              </div>
             </Col>
           ))}
         </Row>
       </Container>
 
-      {/* Zašto odabrati Galeriju slika? */}
-      <div className="bg-white py-5 mb-5 shadow-sm">
-        <Container>
-          <h2 className="text-center fw-bold mb-4">Zašto odabrati Galeriju slika?</h2>
-          <Row className="g-4">
+      {/* Zašto odabrati ovu galeriju? - Suptilna pozadina */}
+      <section className="bg-light py-5 my-5">
+        <Container className="py-4">
+          <div className="text-center mb-5">
+            <h6 className="text-uppercase text-muted small tracking-widest mb-2">Vrijednosti</h6>
+            <h2 className="fw-light display-6">Zašto odabrati ovaj rad?</h2>
+          </div>
+          <Row className="g-5">
             {benefits.map((benefit, idx) => (
-              <Col md={4} key={idx}>
-                <Card className="h-100 border-0 shadow-sm text-center p-4">
-                  <Card.Body>
-                    <Card.Title className="fw-bold mb-3">{benefit.title}</Card.Title>
-                    <Card.Text className="text-muted">{benefit.desc}</Card.Text>
-                  </Card.Body>
-                </Card>
+              <Col md={4} key={idx} className="text-center px-lg-4">
+                <div className="bg-white p-4 h-100 shadow-sm border-0" style={{ borderRadius: '4px' }}>
+                  <h5 className="fw-semibold mb-3">{benefit.title}</h5>
+                  <p className="text-secondary fw-light mb-0" style={{ lineHeight: '1.7' }}>{benefit.desc}</p>
+                </div>
               </Col>
             ))}
           </Row>
         </Container>
-      </div>
+      </section>
 
-     
     </div>
   );
 }
-
-   
