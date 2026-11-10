@@ -5,6 +5,9 @@ import { Button, Card, Col, Container, Form, Row, Table } from "react-bootstrap"
 import { useEffect, useState } from "react";
 import MaterijalService from "../../services/materijali/MaterijalService";
 import OznakaService from "../../services/oznake/OznakaService";
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
+import { useRef } from "react";
 
 export default function OstaliProizvodiNovi() {
     const [materijali, setMaterijali] = useState([])
@@ -13,7 +16,8 @@ export default function OstaliProizvodiNovi() {
     const [pretragaOznaka, setPretragaOznaka] = useState('')
     const [prikaziAutocomplete, setPrikaziAutocomplete] = useState(false)
     const [odabraniIndex, setOdabraniIndex] = useState(-1)
-
+    const [slikaZaCrop, setSlikaZaCrop] = useState(null);
+    const cropperRef = useRef(null);
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -51,12 +55,10 @@ export default function OstaliProizvodiNovi() {
     function ukloniOznaka(sifra) {
         setOdabraniOznake(odabraniOznake.filter(p => p.sifra !== sifra))
     }
-
     function filtrirajOznake() {
-        if (!pretragaOznaka) return []
         return oznake.filter(p =>
             !odabraniOznake.find(op => op.sifra === p.sifra) &&
-            (p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase()))
+            p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())
         )
     }
 
@@ -94,45 +96,64 @@ export default function OstaliProizvodiNovi() {
 
         if (!podaci.get('naziv') || podaci.get('naziv').trim().length === 0) {
             alert("Naziv je obavezan i ne smije sadržavati samo razmake!")
-            return 
+            return
         }
 
         if (podaci.get('naziv').trim().length < 3 || podaci.get('naziv').trim().length > 30) {
             alert("Naziv ostalih proizvoda mora imati najmanje 3 znaka i najviše 30!")
-            return 
+            return
         }
 
         if (isNaN(podaci.get('godinaIzrade')) || podaci.get('godinaIzrade') < 2022 || podaci.get('godinaIzrade') > 2026) {
             alert("Godina izrade mora biti godina između 2022 i 2026 godine!")
-            return 
+            return
         }
 
         if (isNaN(podaci.get('sirina')) || podaci.get('sirina') < 20 || podaci.get('sirina') > 140) {
             alert("Širina mora biti između 20 i 140 centimetara!")
-            return 
+            return
         }
 
         if (isNaN(podaci.get('visina')) || podaci.get('visina') < 20 || podaci.get('visina') > 140) {
             alert("Visina mora biti između 20 i 140 centimetara!")
-            return 
+            return
         }
 
         if (!podaci.get('opis') || podaci.get('opis').trim().length === 0) {
             alert("Opis je obavezan i ne smije sadržavati samo razmake!")
-            return 
+            return
         }
 
         const min = 3
         const max = 500
         if (podaci.get('opis').trim().length < min || podaci.get('opis').trim().length > max) {
             alert(`Opis ostalih proizvoda mora imati najmanje ${min} znaka i najviše ${max}!`)
-            return 
+            return
         }
 
         if (odabraniOznake.length === 0) {
             alert("Morate odabrati barem jednu oznaku!");
             return;
         }
+
+        let dataUrl = null
+        if (cropperRef.current && cropperRef.current.cropper && cropperRef.current.cropper.cropped) {
+            const cropper = cropperRef.current.cropper;
+            const selectionData = cropper.getData();
+            const actualWidth = selectionData.width;
+            const actualHeight = selectionData.height;
+            const targetSize = 400;
+            const canvasWidth = actualWidth > targetSize ? targetSize : actualWidth;
+            const canvasHeight = actualHeight > targetSize ? targetSize : actualHeight;
+            const canvas = cropper.getCroppedCanvas({
+                width: canvasWidth,
+                height: canvasHeight,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+            dataUrl = canvas.toDataURL('image/png');
+        }
+
 
         dodaj({
             naziv: podaci.get('naziv'),
@@ -141,10 +162,30 @@ export default function OstaliProizvodiNovi() {
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: podaci.get('dostupnost') === 'on',
-            image: '',
+            image: dataUrl,
             opis: podaci.get('opis'),
             oznake: odabraniOznake.map(p => p.sifra)
         })
+    }
+
+    function onChangeImage(e) {
+        e.preventDefault();
+
+        let files;
+        if (e.dataTransfer) {
+            files = e.dataTransfer.files;
+        } else if (e.target) {
+            files = e.target.files;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            setSlikaZaCrop(reader.result);
+        };
+        try {
+            reader.readAsDataURL(files[0]);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -210,15 +251,14 @@ export default function OstaliProizvodiNovi() {
                                         <Form.Label className="fw-bold">Dodaj oznake</Form.Label>
                                         <Form.Control
                                             type="text"
-                                            placeholder="Pretraži oznake..."
+                                            placeholder="Pretraži ili klikni za sve oznake..."
                                             value={pretragaOznaka}
                                             onChange={(e) => {
                                                 setPretragaOznaka(e.target.value)
-                                                setPrikaziAutocomplete(e.target.value.length > 0)
+                                                setPrikaziAutocomplete(true) // Uvijek drži otvoreno dok se tipka
                                                 setOdabraniIndex(-1)
                                             }}
-                                            onFocus={() => setPrikaziAutocomplete(pretragaOznaka.length > 0)}
-                                            onKeyDown={handleKeyDown}
+                                            onFocus={() => setPrikaziAutocomplete(true)} // Otvori odmah na klik / fokus!
                                         />
                                         {prikaziAutocomplete && filtrirajOznake().length > 0 && (
                                             <div className="position-absolute w-100 bg-white border rounded shadow-sm" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
@@ -277,15 +317,25 @@ export default function OstaliProizvodiNovi() {
                             </Card>
                         </Col>
 
-                         {/* Desna strana */}
+                        {/* Desna strana */}
 
                         <Col xs={4} className="mt-3">
-                             <div
-                                className="bg-light rounded-3 shadow-sm d-flex align-items-center justify-content-center text-muted"
-                                style={{ height: '350px', border: '2px dashed #dee2e6' }}
-                            >
-                                <span>[ Ovdje ide tvoja slika ]</span>
-                            </div>
+                            <input className='mb-3' type='file' onChange={onChangeImage} />
+                            <Cropper
+                                src={slikaZaCrop}
+                                style={{ height: 400, width: '100%' }}
+                                initialAspectRatio={1}
+                                guides={true}
+                                autoCropArea={1}
+                                viewMode={1}
+                                minCropBoxWidth={400}
+                                minCropBoxHeight={400}
+                                cropBoxResizable={false}
+                                background={false}
+                                responsive={true}
+                                checkOrientation={false}
+                                ref={cropperRef}
+                            />
                         </Col>
                     </Row>
 

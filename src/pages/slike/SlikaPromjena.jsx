@@ -2,9 +2,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import SlikaService from "../../services/slike/SlikaService";
 import { RouteNames } from "../../constanst";
 import { Button, Card, Col, Container, Form, Row, Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TehnikaService from "../../services/tehnike/TehnikaService";
 import OznakaService from "../../services/oznake/OznakaService";
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
 
 export default function SlikaPromjena() {
     const navigate = useNavigate()
@@ -17,6 +19,8 @@ export default function SlikaPromjena() {
     const [pretragaOznaka, setPretragaOznaka] = useState('')
     const [prikaziAutocomplete, setPrikaziAutocomplete] = useState(false)
     const [odabraniIndex, setOdabraniIndex] = useState(-1)
+    const [slikaZaCrop, setSlikaZaCrop] = useState(null);
+    const cropperRef = useRef(null);
 
     useEffect(() => {
         ucitajTehnike()
@@ -39,7 +43,7 @@ export default function SlikaPromjena() {
     async function ucitajSliku(sveOznake) {
         await SlikaService.getBySifra(params.sifra).then((odgovor) => {
             const s = odgovor.data
-            setSlika(s)
+            setSlikaZaCrop(s.image)
             setDostupnost(s.dostupnost)
             if (s.oznake && sveOznake.length > 0) {
                 const odabrane = sveOznake.filter(p => s.oznake.includes(p.sifra))
@@ -47,6 +51,7 @@ export default function SlikaPromjena() {
             }
         })
     }
+
 
     function dodajOznaka(oznaka) {
         if (!odabraniOznake.find(p => p.sifra === oznaka.sifra)) {
@@ -62,10 +67,9 @@ export default function SlikaPromjena() {
     }
 
     function filtrirajOznake() {
-        if (!pretragaOznaka) return []
         return oznake.filter(p =>
             !odabraniOznake.find(op => op.sifra === p.sifra) &&
-            (p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase()))
+            p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())
         )
     }
 
@@ -147,6 +151,25 @@ export default function SlikaPromjena() {
             return;
         }
 
+        let dataUrl = null
+        if (cropperRef.current && cropperRef.current.cropper && cropperRef.current.cropper.cropped) {
+            const cropper = cropperRef.current.cropper;
+            const selectionData = cropper.getData();
+            const actualWidth = selectionData.width;
+            const actualHeight = selectionData.height;
+            const targetSize = 400;
+            const canvasWidth = actualWidth > targetSize ? targetSize : actualWidth;
+            const canvasHeight = actualHeight > targetSize ? targetSize : actualHeight;
+            const canvas = cropper.getCroppedCanvas({
+                width: canvasWidth,
+                height: canvasHeight,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+            dataUrl = canvas.toDataURL('image/png');
+        }
+
+
         promijeni({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
@@ -154,10 +177,30 @@ export default function SlikaPromjena() {
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: dostupnost,
-            image: '',
+            image: dataUrl,
             opis: podaci.get('opis'),
             oznake: odabraniOznake.map(p => p.sifra)
         })
+    }
+
+    function onChangeImage(e) {
+        e.preventDefault();
+
+        let files;
+        if (e.dataTransfer) {
+            files = e.dataTransfer.files;
+        } else if (e.target) {
+            files = e.target.files;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            setSlikaZaCrop(reader.result);
+        };
+        try {
+            reader.readAsDataURL(files[0]);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -231,14 +274,14 @@ export default function SlikaPromjena() {
                                         <Form.Label className="fw-bold">Dodaj oznake</Form.Label>
                                         <Form.Control
                                             type="text"
-                                            placeholder="Pretraži oznake..."
+                                            placeholder="Pretraži ili klikni za sve oznake..."
                                             value={pretragaOznaka}
                                             onChange={(e) => {
                                                 setPretragaOznaka(e.target.value)
-                                                setPrikaziAutocomplete(e.target.value.length > 0)
+                                                setPrikaziAutocomplete(true)
                                                 setOdabraniIndex(-1)
                                             }}
-                                            onFocus={() => setPrikaziAutocomplete(pretragaOznaka.length > 0)}
+                                            onFocus={() => setPrikaziAutocomplete(true)} // <-- Ovo otvara listu odmah na klik / fokus
                                             onKeyDown={handleKeyDown}
                                         />
                                         {prikaziAutocomplete && filtrirajOznake().length > 0 && (
@@ -301,9 +344,26 @@ export default function SlikaPromjena() {
 
                         {/* Desna strana */}
 
+
                         <Col xs={4} className="mt-3">
-                            <img src={slika.image} alt="Ovo ti Anita" />
+                            <input className='mb-3' type='file' onChange={onChangeImage} />
+                            <Cropper
+                                src={slikaZaCrop}
+                                style={{ height: 400, width: '100%' }}
+                                initialAspectRatio={1}
+                                guides={true}
+                                autoCropArea={1}
+                                viewMode={1}
+                                minCropBoxWidth={400}
+                                minCropBoxHeight={400}
+                                cropBoxResizable={false}
+                                background={false}
+                                responsive={true}
+                                checkOrientation={false}
+                                ref={cropperRef}
+                            />
                         </Col>
+
                     </Row>
 
                     <Row className="mt-3">
