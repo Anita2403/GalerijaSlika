@@ -45,6 +45,7 @@ export default function OstaliProizvodiPromjena() {
         await OstaliProizvodiService.getBySifra(params.sifra).then((odgovor) => {
             const s = odgovor.data
             setOstaliProizvodi(s)
+            setSlikaZaCrop(s.image)
             setDostupnost(s.dostupnost)
             if (s.oznake && sveOznake.length > 0) {
                 const odabrane = sveOznake.filter(p => s.oznake.includes(p.sifra))
@@ -67,11 +68,11 @@ export default function OstaliProizvodiPromjena() {
     }
 
     function filtrirajOznake() {
-    return oznake.filter(p =>
-        !odabraniOznake.find(op => op.sifra === p.sifra) &&
-        p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())
-    )
-}
+        return oznake.filter(p =>
+            !odabraniOznake.find(op => op.sifra === p.sifra) &&
+            p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())
+        )
+    }
 
     function handleKeyDown(e) {
         const filtriraniOznake = filtrirajOznake()

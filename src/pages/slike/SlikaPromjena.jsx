@@ -43,6 +43,7 @@ export default function SlikaPromjena() {
     async function ucitajSliku(sveOznake) {
         await SlikaService.getBySifra(params.sifra).then((odgovor) => {
             const s = odgovor.data
+            setSlika(s)
             setSlikaZaCrop(s.image)
             setDostupnost(s.dostupnost)
             if (s.oznake && sveOznake.length > 0) {
