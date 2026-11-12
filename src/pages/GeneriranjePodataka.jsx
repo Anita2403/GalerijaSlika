@@ -10,6 +10,7 @@ import { slike } from '../services/slike/SlikaPodaci';
 import { DATA_SOURCE } from '../constanst';
 import slika_generiranje_podataka from '../assets/slika_generiranje_podataka.jpg';
 import { FaDatabase, FaTrashAlt, FaPlus, FaLayerGroup } from 'react-icons/fa';
+import OperaterService from '../services/operateri/OperaterService';
 
 export default function GeneriranjePodataka() {
     const [brojSlika, setBrojSlika] = useState(10);
@@ -17,6 +18,7 @@ export default function GeneriranjePodataka() {
     const [brojTehnika, setBrojTehnika] = useState(5);
     const [brojMaterijali, setBrojMaterijali] = useState(5);
     const [brojOznaka, setBrojOznaka] = useState(5);
+    const [brojOperatera, setBrojOperatera] = useState(5);
     const [poruka, setPoruka] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -152,6 +154,7 @@ export default function GeneriranjePodataka() {
             await generirajOznake(brojOznaka);
             await generirajSlike(brojSlika);
             await generirajOstaleProizvodi(brojOstaliProizvodi);
+            await generirajOperatere(brojOperatera);
             setPoruka({ tip: 'success', tekst: 'Uspješno generirani svi testni podaci!' });
         } catch (error) {
             setPoruka({ tip: 'danger', tekst: 'Greška pri masovnom generiranju: ' + error.message });
@@ -166,12 +169,13 @@ export default function GeneriranjePodataka() {
         setLoading(true);
         setPoruka(null);
         try {
-            const [slikeRes, ostaliRes, tehnikeRes, materijaliRes, oznakeRes] = await Promise.all([
+            const [slikeRes, ostaliRes, tehnikeRes, materijaliRes, oznakeRes,operateriRes] = await Promise.all([
                 SlikaService.get(),
                 OstaliProizvodiService.get(),
                 TehnikaService.get(),
                 MaterijalService.get(),
-                OznakaService.get()
+                OznakaService.get(),
+                OperaterService.get()
             ]);
 
             for (const item of slikeRes.data) await SlikaService.obrisi(item.sifra);
@@ -179,6 +183,7 @@ export default function GeneriranjePodataka() {
             for (const item of tehnikeRes.data) await TehnikaService.obrisi(item.sifra);
             for (const item of materijaliRes.data) await MaterijalService.obrisi(item.sifra);
             for (const item of oznakeRes.data) await OznakaService.obrisi(item.sifra);
+            for (const item of operateriRes.data) await OperaterService.obrisi(item.sifra);
 
             setPoruka({ tip: 'success', tekst: 'Uspješno obrisani svi podaci iz baze!' });
         } catch (error) {
@@ -211,6 +216,86 @@ export default function GeneriranjePodataka() {
             setPoruka({ tip: 'success', tekst: `Uspješno generirano ${brojOstaliProizvodi} ostalih proizvoda!` });
         } catch (error) {
             setPoruka({ tip: 'danger', tekst: 'Greška pri generiranju ostalih proizvoda: ' + error.message });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+     const generirajOperatere = async (broj) => {
+        // Prvo obriši admin operatera ako postoji
+        const rezultat = await OperaterService.get();
+        const operateri = rezultat.data;
+        const adminOperater = operateri.find(op => op.email === 'admin@edunova.hr');
+        
+        if (adminOperater) {
+            await OperaterService.obrisi(adminOperater.sifra);
+        }
+
+        // Dodaj admin operatera
+        await OperaterService.dodaj({
+            email: 'admin@edunova.hr',
+            lozinka: 'Edunova123!',
+            uloga: 'admin'
+        });
+
+        // Generiraj korisnik operatere
+        for (let i = 0; i < broj; i++) {
+            await OperaterService.dodaj({
+                email: faker.internet.email(),
+                lozinka: 'Edunova123!',
+                uloga: 'korisnik'
+            });
+        }
+    };
+
+    const handleGenerirajOperatere = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            await generirajOperatere(brojOperatera);
+
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno generirano ${brojOperatera + 1} operatera (1 admin + ${brojOperatera} korisnika)!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri generiranju operatera: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleObrisiOperatere = async () => {
+        if (!window.confirm('Jeste li sigurni da želite obrisati sve operatere?')) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            const rezultat = await OperaterService.get();
+            const operateri = rezultat.data;
+            
+            for (const operater of operateri) {
+                await OperaterService.obrisi(operater.sifra);
+            }
+
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno obrisano ${operateri.length} operatera!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri brisanju operatera: ' + error.message
+            });
         } finally {
             setLoading(false);
         }
@@ -431,7 +516,7 @@ export default function GeneriranjePodataka() {
                             </Card>
                         </Col>
 
-                        <Col md={6}>
+                        <Col md={4}>
                             <Card className="h-100 border-0 bg-white p-4" style={{ borderRadius: '4px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
                                 <Form onSubmit={handleGenerirajSlike}>
                                     <Form.Group className="mb-3">
@@ -445,7 +530,7 @@ export default function GeneriranjePodataka() {
                             </Card>
                         </Col>
 
-                        <Col md={6}>
+                        <Col md={4}>
                             <Card className="h-100 border-0 bg-white p-4" style={{ borderRadius: '4px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
                                 <Form onSubmit={handleGenerirajOstaliProizvodi}>
                                     <Form.Group className="mb-3">
@@ -455,6 +540,27 @@ export default function GeneriranjePodataka() {
                                     <Button variant="outline-dark" type="submit" disabled={loading} className="w-100 d-flex align-items-center justify-content-center gap-2" style={{ borderRadius: '4px' }}>
                                         <FaPlus size={12} /> {loading ? 'Generiranje...' : 'Generiraj ostale proizvode'}
                                     </Button>
+                                </Form>
+                            </Card>
+                        </Col>
+                        <Col md={4}>
+                            <Card className="h-100 border-0 bg-white p-4" style={{ borderRadius: '4px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+                                <Form onSubmit={handleGenerirajOperatere}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Broj operatera</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            min="1"
+                                            max="50"
+                                            value={brojOperatera}
+                                            onChange={(e) => setBrojOperatera(parseInt(e.target.value))}
+                                            disabled={loading}
+                                        />
+                                    </Form.Group>
+                                    <Button variant="outline-dark" type="submit" disabled={loading} className="w-100 d-flex align-items-center justify-content-center gap-2" style={{ borderRadius: '4px' }}>
+                                        <FaPlus size={12} /> {loading ? 'Generiranje...' : 'Generiraj operatere'}
+                                    </Button>
+                                    
                                 </Form>
                             </Card>
                         </Col>
@@ -481,14 +587,19 @@ export default function GeneriranjePodataka() {
                                     Obriši sve tehnike
                                 </Button>
                             </Col>
-                            <Col md={6}>
+                            <Col md={4}>
                                 <Button variant="outline-danger" onClick={handleObrisiMaterijale} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
                                     Obriši sve materijale
                                 </Button>
                             </Col>
-                            <Col md={6}>
+                            <Col md={4}>
                                 <Button variant="outline-danger" onClick={handleObrisiOznake} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
                                     Obriši sve oznake
+                                </Button>
+                            </Col>
+                            <Col md={4}>
+                                <Button variant="outline-danger" onClick={handleObrisiOperatere} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
+                                    Obriši sve operatere
                                 </Button>
                             </Col>
                         </Row>

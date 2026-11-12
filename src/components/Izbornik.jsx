@@ -56,9 +56,9 @@ export default function Izbornik() {
               <NavDropdown.Item
                 onClick={() => navigate(RouteNames.MATERIJALI)}
               > Materijali</NavDropdown.Item>
-            
 
-            <NavDropdown.Item
+
+              <NavDropdown.Item
                 onClick={() => navigate(RouteNames.OZNAKE)}
               > Oznake</NavDropdown.Item>
             </NavDropdown>
@@ -67,8 +67,11 @@ export default function Izbornik() {
 
             <NavDropdown title="Servisno">
               <NavDropdown.Item
-                onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}>
-                Generiraj podatke</NavDropdown.Item>
+                onClick={() => navigate(RouteNames.OPERATERI)}
+              >Operateri</NavDropdown.Item>
+              <NavDropdown.Item
+                onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
+              >Generiraj podatke</NavDropdown.Item>
             </NavDropdown>
 
 

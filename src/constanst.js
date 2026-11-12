@@ -1,9 +1,9 @@
 export const IME_APLIKACIJE = 'Galerija Slika'
 
 export const RouteNames = {
-    
+
     HOME: '/',
-    OAPLIKACIJI:'/oaplikaciji',
+    OAPLIKACIJI: '/oaplikaciji',
 
     SLIKE: '/slike',
     SLIKE_DODAJ: '/slike/nove',
@@ -28,7 +28,13 @@ export const RouteNames = {
 
     GENERIRANJE_PODATAKA: '/generiranje-podataka',
 
-   
+    OPERATERI: '/operateri',
+    OPERATERI_NOVI: '/operateri/novi',
+    OPERATERI_PROMJENA: '/operateri/:sifra',
+    OPERATERI_PROMJENA_LOZINKE: '/operateri/:sifra/lozinka',
+
+
+
 }
 // memorija, localStorage, firebase
-export const DATA_SOURCE = 'memorija'
+export const DATA_SOURCE = 'localStorage'

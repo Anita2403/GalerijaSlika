@@ -22,6 +22,10 @@ import GeneriranjePodataka from './pages/GeneriranjePodataka'
 import OznakaPregled from './pages/oznake/OznakaPregled'
 import OznakaNova from './pages/oznake/OznakaNova'
 import OznakaPromjena from './pages/oznake/OznakaPromjena'
+import OperaterPregled from './pages/operateri/OperaterPregled'
+import OperaterNovi from './pages/operateri/OperaterNovi'
+import OperaterPromjena from './pages/operateri/OperaterPromjena'
+import OperaterPromjenaLozinke from './pages/operateri/OperaterPromjenaLozinke'
 
 
 function App() {
@@ -59,6 +63,11 @@ function App() {
             <Route path={RouteNames.OZNAKE} element={<OznakaPregled />} />
             <Route path={RouteNames.OZNAKE_DODAJ} element={<OznakaNova />} />
             <Route path={RouteNames.OZNAKE_PROMJENA} element={<OznakaPromjena />} />
+
+            <Route path={RouteNames.OPERATERI} element={<OperaterPregled />} />
+            <Route path={RouteNames.OPERATERI_NOVI} element={<OperaterNovi />} />
+            <Route path={RouteNames.OPERATERI_PROMJENA} element={<OperaterPromjena />} />
+            <Route path={RouteNames.OPERATERI_PROMJENA_LOZINKE} element={<OperaterPromjenaLozinke />} />
 
 
           </Routes>
