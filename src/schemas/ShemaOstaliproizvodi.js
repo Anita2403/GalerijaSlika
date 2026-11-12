@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const ShemaSlikaOstaliproizvodi = z.object({
+export const ShemaOstaliproizvodi = z.object({
   naziv: z.string()
     .trim()
     .min(1, "Naziv je obavezan i ne smije sadržavati samo razmake!")
@@ -12,9 +12,6 @@ export const ShemaSlikaOstaliproizvodi = z.object({
   })
     .min(2022, "Godina izrade mora biti godina između 2022 i 2026 godine!")
     .max(2026, "Godina izrade mora biti godina između 2022 i 2026 godine!"),
-
-  tehnika: z.string()
-    .min(1, "Odabir tehnike je obavezan!"),
 
   materijal: z.string()
     .min(1, "Odabir materijala je obavezan!"),
@@ -34,8 +31,8 @@ export const ShemaSlikaOstaliproizvodi = z.object({
   opis: z.string()
     .trim()
     .min(1, "Opis je obavezan i ne smije sadržavati samo razmake!")
-    .min(3, "Opis slike mora imati najmanje 3 znaka!")
-    .max(500, "Opis slike može imati najviše 500!"),
+    .min(3, "Opis mora imati najmanje 3 znaka!")
+    .max(500, "Opis može imati najviše 500 znakova!"),
 
   oznake: z.array(z.number())
     .min(1, "Morate odabrati barem jednu oznaku!"),

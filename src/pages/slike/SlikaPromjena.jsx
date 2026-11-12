@@ -7,6 +7,7 @@ import TehnikaService from "../../services/tehnike/TehnikaService";
 import OznakaService from "../../services/oznake/OznakaService";
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import { ShemaSlika } from "../../schemas/ShemaSlika";
 
 export default function SlikaPromjena() {
     const navigate = useNavigate()
@@ -21,6 +22,8 @@ export default function SlikaPromjena() {
     const [odabraniIndex, setOdabraniIndex] = useState(-1)
     const [slikaZaCrop, setSlikaZaCrop] = useState(null);
     const cropperRef = useRef(null);
+    const [errors, setErrors] = useState({});
+    const [isChecking, setIsChecking] = useState(false);
 
     useEffect(() => {
         ucitajTehnike()
@@ -112,43 +115,22 @@ export default function SlikaPromjena() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        if (!podaci.get('naziv') || podaci.get('naziv').trim().length === 0) {
-            alert("Naziv je obavezan i ne smije sadržavati samo razmake!")
-            return
-        }
+        setErrors({});
+        const objektPodataka = Object.fromEntries(podaci);
+        objektPodataka.dostupnost = dostupnost;
+        objektPodataka.oznake = odabraniOznake.map(p => parseInt(p.sifra))
+        const rezultat = ShemaSlika.safeParse(objektPodataka);
 
-        if (podaci.get('naziv').trim().length < 3 || podaci.get('naziv').trim().length > 30) {
-            alert("Naziv slike mora imati najmanje 3 znaka i najviše 30!")
-            return
-        }
+        if (!rezultat.success) {
+            const noveGreske = {};
 
-        if (isNaN(podaci.get('godinaIzrade')) || podaci.get('godinaIzrade') < 2022 || podaci.get('godinaIzrade') > 2026) {
-            alert("Godina izrade mora biti godina između 2022 i 2026 godine!")
-            return
-        }
-
-        if (isNaN(podaci.get('sirina')) || podaci.get('sirina') < 20 || podaci.get('sirina') > 140) {
-            alert("Širina mora biti između 20 i 140 centimetara!")
-            return
-        }
-
-        if (isNaN(podaci.get('visina')) || podaci.get('visina') < 20 || podaci.get('visina') > 140) {
-            alert("Visina mora biti između 20 i 140 centimetara!")
-            return
-        }
-
-        if (!podaci.get('opis') || podaci.get('opis').trim().length === 0) {
-            alert("Opis je obavezan i ne smije sadržavati samo razmake!")
-            return
-        }
-
-        if (podaci.get('opis').trim().length < 3 || podaci.get('opis').trim().length > 500) {
-            alert("Opis slike mora imati najmanje 3 znaka i najviše 500!")
-            return
-        }
-
-        if (odabraniOznake.length === 0) {
-            alert("Morate odabrati barem jednu oznaku!");
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0];
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message;
+                }
+            });
+            setErrors(noveGreske);
             return;
         }
 
@@ -204,6 +186,24 @@ export default function SlikaPromjena() {
         }
     }
 
+    const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors };
+            delete noveGreske[nazivPolja];
+            setErrors(noveGreske);
+        }
+    };
+
+
+    const handleFocus = (nazivPolja) => {
+        ocistiGresku(nazivPolja);
+        if (isChecking) setIsChecking(true)
+    };
+
+    const handleBlur = () => {
+        if (isChecking) setIsChecking(false);
+    };
+
     return (
         <Form onSubmit={obradiSubmit}>
             <Container className="visinaAkcija">
@@ -217,50 +217,107 @@ export default function SlikaPromjena() {
                         <Col xs={4} className="mt-3">
                             <Form.Group controlId="naziv">
                                 <Form.Label>Naziv</Form.Label>
-                                <Form.Control type="text" name="naziv" required
-                                    defaultValue={slika.naziv} />
+                                <Form.Control type="text"
+                                    placeholder="Unesite naziv slike"
+                                    className="granica"
+                                    name="naziv"
+                                    isInvalid={!!errors.naziv}
+                                    onFocus={() => handleFocus('naziv')}
+                                    onBlur={handleBlur}
+                                    defaultValue={slika.naziv}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.naziv}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Group controlId="godinaIzrade">
                                 <Form.Label>Godina izrade</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
                                     name="godinaIzrade" step={1}
-                                    defaultValue={slika.godinaIzrade} />
+                                    placeholder="0"
+                                    isInvalid={!!errors.godinaIzrade}
+                                    onFocus={() => ocistiGresku('godinaIzrade')}
+                                    onBlur={handleBlur}
+                                    defaultValue={slika.godinaIzrade}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.godinaIzrade}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Group controlId="tehnika">
                                 <Form.Label>Tehnika</Form.Label>
-                                <Form.Select name="tehnika" required
-                                    value={slika.tehnika || ""} onChange={(e) => setSlika({ ...slika, tehnika: parseInt(e.target.value) })}>
+                                <Form.Select name="tehnika"
+                                    isInvalid={!!errors.tehnika}
+                                    onFocus={() => ocistiGresku('tehnika')}
+                                    onBlur={handleBlur}
+                                    value={slika.tehnika || ""}
+                                    onChange={(e) => setSlika({ ...slika, tehnika: parseInt(e.target.value) })}
+                                >
                                     <option value="">Odaberi tehniku</option>
                                     {tehnike && tehnike.map((t) => (
                                         <option key={t.sifra} value={t.sifra}>{t.naziv}</option>
                                     ))}
                                 </Form.Select>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.tehnika}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Group controlId="sirina">
                                 <Form.Label>Širina</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
-                                    name="sirina"
-                                    defaultValue={slika.sirina} />
+                                    name="sirina" step={1}
+                                    placeholder="0"
+                                    isInvalid={!!errors.sirina}
+                                    onFocus={() => ocistiGresku('sirina')}
+                                    onBlur={handleBlur}
+                                    defaultValue={slika.sirina}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.sirina}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Group controlId="visina">
                                 <Form.Label>Visina</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
-                                    name="visina"
-                                    defaultValue={slika.visina} />
+                                    name="visina" step={1}
+                                    placeholder="0"
+                                    isInvalid={!!errors.visina}
+                                    onFocus={() => ocistiGresku('visina')}
+                                    onBlur={handleBlur}
+                                    defaultValue={slika.visina}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.visina}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Label>Dostupno</Form.Label>
                             <Form.Group controlId="dostupnost">
                                 <Form.Check label="" name="dostupnost"
                                     checked={dostupnost}
                                     onChange={(e) => { setDostupnost(e.target.checked) }} />
                             </Form.Group>
+
                             <Form.Group controlId="opis">
                                 <Form.Label>Opis</Form.Label>
                                 <Form.Control as="textarea" rows={5} name="opis"
-                                    defaultValue={slika.opis} />
+                                    placeholder="Unesite opis slike"
+                                    className="granica"
+                                    isInvalid={!!errors.opis}
+                                    onFocus={() => handleFocus('opis')}
+                                    onBlur={handleBlur}
+                                    defaultValue={slika.opis}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.opis}
+                                </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
 
@@ -282,9 +339,17 @@ export default function SlikaPromjena() {
                                                 setPrikaziAutocomplete(true)
                                                 setOdabraniIndex(-1)
                                             }}
-                                            onFocus={() => setPrikaziAutocomplete(true)} // <-- Ovo otvara listu odmah na klik / fokus
+                                            onFocus={() => {
+                                                setPrikaziAutocomplete(true)
+                                                handleFocus('oznake')
+                                            }}
                                             onKeyDown={handleKeyDown}
+                                            isInvalid={!!errors.oznake}
+                                            onBlur={handleBlur}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.oznake}
+                                        </Form.Control.Feedback>
                                         {prikaziAutocomplete && filtrirajOznake().length > 0 && (
                                             <div className="position-absolute w-100 bg-white border rounded shadow-sm" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
                                                 {filtrirajOznake().map((oznaka, index) => (

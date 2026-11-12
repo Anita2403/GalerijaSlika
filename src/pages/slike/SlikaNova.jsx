@@ -8,7 +8,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { useRef } from "react";
 import { useEffect, useState } from "react";
-import { ShemaSlikaOstaliproizvodi } from "../../schemas/ShemaSlikaOstaliproizvodi";
+import { ShemaSlika } from "../../schemas/ShemaSlika";
 
 export default function SlikaNova() {
     const [tehnike, setTehnike] = useState([]);
@@ -102,7 +102,7 @@ export default function SlikaNova() {
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
         objektPodataka.oznake = odabraniOznake.map(p => parseInt(p.sifra))
-        const rezultat = ShemaSlikaOstaliproizvodi.safeParse(objektPodataka);
+        const rezultat = ShemaSlika.safeParse(objektPodataka);
 
         if (!rezultat.success) {
             const noveGreske = {};

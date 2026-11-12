@@ -2,23 +2,26 @@ import { Link, useNavigate } from "react-router-dom";
 import OstaliProizvodiService from "../../services/ostaliproizvodi/OstaliProizvodiService";
 import { RouteNames } from "../../constanst";
 import { Button, Card, Col, Container, Form, Row, Table } from "react-bootstrap";
-import { useEffect, useState } from "react";
 import MaterijalService from "../../services/materijali/MaterijalService";
 import OznakaService from "../../services/oznake/OznakaService";
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { useRef } from "react";
+import { useEffect, useState } from "react";
+import { ShemaOstaliproizvodi } from "../../schemas/ShemaOstaliproizvodi";
 
 export default function OstaliProizvodiNovi() {
-    const [materijali, setMaterijali] = useState([])
-    const [oznake, setOznake] = useState([])
-    const [odabraniOznake, setOdabraniOznake] = useState([])
-    const [pretragaOznaka, setPretragaOznaka] = useState('')
-    const [prikaziAutocomplete, setPrikaziAutocomplete] = useState(false)
-    const [odabraniIndex, setOdabraniIndex] = useState(-1)
+    const [materijali, setMaterijali] = useState([]);
+    const [oznake, setOznake] = useState([]);
+    const [odabraniOznake, setOdabraniOznake] = useState([]);
+    const [pretragaOznaka, setPretragaOznaka] = useState('');
+    const [prikaziAutocomplete, setPrikaziAutocomplete] = useState(false);
+    const [odabraniIndex, setOdabraniIndex] = useState(-1);
     const [slikaZaCrop, setSlikaZaCrop] = useState(null);
     const cropperRef = useRef(null);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
+    const [isChecking, setIsChecking] = useState(false);
 
     useEffect(() => {
         ucitajMaterijale()
@@ -55,12 +58,14 @@ export default function OstaliProizvodiNovi() {
     function ukloniOznaka(sifra) {
         setOdabraniOznake(odabraniOznake.filter(p => p.sifra !== sifra))
     }
+
     function filtrirajOznake() {
         return oznake.filter(p =>
             !odabraniOznake.find(op => op.sifra === p.sifra) &&
             p.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())
         )
     }
+
 
     function handleKeyDown(e) {
         const filtriraniOznake = filtrirajOznake()
@@ -94,47 +99,24 @@ export default function OstaliProizvodiNovi() {
         e.preventDefault()
         const podaci = new FormData(e.target)
 
-        if (!podaci.get('naziv') || podaci.get('naziv').trim().length === 0) {
-            alert("Naziv je obavezan i ne smije sadržavati samo razmake!")
-            return
-        }
+        setErrors({});
+        const objektPodataka = Object.fromEntries(podaci);
+        objektPodataka.oznake = odabraniOznake.map(p => parseInt(p.sifra))
+        const rezultat = ShemaOstaliproizvodi.safeParse(objektPodataka);
 
-        if (podaci.get('naziv').trim().length < 3 || podaci.get('naziv').trim().length > 30) {
-            alert("Naziv ostalih proizvoda mora imati najmanje 3 znaka i najviše 30!")
-            return
-        }
+        if (!rezultat.success) {
+            const noveGreske = {};
 
-        if (isNaN(podaci.get('godinaIzrade')) || podaci.get('godinaIzrade') < 2022 || podaci.get('godinaIzrade') > 2026) {
-            alert("Godina izrade mora biti godina između 2022 i 2026 godine!")
-            return
-        }
-
-        if (isNaN(podaci.get('sirina')) || podaci.get('sirina') < 20 || podaci.get('sirina') > 140) {
-            alert("Širina mora biti između 20 i 140 centimetara!")
-            return
-        }
-
-        if (isNaN(podaci.get('visina')) || podaci.get('visina') < 20 || podaci.get('visina') > 140) {
-            alert("Visina mora biti između 20 i 140 centimetara!")
-            return
-        }
-
-        if (!podaci.get('opis') || podaci.get('opis').trim().length === 0) {
-            alert("Opis je obavezan i ne smije sadržavati samo razmake!")
-            return
-        }
-
-        const min = 3
-        const max = 500
-        if (podaci.get('opis').trim().length < min || podaci.get('opis').trim().length > max) {
-            alert(`Opis ostalih proizvoda mora imati najmanje ${min} znaka i najviše ${max}!`)
-            return
-        }
-
-        if (odabraniOznake.length === 0) {
-            alert("Morate odabrati barem jednu oznaku!");
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0];
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message;
+                }
+            });
+            setErrors(noveGreske);
             return;
         }
+
 
         let dataUrl = null
         if (cropperRef.current && cropperRef.current.cropper && cropperRef.current.cropper.cropped) {
@@ -153,6 +135,7 @@ export default function OstaliProizvodiNovi() {
             });
             dataUrl = canvas.toDataURL('image/png');
         }
+
 
 
         dodaj({
@@ -188,6 +171,24 @@ export default function OstaliProizvodiNovi() {
         }
     }
 
+    const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors };
+            delete noveGreske[nazivPolja];
+            setErrors(noveGreske);
+        }
+    };
+
+
+    const handleFocus = (nazivPolja) => {
+        ocistiGresku(nazivPolja);
+        if (isChecking) setIsChecking(true)
+    };
+
+    const handleBlur = () => {
+        if (isChecking) setIsChecking(false);
+    };
+
     return (
         <Form onSubmit={obradiSubmit}>
             <Container className="visinaAkcija">
@@ -197,47 +198,106 @@ export default function OstaliProizvodiNovi() {
                     </Card.Title>
 
                     <Row>
-                        {/* Lijeva strana */}
+                        {/* Lijeva strana  */}
                         <Col xs={4} className="mt-3">
                             <Form.Group controlId="naziv">
                                 <Form.Label>Naziv</Form.Label>
-                                <Form.Control type="text" name="naziv" required />
+                                <Form.Control type="text"
+                                    placeholder="Unesite naziv ostalih proizvoda"
+                                    className="granica"
+                                    name="naziv"
+                                    isInvalid={!!errors.naziv}
+                                    onFocus={() => handleFocus('naziv')}
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.naziv}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Group controlId="godinaIzrade">
                                 <Form.Label>Godina izrade</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
-                                    name="godinaIzrade" step={1} />
+                                    name="godinaIzrade" step={1}
+                                    placeholder="0"
+                                    isInvalid={!!errors.godinaIzrade}
+                                    onFocus={() => ocistiGresku('godinaIzrade')}
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.godinaIzrade}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
+
                             <Form.Group controlId="materijal">
                                 <Form.Label>Materijal</Form.Label>
-                                <Form.Select name="materijal" required>
+                                <Form.Select name="materijal"
+                                    isInvalid={!!errors.materijal}
+                                    onFocus={() => ocistiGresku('materijal')}
+                                    onBlur={handleBlur}
+                                >
                                     <option value="">Odaberi materijal</option>
                                     {materijali && materijali.map((t) => (
                                         <option key={t.sifra} value={t.sifra}>{t.naziv}</option>
                                     ))}
                                 </Form.Select>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.materijal}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
+
                             <Form.Group controlId="sirina">
                                 <Form.Label>Širina</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
-                                    name="sirina" />
+                                    name="sirina" step={1}
+                                    placeholder="0"
+                                    isInvalid={!!errors.sirina}
+                                    onFocus={() => ocistiGresku('sirina')}
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.sirina}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Group controlId="visina">
                                 <Form.Label>Visina</Form.Label>
                                 <Form.Control type="number"
                                     style={{ textAlign: 'right' }}
-                                    name="visina" />
+                                    name="visina" step={1}
+                                    placeholder="0"
+                                    isInvalid={!!errors.visina}
+                                    onFocus={() => ocistiGresku('visina')}
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.visina}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                             <Form.Label>Dostupno</Form.Label>
                             <Form.Group controlId="dostupnost">
                                 <Form.Check label="" name="dostupnost" />
                             </Form.Group>
+
                             <Form.Group controlId="opis">
                                 <Form.Label>Opis</Form.Label>
-                                <Form.Control as="textarea" rows={5} name="opis" />
+                                <Form.Control as="textarea" rows={5} name="opis"
+                                    placeholder="Unesite opis ostalih proizvoda"
+                                    className="granica"
+                                    isInvalid={!!errors.opis}
+                                    onFocus={() => handleFocus('opis')}
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.opis}
+                                </Form.Control.Feedback>
                             </Form.Group>
+
                         </Col>
 
                         {/* Sredina */}
@@ -255,11 +315,20 @@ export default function OstaliProizvodiNovi() {
                                             value={pretragaOznaka}
                                             onChange={(e) => {
                                                 setPretragaOznaka(e.target.value)
-                                                setPrikaziAutocomplete(true) // Uvijek drži otvoreno dok se tipka
+                                                setPrikaziAutocomplete(true)
                                                 setOdabraniIndex(-1)
                                             }}
-                                            onFocus={() => setPrikaziAutocomplete(true)} // Otvori odmah na klik / fokus!
+                                            onFocus={() => {
+                                                setPrikaziAutocomplete(true)
+                                                handleFocus('oznake')
+                                            }}
+                                            isInvalid={!!errors.oznake}
+
+                                            onBlur={handleBlur}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.oznake}
+                                        </Form.Control.Feedback>
                                         {prikaziAutocomplete && filtrirajOznake().length > 0 && (
                                             <div className="position-absolute w-100 bg-white border rounded shadow-sm" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
                                                 {filtrirajOznake().map((oznaka, index) => (
@@ -337,7 +406,9 @@ export default function OstaliProizvodiNovi() {
                                 ref={cropperRef}
                             />
                         </Col>
+
                     </Row>
+
 
                     <Row className="mt-3">
                         <Col xs={6} className="visinaAkcija">
