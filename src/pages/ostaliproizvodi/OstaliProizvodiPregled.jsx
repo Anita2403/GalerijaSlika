@@ -8,11 +8,13 @@ import MaterijalService from "../../services/materijali/MaterijalService";
 import { FaEdit, FaFilePdf, FaTrash, FaPlus } from "react-icons/fa";
 import OstaliProizvodiPDFGenerator from "../../components/OstaliProizvodiPDFGenerator";
 import OznakaService from "../../services/oznake/OznakaService";
+import useAuth from "../../hooks/useAuth";
 
 export default function OstaliProizvodiPregled() {
     const [ostaliproizvodi, setOstaliProizvodi] = useState([]);
     const [materijali, setMaterijali] = useState([]);
     const navigate = useNavigate();
+    const { isLoggedIn } = useAuth()
 
     useEffect(() => {
         ucitajOstaliProizvodi();
@@ -70,6 +72,7 @@ export default function OstaliProizvodiPregled() {
                     <h1 className="fw-light display-6 mb-0">Pregled ostalih proizvoda</h1>
                 </div>
                 <div className="mt-3 mt-md-0">
+                    {isLoggedIn && (
                     <Link 
                         to={RouteNames.OSTALIPROIZVODI_DODAJ}
                         className="btn btn-outline-dark px-4 py-2 d-inline-flex align-items-center gap-2"
@@ -77,6 +80,7 @@ export default function OstaliProizvodiPregled() {
                     >
                         <FaPlus size={14} /> Dodaj novi proizvod
                     </Link>
+                    )}
                 </div>
             </div>
 
@@ -130,6 +134,7 @@ export default function OstaliProizvodiPregled() {
                                 </Card.Text>
 
                                 {/* Akcijski gumbi */}
+                                {isLoggedIn && (
                                 <div className="mt-auto d-flex gap-2 pt-2 border-top border-light">
                                     <Button
                                         variant="outline-secondary"
@@ -150,6 +155,7 @@ export default function OstaliProizvodiPregled() {
                                         <FaTrash size={14} />
                                     </Button>
                                 </div>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>

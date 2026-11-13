@@ -26,57 +26,72 @@ import OperaterPregled from './pages/operateri/OperaterPregled'
 import OperaterNovi from './pages/operateri/OperaterNovi'
 import OperaterPromjena from './pages/operateri/OperaterPromjena'
 import OperaterPromjenaLozinke from './pages/operateri/OperaterPromjenaLozinke'
+import useAuth from './hooks/useAuth'
+import Login from './pages/login/Login'
+import Registracija from './pages/registracija/Registracija'
+import NadzornaPloca from './pages/NadzornaPloca'
 
 
 function App() {
 
+  const { isLoggedIn, authUser } = useAuth()
 
   return (
-    <>
-      <Container>
-        <Izbornik />
-        <Container className='app'>
-          <Routes>
+    <Container>
+      <Izbornik />
+      <Container className='app'>
+        <Routes>
 
-            <Route path={RouteNames.HOME} element={<Home />} />
-            <Route path={RouteNames.OAPLIKACIJI} element={<OAplikaciji />} />
-
-            <Route path={RouteNames.SLIKE} element={<SlikaPregled />} />
-            <Route path={RouteNames.SLIKE_DODAJ} element={<SlikaNova />} />
-            <Route path={RouteNames.SLIKE_PROMJENA} element={<SlikaPromjena />} />
+          <Route path={RouteNames.HOME} element={<Home />} />
+          <Route path={RouteNames.OAPLIKACIJI} element={<OAplikaciji />} />
+          <Route path={RouteNames.SLIKE} element={<SlikaPregled />} />
+          <Route path={RouteNames.OSTALIPROIZVODI} element={<OstaliProizvodiPregled />} />
 
 
-            <Route path={RouteNames.OSTALIPROIZVODI} element={<OstaliProizvodiPregled />} />
-            <Route path={RouteNames.OSTALIPROIZVODI_DODAJ} element={<OstaliProizvodiNovi />} />
-            <Route path={RouteNames.OSTALIPROIZVODI_PROMJENA} element={<OstaliProizvodiPromjena />} />
-
-            <Route path={RouteNames.TEHNIKE} element={<TehnikaPregled />} />
-            <Route path={RouteNames.TEHNIKE_DODAJ} element={<TehnikaNova />} />
-            <Route path={RouteNames.TEHNIKE_PROMJENA} element={<TehnikaPromjena />} />
-
-            <Route path={RouteNames.MATERIJALI} element={<MaterijalPregled />} />
-            <Route path={RouteNames.MATERIJALI_DODAJ} element={<MaterijalNova />} />
-            <Route path={RouteNames.MATERIJALI_PROMJENA} element={<MaterijalPromjena />} />
-
-            <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
-
-            <Route path={RouteNames.OZNAKE} element={<OznakaPregled />} />
-            <Route path={RouteNames.OZNAKE_DODAJ} element={<OznakaNova />} />
-            <Route path={RouteNames.OZNAKE_PROMJENA} element={<OznakaPromjena />} />
-
-            <Route path={RouteNames.OPERATERI} element={<OperaterPregled />} />
-            <Route path={RouteNames.OPERATERI_NOVI} element={<OperaterNovi />} />
-            <Route path={RouteNames.OPERATERI_PROMJENA} element={<OperaterPromjena />} />
-            <Route path={RouteNames.OPERATERI_PROMJENA_LOZINKE} element={<OperaterPromjenaLozinke />} />
+          {isLoggedIn ? (
+            <>
+              <Route path={RouteNames.TEHNIKE} element={<TehnikaPregled />} />
+              <Route path={RouteNames.MATERIJALI} element={<MaterijalPregled />} />
+              <Route path={RouteNames.OZNAKE} element={<OznakaPregled />} />
+              <Route path={RouteNames.SLIKE_DODAJ} element={<SlikaNova />} />
+              <Route path={RouteNames.SLIKE_PROMJENA} element={<SlikaPromjena />} />
+              <Route path={RouteNames.OSTALIPROIZVODI_DODAJ} element={<OstaliProizvodiNovi />} />
+              <Route path={RouteNames.OSTALIPROIZVODI_PROMJENA} element={<OstaliProizvodiPromjena />} />
+              <Route path={RouteNames.TEHNIKE_DODAJ} element={<TehnikaNova />} />
+              <Route path={RouteNames.TEHNIKE_PROMJENA} element={<TehnikaPromjena />} />
+              <Route path={RouteNames.MATERIJALI_DODAJ} element={<MaterijalNova />} />
+              <Route path={RouteNames.MATERIJALI_PROMJENA} element={<MaterijalPromjena />} />
+              <Route path={RouteNames.OZNAKE_DODAJ} element={<OznakaNova />} />
+              <Route path={RouteNames.OZNAKE_PROMJENA} element={<OznakaPromjena />} />
 
 
-          </Routes>
+              {authUser.uloga === 'admin' && (
+                <>
+                  <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
+                  <Route path={RouteNames.OPERATERI} element={<OperaterPregled />} />
+                  <Route path={RouteNames.OPERATERI_NOVI} element={<OperaterNovi />} />
+                  <Route path={RouteNames.OPERATERI_PROMJENA} element={<OperaterPromjena />} />
+                  <Route path={RouteNames.OPERATERI_PROMJENA_LOZINKE} element={<OperaterPromjenaLozinke />} />
+                  <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
+                </>
+              )}
 
-        </Container>
-        <hr />
-        &copy; {IME_APLIKACIJE}({DATA_SOURCE})
+
+            </>
+          ) : (
+            <>
+              <Route path={RouteNames.LOGIN} element={<Login />} />
+              <Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
+            </>
+          )}
+
+        </Routes>
+
       </Container>
-    </>
+      <hr />
+      &copy; {IME_APLIKACIJE}({DATA_SOURCE})
+    </Container>
+
   )
 }
 

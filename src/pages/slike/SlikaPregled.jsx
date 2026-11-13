@@ -8,11 +8,13 @@ import { FaEdit, FaFilePdf, FaTrash, FaPlus } from "react-icons/fa";
 import { GrValidate } from "react-icons/gr";
 import OznakaService from "../../services/oznake/OznakaService";
 import SlikePDFGenerator from "../../components/SlikePDFGenerator";
+import useAuth from "../../hooks/useAuth";
 
 export default function SlikaPregled() {
     const [slike, setSlike] = useState([]);
     const [tehnike, setTehnike] = useState([]);
     const navigate = useNavigate();
+    const { isLoggedIn } = useAuth()
 
     useEffect(() => {
         ucitajSlike();
@@ -70,13 +72,16 @@ export default function SlikaPregled() {
                     <h1 className="fw-light display-6 mb-0">Pregled slika</h1>
                 </div>
                 <div className="mt-3 mt-md-0">
-                    <Link 
-                        to={RouteNames.SLIKE_DODAJ}
-                        className="btn btn-outline-dark px-4 py-2 d-inline-flex align-items-center gap-2"
-                        style={{ borderRadius: '4px', fontWeight: '500' }}
-                    >
-                        <FaPlus size={14} /> Dodaj novu sliku
-                    </Link>
+                    {isLoggedIn && (
+                        <Link
+                            to={RouteNames.SLIKE_DODAJ}
+                            className="btn btn-outline-dark px-4 py-2 d-inline-flex align-items-center gap-2"
+                            style={{ borderRadius: '4px', fontWeight: '500' }}
+                        >
+                            <FaPlus size={14} /> Dodaj novu sliku
+                        </Link>
+                    )}
+
                 </div>
             </div>
 
@@ -85,7 +90,7 @@ export default function SlikaPregled() {
                 {slike && slike.map((slika) => (
                     <Col key={slika.sifra} xs={12} sm={6} lg={4} xl={3}>
                         <Card className="h-100 border-0 bg-white" style={{ borderRadius: '4px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                            
+
                             {/* Slika okvir */}
                             <div style={{ height: "220px", overflow: "hidden", backgroundColor: "#f8f9fa", borderTopLeftRadius: '4px', borderTopRightRadius: '4px' }} className="position-relative d-flex align-items-center justify-content-center">
                                 {slika.image ? (
@@ -112,8 +117,8 @@ export default function SlikaPregled() {
                                         className="text-secondary ms-2 mt-1"
                                         size={18}
                                         style={{ cursor: 'pointer', transition: 'color 0.2s' }}
-                                        onClick={() => generirajPDFZaSliku(slika)} 
-                                        title="Generiraj PDF dokument" 
+                                        onClick={() => generirajPDFZaSliku(slika)}
+                                        title="Generiraj PDF dokument"
                                     />
                                 </div>
 
@@ -121,7 +126,7 @@ export default function SlikaPregled() {
                                     <span className="d-block"><strong>Tehnika:</strong> {dohvatiNazivTehnika(slika.tehnika)}</span>
                                     <span className="d-block"><strong>Dimenzije:</strong> {slika.sirina} × {slika.visina} cm</span>
                                     <span className="d-flex align-items-center gap-2 mt-2">
-                                        <strong>Dostupnost:</strong> 
+                                        <strong>Dostupnost:</strong>
                                         <GrValidate
                                             size={16}
                                             color={slika.dostupnost ? '#198754' : '#dc3545'}
@@ -130,26 +135,28 @@ export default function SlikaPregled() {
                                 </Card.Text>
 
                                 {/* Akcijski gumbi */}
-                                <div className="mt-auto d-flex gap-2 pt-2 border-top border-light">
-                                    <Button
-                                        variant="outline-secondary"
-                                        className="flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
-                                        onClick={() => navigate(`/slike/${slika.sifra}`)}
-                                        title="Uredi podatke"
-                                        style={{ borderRadius: '4px', fontSize: '0.9rem' }}
-                                    >
-                                        <FaEdit /> Uredi
-                                    </Button>
-                                    <Button
-                                        variant="outline-danger"
-                                        className="d-flex align-items-center justify-content-center px-3 py-2"
-                                        onClick={() => obrisi(slika.sifra)}
-                                        title="Obriši sliku"
-                                        style={{ borderRadius: '4px' }}
-                                    >
-                                        <FaTrash size={14} />
-                                    </Button>
-                                </div>
+                                {isLoggedIn && (
+                                    <div className="mt-auto d-flex gap-2 pt-2 border-top border-light">
+                                        <Button
+                                            variant="outline-secondary"
+                                            className="flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
+                                            onClick={() => navigate(`/slike/${slika.sifra}`)}
+                                            title="Uredi podatke"
+                                            style={{ borderRadius: '4px', fontSize: '0.9rem' }}
+                                        >
+                                            <FaEdit /> Uredi
+                                        </Button>
+                                        <Button
+                                            variant="outline-danger"
+                                            className="d-flex align-items-center justify-content-center px-3 py-2"
+                                            onClick={() => obrisi(slika.sifra)}
+                                            title="Obriši sliku"
+                                            style={{ borderRadius: '4px' }}
+                                        >
+                                            <FaTrash size={14} />
+                                        </Button>
+                                    </div>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>
