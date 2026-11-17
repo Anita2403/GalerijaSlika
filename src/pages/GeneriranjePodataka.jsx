@@ -11,6 +11,11 @@ import { DATA_SOURCE } from '../constanst';
 import slika_generiranje_podataka from '../assets/slika_generiranje_podataka.jpg';
 import { FaDatabase, FaTrashAlt, FaPlus, FaLayerGroup } from 'react-icons/fa';
 import OperaterService from '../services/operateri/OperaterService';
+import { ostaliproizvodi } from '../services/ostaliproizvodi/OstaliProizvodiPodaci';
+import { tehnike } from '../services/tehnike/TehnikaPodaci';
+import { operateri } from '../services/operateri/OperaterPodaci';
+import { materijali } from '../services/materijali/MaterijalPodaci';
+import { oznake } from '../services/oznake/OznakaPodaci';
 
 export default function GeneriranjePodataka() {
     const [brojSlika, setBrojSlika] = useState(10);
@@ -169,7 +174,7 @@ export default function GeneriranjePodataka() {
         setLoading(true);
         setPoruka(null);
         try {
-            const [slikeRes, ostaliRes, tehnikeRes, materijaliRes, oznakeRes,operateriRes] = await Promise.all([
+            const [slikeRes, ostaliRes, tehnikeRes, materijaliRes, oznakeRes, operateriRes] = await Promise.all([
                 SlikaService.get(),
                 OstaliProizvodiService.get(),
                 TehnikaService.get(),
@@ -222,12 +227,12 @@ export default function GeneriranjePodataka() {
     };
 
 
-     const generirajOperatere = async (broj) => {
+    const generirajOperatere = async (broj) => {
         // Prvo obriši admin operatera ako postoji
         const rezultat = await OperaterService.get();
         const operateri = rezultat.data;
         const adminOperater = operateri.find(op => op.email === 'admin@edunova.hr');
-        
+
         if (adminOperater) {
             await OperaterService.obrisi(adminOperater.sifra);
         }
@@ -282,7 +287,7 @@ export default function GeneriranjePodataka() {
         try {
             const rezultat = await OperaterService.get();
             const operateri = rezultat.data;
-            
+
             for (const operater of operateri) {
                 await OperaterService.obrisi(operater.sifra);
             }
@@ -428,6 +433,47 @@ export default function GeneriranjePodataka() {
         }
     };
 
+    const handleMemorijaULocalStorage = async () => {
+        if (!window.confirm('Jeste li sigurni da želite presipati sve podatke iz memorije u localStorage?')) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+
+            localStorage.removeItem('slike')
+            localStorage.removeItem('ostaliproizvodi')
+            localStorage.removeItem('tehnike')
+            localStorage.removeItem('materijali')
+            localStorage.removeItem('oznake')
+            localStorage.removeItem('operateri')
+
+            localStorage.setItem('slike', JSON.stringify(slike))
+            localStorage.setItem('ostaliproizvodi', JSON.stringify(ostaliproizvodi))
+            localStorage.setItem('tehnike', JSON.stringify(tehnike))
+            localStorage.setItem('materijali', JSON.stringify(materijali))
+            localStorage.setItem('oznake', JSON.stringify(oznake))
+            localStorage.setItem('operateri', JSON.stringify(operateri))
+
+
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno presipano!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri presipavanju podataka: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
     return (
         <Container className="py-5">
             {/* Zaglavlje */}
@@ -560,7 +606,7 @@ export default function GeneriranjePodataka() {
                                     <Button variant="outline-dark" type="submit" disabled={loading} className="w-100 d-flex align-items-center justify-content-center gap-2" style={{ borderRadius: '4px' }}>
                                         <FaPlus size={12} /> {loading ? 'Generiranje...' : 'Generiraj operatere'}
                                     </Button>
-                                    
+
                                 </Form>
                             </Card>
                         </Col>
@@ -604,8 +650,34 @@ export default function GeneriranjePodataka() {
                             </Col>
                         </Row>
                     </div>
-                </>
+
+                     {DATA_SOURCE === 'memorija' && (
+                        <>
+                        <hr className="my-4" />
+
+                        <h3>Presipavanje podataka</h3>
+                        <p className="text-muted">
+                            Koristite ove opcije za kopiranje iz jednog izvora u drugi.
+                        </p>
+
+                        <Row className="mt-3">
+                            <Col md={3}>
+                                <Button
+                                    variant="danger"
+                                    onClick={handleMemorijaULocalStorage}
+                                    disabled={loading}
+                                    className="w-100 mb-2"
+                                >
+                                    {loading ? 'Presipavanje...' : 'Presipaj'}
+                                </Button>
+                            </Col>
+                        </Row>
+
+                    </>
+                )}
+                   
+               </> 
             )}
-        </Container>
-    );
+            </Container>
+            )
 }

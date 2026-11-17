@@ -6,7 +6,7 @@ import { DATA_SOURCE, IME_APLIKACIJE, RouteNames } from '../constanst';
 import { useNavigate } from 'react-router-dom';
 import { NavbarToggle } from 'react-bootstrap';
 import { FaMemory } from 'react-icons/fa';
-import { GrStatusUnknown, GrVirtualStorage } from 'react-icons/gr';
+import { GrServer, GrStatusUnknown, GrVirtualStorage } from 'react-icons/gr';
 import useAuth from '../hooks/useAuth';
 import { Button } from 'react-bootstrap';
 
@@ -22,6 +22,8 @@ export default function Izbornik() {
         return <FaMemory title='Memorija' />
       case 'localStorage':
         return <GrVirtualStorage title='Local storage' />
+         case 'firebase':
+                return <GrServer title='Firebase' />
       default:
         return <GrStatusUnknown title='Nepoznato' />
     }

@@ -40,4 +40,13 @@ export const RouteNames = {
 
 }
 // memorija, localStorage, firebase
-export const DATA_SOURCE = 'memorija'
+export const DATA_SOURCE = 'localStorage'
+
+export const PrefixStorage = {
+    SLIKE: 'e38.slike',
+    OSTALIPROIZVODI: 'e38.ostaliproizvodi',
+    TEHNIKE: 'e38.tehnike',
+    MATERIJALI: 'e38.materijali',
+    OZNAKE: 'e38.oznake',
+    OPERATERI: 'e38.operateri'
+} 
