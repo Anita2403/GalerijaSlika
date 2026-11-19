@@ -1,9 +1,7 @@
 import { PrefixStorage } from "../../constanst"
 
 
-const STORAGE_KEY='slike'
-
-function dohvatiSveizStorage() {
+function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(PrefixStorage.SLIKE)
     return podaci ? JSON.parse(podaci) : []
 }
@@ -12,19 +10,19 @@ function spremiUStorage(podaci){
 }
 
 async function get() {
-    const slike = dohvatiSveizStorage()
+    const slike = dohvatiSveIzStorage()
     return { data: [...slike] }
 
 }
 
 async function getBySifra(sifra) {
-    const slike = dohvatiSveizStorage()
+    const slike = dohvatiSveIzStorage()
     return { data: slike.find(s => s.sifra === parseInt(sifra)) }
 }
 
 
 async function dodaj(slika) {
-    const slike = dohvatiSveizStorage()
+    const slike = dohvatiSveIzStorage()
     if (slike.length === 0) {
         slika.sifra = 1
     } else {
@@ -37,7 +35,7 @@ async function dodaj(slika) {
 
 
 async function promijeni(sifra, slika) {
-    const slike = dohvatiSveizStorage()
+    const slike = dohvatiSveIzStorage()
     const index = slike.findIndex(s => s.sifra === parseInt(sifra))
     slike[index] = { ...slike[index], ...slika }
     spremiUStorage(slike)
@@ -46,7 +44,7 @@ async function promijeni(sifra, slika) {
 
 
 async function obrisi(sifra) {
-    let slike = dohvatiSveizStorage()
+    let slike = dohvatiSveIzStorage()
     slike = slike.filter(s => s.sifra !== parseInt(sifra))
     spremiUStorage(slike)
 }

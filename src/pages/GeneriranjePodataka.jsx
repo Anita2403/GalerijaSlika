@@ -7,7 +7,7 @@ import TehnikaService from '../services/tehnike/TehnikaService';
 import MaterijalService from '../services/materijali/MaterijalService';
 import OznakaService from '../services/oznake/OznakaService';
 import { slike } from '../services/slike/SlikaPodaci';
-import { DATA_SOURCE } from '../constanst';
+import { DATA_SOURCE, PrefixStorage } from '../constanst';
 import slika_generiranje_podataka from '../assets/slika_generiranje_podataka.jpg';
 import { FaDatabase, FaTrashAlt, FaPlus, FaLayerGroup } from 'react-icons/fa';
 import OperaterService from '../services/operateri/OperaterService';
@@ -442,7 +442,7 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
-            localStorage.removeItem('slike');
+            localStorage.removeItem(PrefixStorage.SLIKE);
             localStorage.removeItem('ostaliproizvodi');
             localStorage.removeItem('tehnike');
             localStorage.removeItem('materijali');

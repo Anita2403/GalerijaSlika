@@ -1,9 +1,6 @@
 import { PrefixStorage } from "../../constanst"
 
-
-const STORAGE_KEY='ostaliproizvodi'
-
-function dohvatiSveizStorage() {
+function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(PrefixStorage.OSTALIPROIZVODI)
     return podaci ? JSON.parse(podaci) : []
 }
@@ -13,19 +10,19 @@ function spremiUStorage(podaci){
 }
 
 async function get() {
-    const ostaliproizvodi = dohvatiSveizStorage()
+    const ostaliproizvodi = dohvatiSveIzStorage()
     return { data: [...ostaliproizvodi] }
 
 }
 
 async function getBySifra(sifra) {
-    const ostaliproizvodi = dohvatiSveizStorage()
+    const ostaliproizvodi = dohvatiSveIzStorage()
     return { data: ostaliproizvodi.find(s => s.sifra === parseInt(sifra)) }
 }
 
 
 async function dodaj(ostaliproizvod) {
-    const ostaliproizvodi = dohvatiSveizStorage()
+    const ostaliproizvodi = dohvatiSveIzStorage()
     if (ostaliproizvodi.length === 0) {
         ostaliproizvod.sifra = 1
     } else {
@@ -38,7 +35,7 @@ async function dodaj(ostaliproizvod) {
 
 
 async function promijeni(sifra, ostaliproizvod) {
-    const ostaliproizvodi = dohvatiSveizStorage()
+    const ostaliproizvodi = dohvatiSveIzStorage()
     const index = ostaliproizvodi.findIndex(s => s.sifra === parseInt(sifra))
     ostaliproizvodi[index] = { ...ostaliproizvodi[index], ...ostaliproizvod }
     spremiUStorage(ostaliproizvodi)
@@ -47,7 +44,7 @@ async function promijeni(sifra, ostaliproizvod) {
 
 
 async function obrisi(sifra) {
-    let ostaliproizvodi = dohvatiSveizStorage()
+    let ostaliproizvodi = dohvatiSveIzStorage()
     ostaliproizvodi = ostaliproizvodi.filter(s => s.sifra !== parseInt(sifra))
     spremiUStorage(ostaliproizvodi)
 }

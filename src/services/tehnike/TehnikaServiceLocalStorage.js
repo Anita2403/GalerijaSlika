@@ -1,8 +1,6 @@
 import { PrefixStorage } from "../../constanst"
 
 
-const STORAGE_KEY='tehnike'
-
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(PrefixStorage.TEHNIKE)
     return podaci ? JSON.parse(podaci) : []
@@ -14,19 +12,19 @@ function spremiUStorage(podaci){
 }
 
 async function get() {
-    const tehnike = dohvatiSveizStorage()
+    const tehnike = dohvatiSveIzStorage()
     return { data: [...tehnike] }
 
 }
 
 async function getBySifra(sifra) {
-    const tehnike = dohvatiSveizStorage()
+    const tehnike = dohvatiSveIzStorage()
     return { data: tehnike.find(s => s.sifra === parseInt(sifra)) }
 }
 
 
 async function dodaj(tehnika) {
-    const tehnike = dohvatiSveizStorage()
+    const tehnike = dohvatiSveIzStorage()
     if (tehnike.length === 0) {
         tehnika.sifra = 1
     } else {
@@ -39,7 +37,7 @@ async function dodaj(tehnika) {
 
 
 async function promijeni(sifra, tehnika) {
-    const tehnike = dohvatiSveizStorage()
+    const tehnike = dohvatiSveIzStorage()
     const index = tehnike.findIndex(s => s.sifra === parseInt(sifra))
     tehnike[index] = { ...tehnike[index], ...tehnika }
     spremiUStorage(tehnike)
@@ -48,7 +46,7 @@ async function promijeni(sifra, tehnika) {
 
 
 async function obrisi(sifra) {
-    let tehnike = dohvatiSveizStorage()
+    let tehnike = dohvatiSveIzStorage()
     tehnike = tehnike.filter(s => s.sifra !== parseInt(sifra))
     spremiUStorage(tehnike)
 }

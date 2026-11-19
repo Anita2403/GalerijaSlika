@@ -1,26 +1,26 @@
-const STORAGE_KEY = 'oznake'
+import { PrefixStorage } from "../../constanst"
 
-function dohvatiSveizStorage(){
-    const podaci = localStorage.getItem(STORAGE_KEY)
+function dohvatiSveIzStorage(){
+    const podaci = localStorage.getItem(PrefixStorage.OZNAKE)
     return podaci ? JSON.parse(podaci) : []
 }
 
 function spremiUStorage(podaci){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+    localStorage.setItem(PrefixStorage.OZNAKE, JSON.stringify(podaci))
 }
 
 async function get() {
-    const oznake = dohvatiSveizStorage()
+    const oznake = dohvatiSveIzStorage()
     return { data: [...oznake] }
 }
 
 async function getBySifra(sifra) {
-    const oznake = dohvatiSveizStorage()
+    const oznake = dohvatiSveIzStorage()
     return { data: oznake.find(s => s.sifra === parseInt(sifra)) }
 }
 
 async function dodaj(oznaka) {
-    const oznake = dohvatiSveizStorage()
+    const oznake = dohvatiSveIzStorage()
     if (oznake.length === 0) {
         oznaka.sifra = 1
     } else {
@@ -32,14 +32,14 @@ async function dodaj(oznaka) {
 }
 
 async function promijeni(sifra, oznaka) {
-    const oznake = dohvatiSveizStorage()
+    const oznake = dohvatiSveIzStorage()
     const index = oznake.findIndex(s => s.sifra === parseInt(sifra))
     oznake[index] = { ...oznake[index], ...oznaka }
     spremiUStorage(oznake)
 }
 
 async function obrisi(sifra) {
-    let oznake = dohvatiSveizStorage()
+    let oznake = dohvatiSveIzStorage()
     oznake = oznake.filter(s => s.sifra !== parseInt(sifra))
     spremiUStorage(oznake)
 }
