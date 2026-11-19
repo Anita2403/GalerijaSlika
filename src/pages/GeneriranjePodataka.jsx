@@ -8,7 +8,6 @@ import MaterijalService from '../services/materijali/MaterijalService';
 import OznakaService from '../services/oznake/OznakaService';
 import { slike } from '../services/slike/SlikaPodaci';
 import { DATA_SOURCE, PrefixStorage } from '../constanst';
-import slika_generiranje_podataka from '../assets/slika_generiranje_podataka.jpg';
 import { FaDatabase, FaTrashAlt, FaPlus, FaLayerGroup } from 'react-icons/fa';
 import OperaterService from '../services/operateri/OperaterService';
 import { ostaliproizvodi } from '../services/ostaliproizvodi/OstaliProizvodiPodaci';
@@ -16,6 +15,12 @@ import { tehnike } from '../services/tehnike/TehnikaPodaci';
 import { operateri } from '../services/operateri/OperaterPodaci';
 import { materijali } from '../services/materijali/MaterijalPodaci';
 import { oznake } from '../services/oznake/OznakaPodaci';
+import OperaterServiceFireBase from '../services/operateri/OperaterServiceFireBase';
+import TehnikaServiceFireBase from '../services/tehnike/TehnikaServiceFireBase';
+import MaterijalServiceFireBase from '../services/materijali/MaterijalServiceFireBase';
+import OznakaServiceFireBase from '../services/oznake/OznakaServiceFireBase';
+import SlikaServiceFireBase from '../services/slike/SlikaServiceFireBase';
+import OstaliProizvodiServiceFireBase from '../services/ostaliproizvodi/OstaliProizvodiServiceFireBase';
 
 export default function GeneriranjePodataka() {
     const [brojSlika, setBrojSlika] = useState(10);
@@ -449,12 +454,12 @@ export default function GeneriranjePodataka() {
             localStorage.removeItem(PrefixStorage.OZNAKE);
             localStorage.removeItem(PrefixStorage.OPERATERI);
 
-            localStorage.setItem('slike', JSON.stringify(slike));
-            localStorage.setItem('ostaliproizvodi', JSON.stringify(ostaliproizvodi));
-            localStorage.setItem('tehnike', JSON.stringify(tehnike));
-            localStorage.setItem('materijali', JSON.stringify(materijali));
-            localStorage.setItem('oznake', JSON.stringify(oznake));
-            localStorage.setItem('operateri', JSON.stringify(operateri));
+            localStorage.setItem(PrefixStorage.SLIKE, JSON.stringify(slike));
+            localStorage.setItem(PrefixStorage.OSTALIPROIZVODI, JSON.stringify(ostaliproizvodi));
+            localStorage.setItem(PrefixStorage.TEHNIKE, JSON.stringify(tehnike));
+            localStorage.setItem(PrefixStorage.MATERIJALI, JSON.stringify(materijali));
+            localStorage.setItem(PrefixStorage.OZNAKE, JSON.stringify(oznake));
+            localStorage.setItem(PrefixStorage.OPERATERI, JSON.stringify(operateri));
 
             setPoruka({
                 tip: 'success',
@@ -469,6 +474,117 @@ export default function GeneriranjePodataka() {
             setLoading(false);
         }
     };
+
+
+    const handleMemorijaUFirebase = async () => {
+    if (!window.confirm('Jeste li sigurni da želite pretočiti iz memorije u firebase?')) {
+        return;
+    }
+
+    setLoading(true);
+    setPoruka(null);
+
+    try {
+        // 1. Operateri (mogu ići paralelno jer ne trebamo njihove ID-ove za kasnije)
+        const operateriPromises = operateri.map(e => {
+            const { sifra, ...ostatak } = e;
+            return OperaterServiceFireBase.dodajBezHash(ostatak);
+        });
+        await Promise.all(operateriPromises);
+
+
+        // 2. Tehnike (trebamo šifre za slike)
+        let mapiranjeSifriTehnika = [];
+        for (const e of tehnike) {
+            const { sifra, ...ostatak } = e;
+            const fb = await TehnikaServiceFireBase.dodaj(ostatak);
+            const noviId = fb.id; // ili fb.data.sifra ovisno o servisu
+            mapiranjeSifriTehnika.push({ sifram: sifra, sifraf: noviId });
+        }
+
+
+        // 3. Materijali (trebamo šifre za ostale proizvode)
+        let mapiranjeSifriMaterijala = [];
+        for (const e of materijali) {
+            const { sifra, ...ostatak } = e;
+            const fb = await MaterijalServiceFireBase.dodaj(ostatak);
+            const noviId = fb.id; // ili fb.data.sifra ovisno o servisu
+            mapiranjeSifriMaterijala.push({ sifram: sifra, sifraf: noviId });
+        }
+
+
+        
+        // 4. Oznake (otkomentirati ako postoji entitet oznake u memoriji)
+        let mapiranjeSifriOznaka = [];
+        for (const e of oznake) {
+            const { sifra, ...ostatak } = e;
+            const fb = await OznakaServiceFireBase.dodaj(ostatak);
+            const noviId = fb.id;
+            mapiranjeSifriOznaka.push({ sifram: sifra, sifraf: noviId });
+        }
+        
+
+
+        // 5. Slike (povezivanje starih šifri tehnika i oznaka s novim Firebase ID-ovima)
+        for (const e of slike) {
+            const { sifra, ...ostatak } = e;
+
+            // Pronađi novi ID tehnike
+            const mTehnika = mapiranjeSifriTehnika.find(m => m.sifram == ostatak.tehnika);
+            ostatak.tehnika = mTehnika ? mTehnika.sifraf : null;
+
+            
+            // Mapiraj oznake na njihove nove ID-ove (ako postoji mapiranjeSifriOznaka)
+            if (ostatak.oznake) {
+                ostatak.oznake = ostatak.oznake.map(oSifra => {
+                    const mOznaka = mapiranjeSifriOznaka.find(m => m.sifram == oSifra);
+                    return mOznaka ? mOznaka.sifraf : null;
+                }).filter(id => id !== null);
+            }
+            
+
+            await SlikaServiceFireBase.dodaj(ostatak);
+        }
+
+
+        // 6. Ostali proizvodi (povezivanje starih šifri materijala i oznaka s novim Firebase ID-ovima)
+        for (const e of ostaliproizvodi) {
+            const { sifra, ...ostatak } = e;
+
+            // Pronađi novi ID materijala
+            const mMaterijal = mapiranjeSifriMaterijala.find(m => m.sifram == ostatak.materijal);
+            ostatak.materijal = mMaterijal ? mMaterijal.sifraf : null;
+
+            
+            // Mapiraj oznake na njihove nove ID-ove (ako postoji mapiranjeSifriOznaka)
+            if (ostatak.oznake) {
+                ostatak.oznake = ostatak.oznake.map(oSifra => {
+                    const mOznaka = mapiranjeSifriOznaka.find(m => m.sifram == oSifra);
+                    return mOznaka ? mOznaka.sifraf : null;
+                }).filter(id => id !== null);
+            }
+            
+
+            await OstaliProizvodiServiceFireBase.dodaj(ostatak);
+        }
+
+        setPoruka({
+            tip: 'success',
+            tekst: 'Uspješno presipano u Firebase'
+        });
+
+    } catch (error) {
+        console.error("Greška pri presipanju:", error);
+        setPoruka({
+            tip: 'error',
+            tekst: 'Došlo je do greške prilikom sinkronizacije.'
+        });
+    } finally {
+        setLoading(false);
+    }
+};
+
+
 
     return (
         <Container className="py-5">
@@ -502,6 +618,16 @@ export default function GeneriranjePodataka() {
                                 className="w-100 mb-2"
                             >
                                 {loading ? 'Obrada...' : 'Presipaj u LocalStorage'}
+                            </Button>
+                        </Col>
+                        <Col md={3}>
+                            <Button
+                                variant="danger"
+                                onClick={handleMemorijaUFirebase}
+                                disabled={loading}
+                                className="w-100 mb-2"
+                            >
+                                {loading ? 'Obrada...' : 'Presipaj u Firebase'}
                             </Button>
                         </Col>
                     </Row>

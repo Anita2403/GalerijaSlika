@@ -1,5 +1,3 @@
-import { oznake } from "../oznake/OznakaPodaci";
-
 export const ostaliproizvodi = [
     {
         sifra: 1,
