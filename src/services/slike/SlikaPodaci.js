@@ -1,5 +1,3 @@
-import { oznake } from "../oznake/OznakaPodaci";
-
 export const slike = [
     {
         sifra: 1,

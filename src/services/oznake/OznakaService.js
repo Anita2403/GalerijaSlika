@@ -1,6 +1,7 @@
 import OznakaServiceMemorija from "./OznakaServiceMemorija";
 import OznakaServiceLocalStorage from "./OznakaServiceLocalStorage";
 import { DATA_SOURCE } from "../../constanst";
+import OznakaServiceFireBase from "./OznakaServiceFireBase";
 
 let Servis = null
 
@@ -10,6 +11,9 @@ switch (DATA_SOURCE){
         break
     case 'localStorage':
         Servis = OznakaServiceLocalStorage
+        break
+    case 'firebase':
+        Servis = OznakaServiceFireBase
         break
     default:
         Servis = null

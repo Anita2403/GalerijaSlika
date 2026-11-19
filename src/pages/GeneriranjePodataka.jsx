@@ -443,11 +443,11 @@ export default function GeneriranjePodataka() {
 
         try {
             localStorage.removeItem(PrefixStorage.SLIKE);
-            localStorage.removeItem('ostaliproizvodi');
-            localStorage.removeItem('tehnike');
-            localStorage.removeItem('materijali');
-            localStorage.removeItem('oznake');
-            localStorage.removeItem('operateri');
+            localStorage.removeItem(PrefixStorage.OSTALIPROIZVODI);
+            localStorage.removeItem(PrefixStorage.TEHNIKE);
+            localStorage.removeItem(PrefixStorage.MATERIJALI);
+            localStorage.removeItem(PrefixStorage.OZNAKE);
+            localStorage.removeItem(PrefixStorage.OPERATERI);
 
             localStorage.setItem('slike', JSON.stringify(slike));
             localStorage.setItem('ostaliproizvodi', JSON.stringify(ostaliproizvodi));

@@ -1,4 +1,5 @@
 import { DATA_SOURCE } from "../../constanst";
+import MaterijaliServiceFireBase from "./MaterijaliServiceFireBase";
 import MaterijalServiceLocalStorage from "./MaterijalServiceLocalStorage";
 import MaterijalServiceMemorija from "./MaterijalServiceMemorija";
 
@@ -10,6 +11,9 @@ switch (DATA_SOURCE){
         break
     case 'localStorage':
         Servis = MaterijalServiceLocalStorage
+        break
+    case 'firebase':
+        Servis = MaterijaliServiceFireBase
         break
     default:
         Servis = null

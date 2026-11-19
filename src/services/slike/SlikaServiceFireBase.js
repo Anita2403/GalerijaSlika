@@ -6,36 +6,40 @@ async function get() {
     try {
         const skupSlika = collection(getFirebaseDB(), PrefixStorage.SLIKE);
         const slikeSnapshot = await getDocs(skupSlika);
-        
-        const data = slikeSnapshot.docs.map(document => {
-            const docData = document.data();
-            return {
-                sifra: document.id,
-                ...docData
-            };
-        });
-
-        return { data };
+        return {
+            success: true, 
+            data: slikeSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    sifra: doc.id,
+                    ...data
+                };
+            }) 
+        };
     } catch (e) {
         console.error("Greška kod dohvaćanja slika: ", e);
-        return { data: [] };
+        return {
+            success: false,
+            message: e.message
+        };
     }
 }
 
 async function dodaj(slika) {
     try {
-        const slikaZaSlanje = { ...slika };
-        
         const skupSlika = collection(getFirebaseDB(), PrefixStorage.SLIKE);
-        const docRef = await addDoc(skupSlika, slikaZaSlanje);
+        const docRef = await addDoc(skupSlika, slika);
         
         return {
             success: true,
-            sifra: docRef.id
+            id: docRef.id
         };
     } catch (e) {
         console.error("Greška kod dodavanja slike: ", e);
-        throw e;
+        return {
+            success: false,
+            message: e.message
+        };
     }
 }
 
@@ -43,36 +47,39 @@ async function getBySifra(sifra) {
     try {
         const docRef = doc(getFirebaseDB(), PrefixStorage.SLIKE, sifra);
         const docSnap = await getDoc(docRef);
-        
         if (docSnap.exists()) {
-            const docData = docSnap.data();
+            const data = docSnap.data();
             return {
+                success: true,
                 data: {
                     sifra: docSnap.id,
-                    ...docData
+                    ...data
                 }
             };
         } else {
-            throw new Error("Slika s tom šifrom ne postoji u bazi.");
+            return { 
+                success: false, 
+                message: "Slika s tom šifrom ne postoji u bazi." 
+            };
         }
     } catch (e) {
         console.error("Greška kod dohvaćanja po šifri: ", e);
-        throw e;
+        return { 
+            success: false, 
+            message: e.message 
+        };
     }
 }
 
 async function promijeni(sifra, slika) {
     try {
-        const slikaZaSlanje = { ...slika };
-        delete slikaZaSlanje.sifra;
-
         const docRef = doc(getFirebaseDB(), PrefixStorage.SLIKE, sifra);
-        await updateDoc(docRef, slikaZaSlanje);
+        await updateDoc(docRef, slika);
 
         return { success: true };
     } catch (e) {
-        console.error("Greška kod promjene slike: ", e);
-        throw e;
+        console.error("Greška kod promjene: ", e);
+        return { success: false, message: e.message };
     }
 }
 
@@ -81,11 +88,15 @@ async function obrisi(sifra) {
         const docRef = doc(getFirebaseDB(), PrefixStorage.SLIKE, sifra);
         await deleteDoc(docRef);
         return {
-            success: true
+            success: true,
+            message: "Uspješno obrisano"
         };
     } catch (e) {
-        console.error("Greška kod brisanja slike: ", e);
-        throw e;
+        console.error("Greška kod brisanja: ", e);
+        return {
+            success: false,
+            message: e.message
+        };
     }
 }
 
