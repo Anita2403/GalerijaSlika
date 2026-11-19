@@ -1,14 +1,16 @@
+import { PrefixStorage } from "../../constanst"
 
 
 const STORAGE_KEY='tehnike'
 
-function dohvatiSveizStorage(){
-    const podaci = localStorage.getItem(STORAGE_KEY)
+function dohvatiSveIzStorage() {
+    const podaci = localStorage.getItem(PrefixStorage.TEHNIKE)
     return podaci ? JSON.parse(podaci) : []
 }
 
+
 function spremiUStorage(podaci){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+      localStorage.setItem(PrefixStorage.TEHNIKE, JSON.stringify(podaci))
 }
 
 async function get() {

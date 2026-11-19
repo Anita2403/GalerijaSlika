@@ -442,21 +442,19 @@ export default function GeneriranjePodataka() {
         setPoruka(null);
 
         try {
+            localStorage.removeItem('slike');
+            localStorage.removeItem('ostaliproizvodi');
+            localStorage.removeItem('tehnike');
+            localStorage.removeItem('materijali');
+            localStorage.removeItem('oznake');
+            localStorage.removeItem('operateri');
 
-            localStorage.removeItem('slike')
-            localStorage.removeItem('ostaliproizvodi')
-            localStorage.removeItem('tehnike')
-            localStorage.removeItem('materijali')
-            localStorage.removeItem('oznake')
-            localStorage.removeItem('operateri')
-
-            localStorage.setItem('slike', JSON.stringify(slike))
-            localStorage.setItem('ostaliproizvodi', JSON.stringify(ostaliproizvodi))
-            localStorage.setItem('tehnike', JSON.stringify(tehnike))
-            localStorage.setItem('materijali', JSON.stringify(materijali))
-            localStorage.setItem('oznake', JSON.stringify(oznake))
-            localStorage.setItem('operateri', JSON.stringify(operateri))
-
+            localStorage.setItem('slike', JSON.stringify(slike));
+            localStorage.setItem('ostaliproizvodi', JSON.stringify(ostaliproizvodi));
+            localStorage.setItem('tehnike', JSON.stringify(tehnike));
+            localStorage.setItem('materijali', JSON.stringify(materijali));
+            localStorage.setItem('oznake', JSON.stringify(oznake));
+            localStorage.setItem('operateri', JSON.stringify(operateri));
 
             setPoruka({
                 tip: 'success',
@@ -472,8 +470,6 @@ export default function GeneriranjePodataka() {
         }
     };
 
-
-
     return (
         <Container className="py-5">
             {/* Zaglavlje */}
@@ -485,19 +481,33 @@ export default function GeneriranjePodataka() {
                 </p>
             </div>
 
+            {poruka && (
+                <Alert variant={poruka.tip} dismissible onClose={() => setPoruka(null)} className="mb-4">
+                    {poruka.tekst}
+                </Alert>
+            )}
+
             {DATA_SOURCE === 'memorija' ? (
-                <div className="text-center py-5 bg-white p-4 shadow-sm" style={{ borderRadius: '4px' }}>
-                    <p className="text-muted mb-4">Na memoriji se ne mogu generirati podaci.</p>
-                    <img src={slika_generiranje_podataka} alt="Memorija" className="img-fluid rounded" style={{ maxWidth: '400px' }} />
+                <div className="bg-white p-4 shadow-sm" style={{ borderRadius: '4px' }}>
+                    <h3 className="mb-3">Presipavanje podataka</h3>
+                    <p className="text-muted mb-4">
+                        Koristite ove opcije za kopiranje iz jednog izvora u drugi.
+                    </p>
+                    <Row className="mt-3">
+                        <Col md={3}>
+                            <Button
+                                variant="danger"
+                                onClick={handleMemorijaULocalStorage}
+                                disabled={loading}
+                                className="w-100 mb-2"
+                            >
+                                {loading ? 'Obrada...' : 'Presipaj u LocalStorage'}
+                            </Button>
+                        </Col>
+                    </Row>
                 </div>
             ) : (
                 <>
-                    {poruka && (
-                        <Alert variant={poruka.tip} dismissible onClose={() => setPoruka(null)} className="mb-4">
-                            {poruka.tekst}
-                        </Alert>
-                    )}
-
                     {/* GLAVNE MASTER AKCIJE (DODAJ SVE / OBRIŠI SVE) */}
                     <div className="bg-white p-4 mb-5 shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-center gap-3" style={{ borderRadius: '4px' }}>
                         <div>
@@ -606,7 +616,6 @@ export default function GeneriranjePodataka() {
                                     <Button variant="outline-dark" type="submit" disabled={loading} className="w-100 d-flex align-items-center justify-content-center gap-2" style={{ borderRadius: '4px' }}>
                                         <FaPlus size={12} /> {loading ? 'Generiranje...' : 'Generiraj operatere'}
                                     </Button>
-
                                 </Form>
                             </Card>
                         </Col>
@@ -650,34 +659,8 @@ export default function GeneriranjePodataka() {
                             </Col>
                         </Row>
                     </div>
-
-                     {DATA_SOURCE === 'memorija' && (
-                        <>
-                        <hr className="my-4" />
-
-                        <h3>Presipavanje podataka</h3>
-                        <p className="text-muted">
-                            Koristite ove opcije za kopiranje iz jednog izvora u drugi.
-                        </p>
-
-                        <Row className="mt-3">
-                            <Col md={3}>
-                                <Button
-                                    variant="danger"
-                                    onClick={handleMemorijaULocalStorage}
-                                    disabled={loading}
-                                    className="w-100 mb-2"
-                                >
-                                    {loading ? 'Presipavanje...' : 'Presipaj'}
-                                </Button>
-                            </Col>
-                        </Row>
-
-                    </>
-                )}
-                   
-               </> 
+                </>
             )}
-            </Container>
-            )
+        </Container>
+    );
 }
