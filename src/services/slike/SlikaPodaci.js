@@ -29,7 +29,7 @@ export const slike = [
         godinaIzrade: 2026,
         tehnika: 2,
         sirina: 20,
-        visina:30,
+        visina:50,
         dostupnost: false,
         image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII',
         opis: 'Nazvana „Zahara“, što u prijevodu znači blistava i sjajna, ova slika slavi nesalomljivu snagu, gracioznost i unutarnju svjetlost. Inspirirana iznimnom ženom i majkom, kompozicija prikazuje elegantnu figuru okupanu zlatnim tonovima i toplinom. Djelo je stvoreno s dubokim poštovanjem kao unikatni poklon prijateljici, simbolizirajući žensku otpornost, dostojanstvo i životnu ljepotu koja poput cvijeta uvijek iznova procvate.',
