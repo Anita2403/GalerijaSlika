@@ -175,6 +175,7 @@ export default function GeneriranjePodataka() {
 
     // MASOVNO BRISANJE SVEGA
     const handleObrisiSve = async () => {
+        return
         if (!window.confirm('Jeste li sigurni da želite obrisati SVE podatke iz baze?')) return;
         setLoading(true);
         setPoruka(null);
