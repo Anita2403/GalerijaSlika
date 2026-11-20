@@ -4,7 +4,6 @@ import { IME_APLIKACIJE } from "../constanst";
 import SlikaService from "../services/slike/SlikaService";
 import OstaliProizvodiService from "../services/ostaliproizvodi/OstaliProizvodiService";
 
-
 export default function Home() {
     const [statistika, setStatistika] = useState({ slike: 0, proizvodi: 0 });
 
@@ -39,7 +38,11 @@ export default function Home() {
                         <p className="lead text-secondary mb-4 fw-light" style={{ lineHeight: '1.8' }}>
                             Mjesto gdje se svakodnevica pretvara u platno, a ručni rad unosi dušu i toplinu u svaki prostor.
                         </p>
-                        
+                        <div className="d-flex gap-3 pt-3">
+                            <a href="/slike" className="btn btn-primary px-4 py-2">Pregledaj galeriju</a>
+                            <a href="/ostaliProizvodi" className="btn btn-success px-4 py-2">Unikatni proizvodi</a>
+                        </div>
+
                         {/* Minimalistička statistika umjesto teških kartica */}
                         <div className="d-flex gap-5 pt-3 border-top border-light">
                             <div>
@@ -52,20 +55,27 @@ export default function Home() {
                             </div>
                         </div>
                     </Col>
-                    
+
                     <Col lg={6}>
-                        <div 
+                        <div
                             className="position-relative overflow-hidden shadow-sm"
-                            style={{ 
-                                height: '480px', 
+                            style={{
+                                height: '480px',
                                 backgroundColor: '#f4f4f4',
-                                borderRadius: '4px' 
+                                borderRadius: '12px' // Malo mekši, moderniji kutevi za glavnu sliku
                             }}
                         >
-                            {/* Ovdje umjesto placeholder-a ide prava istaknuta slika galerije */}
-                            <div className="d-flex align-items-center justify-content-center h-100 text-muted fw-light">
-                                <span className="small tracking-widest">[ Istaknuto Umjetničko Djelo ]</span>
-                            </div>
+                            <img
+                                src="/slike/h01.jpg"
+                                alt="Umjetnica na djelu"
+                                className="w-100 h-100"
+                                style={{
+                                    objectFit: 'cover',
+                                    transition: 'transform 0.4s ease'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1.0)'}
+                            />
                         </div>
                     </Col>
                 </Row>
@@ -75,21 +85,38 @@ export default function Home() {
             <section className="bg-light py-5 my-5">
                 <Container className="py-4">
                     <Row className="align-items-center g-5">
-                        <Col lg={5}>
-                            <div 
-                                className="bg-white shadow-sm position-relative"
-                                style={{ height: '420px', borderRadius: '4px' }}
+                        {/* Slika umjetnice oblikovana u elegantan krug ili zaobljeni portret */}
+                        <Col lg={5} className="text-center">
+                            <div
+                                className="position-relative d-inline-block shadow-sm"
+                                style={{
+                                    width: '320px',
+                                    height: '320px',
+                                    borderRadius: '50%', // Čini okvir savršeno okruglim
+                                    overflow: 'hidden',
+                                    backgroundColor: '#fff',
+                                    border: '6px solid #fff' // Daje efekt "rama" oko slike
+                                }}
                             >
-                                <div className="d-flex align-items-center justify-content-center h-100 text-muted fw-light">
-                                    <span className="small tracking-widest">[ Fotografija Umjetnice ]</span>
-                                </div>
+                                <img
+                                    src="/slike/h02.jpg"
+                                    alt="Anita - autorica"
+                                    className="w-100 h-100"
+                                    style={{
+                                        objectFit: 'cover',
+                                        objectPosition: 'top center',
+                                        transition: 'transform 0.4s ease'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1.0)'}
+                                />
                             </div>
                         </Col>
-                        
+
                         <Col lg={7} className="px-lg-5">
                             <h6 className="text-uppercase text-muted small tracking-widest mb-2">O autorici</h6>
                             <h2 className="fw-light mb-4 display-6">Pozdrav, ja sam Anita.</h2>
-                            
+
                             <p className="text-secondary mb-3" style={{ lineHeight: '1.8' }}>
                                 U užurbanoj svakodnevici, slikanje je moj osobni bijeg – prostor u kojem sam istinski svoja i prisutna u trenutku.
                             </p>

@@ -236,7 +236,7 @@ export default function GeneriranjePodataka() {
         // Prvo obriši admin operatera ako postoji
         const rezultat = await OperaterService.get();
         const operateri = rezultat.data;
-        const adminOperater = operateri.find(op => op.email === 'admin@edunova.hr');
+        const adminOperater = operateri.find(op => op.email === 'admin@galerijaslika.hr');
 
         if (adminOperater) {
             await OperaterService.obrisi(adminOperater.sifra);
@@ -244,8 +244,8 @@ export default function GeneriranjePodataka() {
 
         // Dodaj admin operatera
         await OperaterService.dodaj({
-            email: 'admin@edunova.hr',
-            lozinka: 'Edunova123!',
+            email: 'admin@galerijaslika.hr',
+            lozinka: 'GalerijaSlika123!',
             uloga: 'admin'
         });
 
@@ -253,7 +253,7 @@ export default function GeneriranjePodataka() {
         for (let i = 0; i < broj; i++) {
             await OperaterService.dodaj({
                 email: faker.internet.email(),
-                lozinka: 'Edunova123!',
+                lozinka: 'GalerijaSlika123!',
                 uloga: 'korisnik'
             });
         }
