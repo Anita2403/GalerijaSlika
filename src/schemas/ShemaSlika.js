@@ -34,7 +34,7 @@ export const ShemaSlika = z.object({
     .min(3, "Opis slike mora imati najmanje 3 znaka!")
     .max(500, "Opis slike može imati najviše 500 znakova!"),
 
-  oznake: z.array(z.number())
+  oznake: z.array(z.object())
     .min(1, "Morate odabrati barem jednu oznaku!"),
 
 })

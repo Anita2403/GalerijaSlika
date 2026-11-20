@@ -118,7 +118,7 @@ export default function SlikaPromjena() {
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
         objektPodataka.dostupnost = dostupnost;
-        objektPodataka.oznake = odabraniOznake.map(p => parseInt(p.sifra))
+        objektPodataka.oznake = odabraniOznake
         const rezultat = ShemaSlika.safeParse(objektPodataka);
 
         if (!rezultat.success) {

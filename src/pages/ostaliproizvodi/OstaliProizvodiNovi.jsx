@@ -101,7 +101,7 @@ export default function OstaliProizvodiNovi() {
 
         setErrors({});
         const objektPodataka = Object.fromEntries(podaci);
-        objektPodataka.oznake = odabraniOznake.map(p => parseInt(p.sifra))
+        objektPodataka.oznake = odabraniOznake
         const rezultat = ShemaOstaliproizvodi.safeParse(objektPodataka);
 
         if (!rezultat.success) {
