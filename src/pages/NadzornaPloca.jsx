@@ -3,17 +3,32 @@ import TehnikaService from "../services/tehnike/TehnikaService";
 import { useEffect, useState } from "react";
 import Highcharts from 'highcharts';
 import HighchartsReact from "highcharts-react-official";
+import SlikaService from "../services/slike/SlikaService";
 
 export default function NadzornaPloca() {
 
    const [podaci, setPodaci] = useState([]);
 
     async function getPodaci() {
-        const odgovor = await TehnikaService.get();
-        setPodaci(odgovor.data.map((tehnika) => {
+        const odgovorTehnike = await TehnikaService.get();
+        const odgovorSlike = await SlikaService.get();
+
+
+        const rezultat = odgovorTehnike.data.map((tehnika) => {
+            const brojSlika = odgovorSlike.data.filter((slika) => slika.tehnika == tehnika.sifra).length;
+
             return {
-                y: tehnika.slike.length,
-                name: tehnika.naziv,
+                naziv: tehnika.naziv,
+                brojSlika
+            };
+        });
+        console.log(rezultat)
+
+
+        setPodaci(rezultat.map((r) => {
+            return {
+                y: r.brojSlika,
+                name: r.naziv,
             };
         }));
     }
