@@ -173,9 +173,11 @@ export default function GeneriranjePodataka() {
         }
     };
 
+
+
+
     // MASOVNO BRISANJE SVEGA
     const handleObrisiSve = async () => {
-        return
         if (!window.confirm('Jeste li sigurni da želite obrisati SVE podatke iz baze?')) return;
         setLoading(true);
         setPoruka(null);
@@ -202,7 +204,10 @@ export default function GeneriranjePodataka() {
         } finally {
             setLoading(false);
         }
-    };
+
+
+    }
+        ;
 
     const handleGenerirajSlike = async (e) => {
         e.preventDefault();
@@ -478,112 +483,112 @@ export default function GeneriranjePodataka() {
 
 
     const handleMemorijaUFirebase = async () => {
-    if (!window.confirm('Jeste li sigurni da želite pretočiti iz memorije u firebase?')) {
-        return;
-    }
-
-    setLoading(true);
-    setPoruka(null);
-
-    try {
-        // 1. Operateri (mogu ići paralelno jer ne trebamo njihove ID-ove za kasnije)
-        const operateriPromises = operateri.map(e => {
-            const { sifra, ...ostatak } = e;
-            return OperaterServiceFireBase.dodajBezHash(ostatak);
-        });
-        await Promise.all(operateriPromises);
-
-
-        // 2. Tehnike (trebamo šifre za slike)
-        let mapiranjeSifriTehnika = [];
-        for (const e of tehnike) {
-            const { sifra, ...ostatak } = e;
-            const fb = await TehnikaServiceFireBase.dodaj(ostatak);
-            const noviId = fb.id; // ili fb.data.sifra ovisno o servisu
-            mapiranjeSifriTehnika.push({ sifram: sifra, sifraf: noviId });
+        if (!window.confirm('Jeste li sigurni da želite pretočiti iz memorije u firebase?')) {
+            return;
         }
 
+        setLoading(true);
+        setPoruka(null);
 
-        // 3. Materijali (trebamo šifre za ostale proizvode)
-        let mapiranjeSifriMaterijala = [];
-        for (const e of materijali) {
-            const { sifra, ...ostatak } = e;
-            const fb = await MaterijalServiceFireBase.dodaj(ostatak);
-            const noviId = fb.id; // ili fb.data.sifra ovisno o servisu
-            mapiranjeSifriMaterijala.push({ sifram: sifra, sifraf: noviId });
-        }
-
-
-        
-        // 4. Oznake (otkomentirati ako postoji entitet oznake u memoriji)
-        let mapiranjeSifriOznaka = [];
-        for (const e of oznake) {
-            const { sifra, ...ostatak } = e;
-            const fb = await OznakaServiceFireBase.dodaj(ostatak);
-            const noviId = fb.id;
-            mapiranjeSifriOznaka.push({ sifram: sifra, sifraf: noviId });
-        }
-        
+        try {
+            // 1. Operateri (mogu ići paralelno jer ne trebamo njihove ID-ove za kasnije)
+            const operateriPromises = operateri.map(e => {
+                const { sifra, ...ostatak } = e;
+                return OperaterServiceFireBase.dodajBezHash(ostatak);
+            });
+            await Promise.all(operateriPromises);
 
 
-        // 5. Slike (povezivanje starih šifri tehnika i oznaka s novim Firebase ID-ovima)
-        for (const e of slike) {
-            const { sifra, ...ostatak } = e;
-
-            // Pronađi novi ID tehnike
-            const mTehnika = mapiranjeSifriTehnika.find(m => m.sifram == ostatak.tehnika);
-            ostatak.tehnika = mTehnika ? mTehnika.sifraf : null;
-
-            
-            // Mapiraj oznake na njihove nove ID-ove (ako postoji mapiranjeSifriOznaka)
-            if (ostatak.oznake) {
-                ostatak.oznake = ostatak.oznake.map(oSifra => {
-                    const mOznaka = mapiranjeSifriOznaka.find(m => m.sifram == oSifra);
-                    return mOznaka ? mOznaka.sifraf : null;
-                }).filter(id => id !== null);
+            // 2. Tehnike (trebamo šifre za slike)
+            let mapiranjeSifriTehnika = [];
+            for (const e of tehnike) {
+                const { sifra, ...ostatak } = e;
+                const fb = await TehnikaServiceFireBase.dodaj(ostatak);
+                const noviId = fb.id; // ili fb.data.sifra ovisno o servisu
+                mapiranjeSifriTehnika.push({ sifram: sifra, sifraf: noviId });
             }
-            
-
-            await SlikaServiceFireBase.dodaj(ostatak);
-        }
 
 
-        // 6. Ostali proizvodi (povezivanje starih šifri materijala i oznaka s novim Firebase ID-ovima)
-        for (const e of ostaliproizvodi) {
-            const { sifra, ...ostatak } = e;
-
-            // Pronađi novi ID materijala
-            const mMaterijal = mapiranjeSifriMaterijala.find(m => m.sifram == ostatak.materijal);
-            ostatak.materijal = mMaterijal ? mMaterijal.sifraf : null;
-
-            
-            // Mapiraj oznake na njihove nove ID-ove (ako postoji mapiranjeSifriOznaka)
-            if (ostatak.oznake) {
-                ostatak.oznake = ostatak.oznake.map(oSifra => {
-                    const mOznaka = mapiranjeSifriOznaka.find(m => m.sifram == oSifra);
-                    return mOznaka ? mOznaka.sifraf : null;
-                }).filter(id => id !== null);
+            // 3. Materijali (trebamo šifre za ostale proizvode)
+            let mapiranjeSifriMaterijala = [];
+            for (const e of materijali) {
+                const { sifra, ...ostatak } = e;
+                const fb = await MaterijalServiceFireBase.dodaj(ostatak);
+                const noviId = fb.id; // ili fb.data.sifra ovisno o servisu
+                mapiranjeSifriMaterijala.push({ sifram: sifra, sifraf: noviId });
             }
-            
 
-            await OstaliProizvodiServiceFireBase.dodaj(ostatak);
+
+
+            // 4. Oznake (otkomentirati ako postoji entitet oznake u memoriji)
+            let mapiranjeSifriOznaka = [];
+            for (const e of oznake) {
+                const { sifra, ...ostatak } = e;
+                const fb = await OznakaServiceFireBase.dodaj(ostatak);
+                const noviId = fb.id;
+                mapiranjeSifriOznaka.push({ sifram: sifra, sifraf: noviId });
+            }
+
+
+
+            // 5. Slike (povezivanje starih šifri tehnika i oznaka s novim Firebase ID-ovima)
+            for (const e of slike) {
+                const { sifra, ...ostatak } = e;
+
+                // Pronađi novi ID tehnike
+                const mTehnika = mapiranjeSifriTehnika.find(m => m.sifram == ostatak.tehnika);
+                ostatak.tehnika = mTehnika ? mTehnika.sifraf : null;
+
+
+                // Mapiraj oznake na njihove nove ID-ove (ako postoji mapiranjeSifriOznaka)
+                if (ostatak.oznake) {
+                    ostatak.oznake = ostatak.oznake.map(oSifra => {
+                        const mOznaka = mapiranjeSifriOznaka.find(m => m.sifram == oSifra);
+                        return mOznaka ? mOznaka.sifraf : null;
+                    }).filter(id => id !== null);
+                }
+
+
+                await SlikaServiceFireBase.dodaj(ostatak);
+            }
+
+
+            // 6. Ostali proizvodi (povezivanje starih šifri materijala i oznaka s novim Firebase ID-ovima)
+            for (const e of ostaliproizvodi) {
+                const { sifra, ...ostatak } = e;
+
+                // Pronađi novi ID materijala
+                const mMaterijal = mapiranjeSifriMaterijala.find(m => m.sifram == ostatak.materijal);
+                ostatak.materijal = mMaterijal ? mMaterijal.sifraf : null;
+
+
+                // Mapiraj oznake na njihove nove ID-ove (ako postoji mapiranjeSifriOznaka)
+                if (ostatak.oznake) {
+                    ostatak.oznake = ostatak.oznake.map(oSifra => {
+                        const mOznaka = mapiranjeSifriOznaka.find(m => m.sifram == oSifra);
+                        return mOznaka ? mOznaka.sifraf : null;
+                    }).filter(id => id !== null);
+                }
+
+
+                await OstaliProizvodiServiceFireBase.dodaj(ostatak);
+            }
+
+            setPoruka({
+                tip: 'success',
+                tekst: 'Uspješno presipano u Firebase'
+            });
+
+        } catch (error) {
+            console.error("Greška pri presipanju:", error);
+            setPoruka({
+                tip: 'error',
+                tekst: 'Došlo je do greške prilikom sinkronizacije.'
+            });
+        } finally {
+            setLoading(false);
         }
-
-        setPoruka({
-            tip: 'success',
-            tekst: 'Uspješno presipano u Firebase'
-        });
-
-    } catch (error) {
-        console.error("Greška pri presipanju:", error);
-        setPoruka({
-            tip: 'error',
-            tekst: 'Došlo je do greške prilikom sinkronizacije.'
-        });
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
 
 
@@ -645,9 +650,22 @@ export default function GeneriranjePodataka() {
                             <Button variant="dark" onClick={handleGenerirajSve} disabled={loading} className="px-4 py-2 d-flex align-items-center justify-content-center gap-2 flex-fill" style={{ borderRadius: '4px' }}>
                                 <FaLayerGroup size={14} /> {loading ? 'Obrada...' : 'Generiraj sve podatke'}
                             </Button>
-                            <Button variant="outline-danger" onClick={handleObrisiSve} disabled={loading} className="px-4 py-2 d-flex align-items-center justify-content-center gap-2 flex-fill" style={{ borderRadius: '4px' }}>
-                                <FaTrashAlt size={14} /> {loading ? 'Obrada...' : 'Obriši sve podatke'}
-                            </Button>
+
+                            {DATA_SOURCE !== 'firebase' && (
+                                <div className="d-flex flex-column gap-2">
+                                    <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
+
+                                    <Button
+                                        variant="outline-danger"
+                                        onClick={handleObrisiSve}
+                                        disabled={loading}
+                                        className="px-4 py-2 d-flex align-items-center justify-content-center gap-2 flex-fill"
+                                        style={{ borderRadius: '4px' }}
+                                    >
+                                        <FaTrashAlt size={14} /> {loading ? 'Obrada...' : 'Obriši sve podatke'}
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -749,43 +767,51 @@ export default function GeneriranjePodataka() {
                     </Row>
 
                     {/* SEKCIJA ZA POJEDINAČNO BRISANJE */}
-                    <div className="pt-4 border-top">
-                        <h5 className="fw-semibold text-danger mb-4 d-flex align-items-center gap-2">
-                            <FaTrashAlt size={15} /> Pojedinačno brisanje podataka
-                        </h5>
-                        <Row className="g-3">
-                            <Col md={4}>
-                                <Button variant="outline-danger" onClick={handleObrisiSlike} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
-                                    Obriši sve slike
-                                </Button>
-                            </Col>
-                            <Col md={4}>
-                                <Button variant="outline-danger" onClick={handleObrisiOstaliProizvodi} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
-                                    Obriši sve ostale proizvode
-                                </Button>
-                            </Col>
-                            <Col md={4}>
-                                <Button variant="outline-danger" onClick={handleObrisiTehnike} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
-                                    Obriši sve tehnike
-                                </Button>
-                            </Col>
-                            <Col md={4}>
-                                <Button variant="outline-danger" onClick={handleObrisiMaterijale} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
-                                    Obriši sve materijale
-                                </Button>
-                            </Col>
-                            <Col md={4}>
-                                <Button variant="outline-danger" onClick={handleObrisiOznake} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
-                                    Obriši sve oznake
-                                </Button>
-                            </Col>
-                            <Col md={4}>
-                                <Button variant="outline-danger" onClick={handleObrisiOperatere} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
-                                    Obriši sve operatere
-                                </Button>
-                            </Col>
-                        </Row>
-                    </div>
+                    {DATA_SOURCE != 'firebase' && (
+                        <>
+
+                            <div className="pt-4 border-top">
+                                <h5 className="fw-semibold text-danger mb-4 d-flex align-items-center gap-2">
+                                    <FaTrashAlt size={15} /> Pojedinačno brisanje podataka
+                                </h5>
+                                <Row className="g-3">
+                                    <Col md={4}>
+                                        <Button variant="outline-danger" onClick={handleObrisiSlike} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
+                                            Obriši sve slike
+                                        </Button>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Button variant="outline-danger" onClick={handleObrisiOstaliProizvodi} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
+                                            Obriši sve ostale proizvode
+                                        </Button>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Button variant="outline-danger" onClick={handleObrisiTehnike} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
+                                            Obriši sve tehnike
+                                        </Button>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Button variant="outline-danger" onClick={handleObrisiMaterijale} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
+                                            Obriši sve materijale
+                                        </Button>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Button variant="outline-danger" onClick={handleObrisiOznake} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
+                                            Obriši sve oznake
+                                        </Button>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Button variant="outline-danger" onClick={handleObrisiOperatere} disabled={loading} className="w-100 py-2" style={{ borderRadius: '4px' }}>
+                                            Obriši sve operatere
+                                        </Button>
+                                    </Col>
+                                    </Row>
+
+                                    <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se poništiti.
+                               
+                            
+                        </div>
+                         </>)}
                 </>
             )}
         </Container>
