@@ -4,14 +4,18 @@ import { Button, Table, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constanst";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import useLoading from "../../hooks/useLoading";
 
 export default function TehnikaPregled() {
     const [tehnike, setTehnike] = useState([]);
     const navigate = useNavigate();
+    const { showLoading, hideLoading } = useLoading()
 
     async function ucitajTehnike() {
+        showLoading();
         const odgovor = await TehnikaService.get();
         setTehnike(odgovor.data);
+        hideLoading()
     }
 
     useEffect(() => {
@@ -35,7 +39,7 @@ export default function TehnikaPregled() {
                     <h1 className="fw-light display-6 mb-0">Pregled tehnika</h1>
                 </div>
                 <div className="mt-3 mt-md-0">
-                    <Link 
+                    <Link
                         to={RouteNames.TEHNIKE_DODAJ}
                         className="btn btn-outline-dark px-4 py-2 d-inline-flex align-items-center gap-2"
                         style={{ borderRadius: '4px', fontWeight: '500' }}

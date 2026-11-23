@@ -3,17 +3,21 @@ import TehnikaService from "../../services/tehnike/TehnikaService";
 import { RouteNames } from "../../constanst";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import useLoading from "../../hooks/useLoading";
 
 export default function TehnikaNova() {
 
     const navigate = useNavigate()
+    const { showLoading, hideLoading } = useLoading()
+
 
 
     async function dodaj(tehnika) {
+        showLoading()
         await TehnikaService.dodaj(tehnika).then(() => {
-            navigate(RouteNames.TEHNIKE)
+            showLoading()
         })
-
+        navigate(RouteNames.TEHNIKE)
     }
 
 
@@ -22,7 +26,7 @@ export default function TehnikaNova() {
         const podaci = new FormData(e.target)
         dodaj({
             naziv: podaci.get('naziv')
-            
+
         })
     }
 
@@ -40,28 +44,28 @@ export default function TehnikaNova() {
                     <Form.Control type="text" name="naziv" required />
                 </Form.Group>
 
-                
 
 
-            <hr />
+
+                <hr />
 
 
-            <Row className="mt-4">
-                <Col>
-                    <Link to={RouteNames.TEHNIKE}
-                    className="btn btn-danger">
-                        Odustani
-                    </Link>
-                </Col>
+                <Row className="mt-4">
+                    <Col>
+                        <Link to={RouteNames.TEHNIKE}
+                            className="btn btn-danger">
+                            Odustani
+                        </Link>
+                    </Col>
 
-                <Col>
-                <Button type="submit" variant="success">
-                    Dodaj
-                </Button>
-                </Col>
-            </Row>
-            
-             </Form>
+                    <Col>
+                        <Button type="submit" variant="success">
+                            Dodaj
+                        </Button>
+                    </Col>
+                </Row>
+
+            </Form>
         </>
     )
 

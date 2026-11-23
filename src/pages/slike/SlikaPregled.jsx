@@ -9,12 +9,14 @@ import { GrValidate } from "react-icons/gr";
 import OznakaService from "../../services/oznake/OznakaService";
 import SlikePDFGenerator from "../../components/SlikePDFGenerator";
 import useAuth from "../../hooks/useAuth";
+import useLoading from "../../hooks/useLoading";
 
 export default function SlikaPregled() {
     const [slike, setSlike] = useState([]);
     const [tehnike, setTehnike] = useState([]);
     const navigate = useNavigate();
     const { isLoggedIn } = useAuth()
+    const { showLoading, hideLoading } = useLoading()
 
     useEffect(() => {
         ucitajSlike();
@@ -30,8 +32,10 @@ export default function SlikaPregled() {
     }
 
     async function ucitajSlike() {
+        showLoading();
         const odgovor = await SlikaService.get();
         setSlike(odgovor.data);
+        hideLoading()
     }
 
     async function ucitajTehnike() {

@@ -4,16 +4,20 @@ import { useNavigate } from "react-router-dom"
 import OperaterService from "../../services/operateri/OperaterService"
 import { ShemaOperater } from "../../schemas/ShemaOperater"
 import { useState } from "react"
+import useLoading from "../../hooks/useLoading"
 
 export default function Registracija() {
 
     const navigate = useNavigate()
     const [errors, setErrors] = useState({})
+    const { showLoading, hideLoading } = useLoading()
 
     async function registriraj(operater) {
+        showLoading();
         await OperaterService.dodaj(operater).then(() => {
             navigate(RouteNames.LOGIN)
         })
+        hideLoading()
     }
 
     function odradiSubmit(e) {
@@ -128,8 +132,8 @@ export default function Registracija() {
                             <hr />
 
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Button 
-                                    type="submit" 
+                                <Button
+                                    type="submit"
                                     variant="success"
                                     className="px-4"
                                 >

@@ -4,11 +4,13 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { IME_APLIKACIJE, RouteNames } from "../../constanst"
 import { FaEdit, FaTrash, FaKey, FaPlus } from "react-icons/fa"
+import useLoading from "../../hooks/useLoading"
 
 export default function OperaterPregled() {
 
     const navigate = useNavigate()
     const [operateri, setOperateri] = useState([])
+    const { showLoading, hideLoading } = useLoading()
 
     useEffect(()=>{document.title='Operateri, ' + IME_APLIKACIJE})
 
@@ -17,12 +19,14 @@ export default function OperaterPregled() {
     }, [])
 
     async function ucitajOperatere() {
+          showLoading();
         await OperaterService.get().then((odgovor) => {
             if (!odgovor.success) {
                 alert('Nije implementiran servis')
                 return
             }
             setOperateri(odgovor.data)
+                  hideLoading()
         })
     }
 

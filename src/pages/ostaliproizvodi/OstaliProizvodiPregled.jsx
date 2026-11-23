@@ -9,12 +9,14 @@ import { FaEdit, FaFilePdf, FaTrash, FaPlus } from "react-icons/fa";
 import OstaliProizvodiPDFGenerator from "../../components/OstaliProizvodiPDFGenerator";
 import OznakaService from "../../services/oznake/OznakaService";
 import useAuth from "../../hooks/useAuth";
+import useLoading from "../../hooks/useLoading";
 
 export default function OstaliProizvodiPregled() {
     const [ostaliproizvodi, setOstaliProizvodi] = useState([]);
     const [materijali, setMaterijali] = useState([]);
     const navigate = useNavigate();
     const { isLoggedIn } = useAuth()
+    const { showLoading, hideLoading } = useLoading()
 
     useEffect(() => {
         ucitajOstaliProizvodi();
@@ -30,8 +32,10 @@ export default function OstaliProizvodiPregled() {
     }
 
     async function ucitajOstaliProizvodi() {
+        showLoading();
         const odgovor = await OstaliProizvodiService.get();
         setOstaliProizvodi(odgovor.data);
+        hideLoading()
     }
 
     async function ucitajMaterijali() {
@@ -73,13 +77,13 @@ export default function OstaliProizvodiPregled() {
                 </div>
                 <div className="mt-3 mt-md-0">
                     {isLoggedIn && (
-                    <Link 
-                        to={RouteNames.OSTALIPROIZVODI_DODAJ}
-                        className="btn btn-outline-dark px-4 py-2 d-inline-flex align-items-center gap-2"
-                        style={{ borderRadius: '4px', fontWeight: '500' }}
-                    >
-                        <FaPlus size={14} /> Dodaj novi proizvod
-                    </Link>
+                        <Link
+                            to={RouteNames.OSTALIPROIZVODI_DODAJ}
+                            className="btn btn-outline-dark px-4 py-2 d-inline-flex align-items-center gap-2"
+                            style={{ borderRadius: '4px', fontWeight: '500' }}
+                        >
+                            <FaPlus size={14} /> Dodaj novi proizvod
+                        </Link>
                     )}
                 </div>
             </div>
@@ -89,7 +93,7 @@ export default function OstaliProizvodiPregled() {
                 {ostaliproizvodi && ostaliproizvodi.map((op) => (
                     <Col key={op.sifra} xs={12} sm={6} lg={4} xl={3}>
                         <Card className="h-100 border-0 bg-white" style={{ borderRadius: '4px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                            
+
                             {/* Slika okvir */}
                             <div style={{ height: "220px", overflow: "hidden", backgroundColor: "#f8f9fa", borderTopLeftRadius: '4px', borderTopRightRadius: '4px' }} className="position-relative d-flex align-items-center justify-content-center">
                                 {op.image ? (
@@ -116,8 +120,8 @@ export default function OstaliProizvodiPregled() {
                                         className="text-secondary ms-2 mt-1"
                                         size={18}
                                         style={{ cursor: 'pointer', transition: 'color 0.2s' }}
-                                        onClick={() => generirajPDFZaOstaliProizvodi(op)} 
-                                        title="Generiraj PDF dokument" 
+                                        onClick={() => generirajPDFZaOstaliProizvodi(op)}
+                                        title="Generiraj PDF dokument"
                                     />
                                 </div>
 
@@ -125,7 +129,7 @@ export default function OstaliProizvodiPregled() {
                                     <span className="d-block"><strong>Materijal:</strong> {dohvatiNazivMaterijal(op.materijal)}</span>
                                     <span className="d-block"><strong>Dimenzije:</strong> {op.sirina} × {op.visina} cm</span>
                                     <span className="d-flex align-items-center gap-2 mt-2">
-                                        <strong>Dostupnost:</strong> 
+                                        <strong>Dostupnost:</strong>
                                         <GrValidate
                                             size={16}
                                             color={op.dostupnost ? '#198754' : '#dc3545'}
@@ -135,26 +139,26 @@ export default function OstaliProizvodiPregled() {
 
                                 {/* Akcijski gumbi */}
                                 {isLoggedIn && (
-                                <div className="mt-auto d-flex gap-2 pt-2 border-top border-light">
-                                    <Button
-                                        variant="outline-secondary"
-                                        className="flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
-                                        onClick={() => navigate(`/ostaliproizvodi/${op.sifra}`)}
-                                        title="Uredi podatke"
-                                        style={{ borderRadius: '4px', fontSize: '0.9rem' }}
-                                    >
-                                        <FaEdit /> Uredi
-                                    </Button>
-                                    <Button
-                                        variant="outline-danger"
-                                        className="d-flex align-items-center justify-content-center px-3 py-2"
-                                        onClick={() => obrisi(op.sifra)}
-                                        title="Obriši proizvod"
-                                        style={{ borderRadius: '4px' }}
-                                    >
-                                        <FaTrash size={14} />
-                                    </Button>
-                                </div>
+                                    <div className="mt-auto d-flex gap-2 pt-2 border-top border-light">
+                                        <Button
+                                            variant="outline-secondary"
+                                            className="flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
+                                            onClick={() => navigate(`/ostaliproizvodi/${op.sifra}`)}
+                                            title="Uredi podatke"
+                                            style={{ borderRadius: '4px', fontSize: '0.9rem' }}
+                                        >
+                                            <FaEdit /> Uredi
+                                        </Button>
+                                        <Button
+                                            variant="outline-danger"
+                                            className="d-flex align-items-center justify-content-center px-3 py-2"
+                                            onClick={() => obrisi(op.sifra)}
+                                            title="Obriši proizvod"
+                                            style={{ borderRadius: '4px' }}
+                                        >
+                                            <FaTrash size={14} />
+                                        </Button>
+                                    </div>
                                 )}
                             </Card.Body>
                         </Card>
