@@ -156,7 +156,7 @@ export default function OstaliProizvodiPromjena() {
         promijeni({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
-            materijal: parseInt(podaci.get('materijal')),
+            materijal: podaci.get('materijal'),
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: dostupnost,
@@ -254,7 +254,7 @@ export default function OstaliProizvodiPromjena() {
                                     onFocus={() => ocistiGresku('materijal')}
                                     onBlur={handleBlur}
                                     value={ostaliproizvod.materijal || ""}
-                                    onChange={(e) => setOstaliProizvodi({ ...ostaliproizvod, materijal: parseInt(e.target.value) })}
+                                    onChange={(e) => setOstaliProizvodi({ ...ostaliproizvod, materijal: e.target.value })}
                                 >
                                     <option value="">Odaberi materijal</option>
                                     {materijali && materijali.map((t) => (

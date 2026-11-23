@@ -41,6 +41,15 @@ export default function Izbornik() {
               eventKey="pocetna"
             >Početna</Nav.Link>
 
+             {isLoggedIn && (
+              <>
+              <Nav.Link
+              onClick={() => navigate(RouteNames.NADZORNA_PLOCA)}
+              eventKey="pocetna"
+            >Nadzorna ploča</Nav.Link>
+              </>
+             )}
+
             <NavDropdown title="Proizvodi" id="basic-nav-dropdown">
               <NavDropdown.Item
                 onClick={() => navigate(RouteNames.SLIKE)}

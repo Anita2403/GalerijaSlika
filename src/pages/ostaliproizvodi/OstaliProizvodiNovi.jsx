@@ -141,7 +141,7 @@ export default function OstaliProizvodiNovi() {
         dodaj({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
-            materijal: parseInt(podaci.get('materijal')),
+            materijal: podaci.get('materijal'),
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: podaci.get('dostupnost') === 'on',

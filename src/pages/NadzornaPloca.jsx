@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 import TehnikaService from "../services/tehnike/TehnikaService";
 import { useEffect, useState } from "react";
 import Highcharts from 'highcharts';
-import HighchartsReact from "highcharts-react-official";
+import {HighchartsReact} from "highcharts-react-official";
 import SlikaService from "../services/slike/SlikaService";
 
 export default function NadzornaPloca() {
@@ -18,19 +18,14 @@ export default function NadzornaPloca() {
             const brojSlika = odgovorSlike.data.filter((slika) => slika.tehnika == tehnika.sifra).length;
 
             return {
-                naziv: tehnika.naziv,
-                brojSlika
+                name: tehnika.naziv,
+                y: brojSlika
             };
         });
-        console.log(rezultat)
+      
 
 
-        setPodaci(rezultat.map((r) => {
-            return {
-                y: r.brojSlika,
-                name: r.naziv,
-            };
-        }));
+        setPodaci(rezultat);
     }
 
     useEffect(() => {

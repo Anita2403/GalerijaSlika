@@ -156,7 +156,7 @@ export default function SlikaPromjena() {
         promijeni({
             naziv: podaci.get('naziv'),
             godinaIzrade: parseInt(podaci.get('godinaIzrade')),
-            tehnika: parseInt(podaci.get('tehnika')),
+            tehnika: podaci.get('tehnika'),
             sirina: parseInt(podaci.get('sirina')),
             visina: parseInt(podaci.get('visina')),
             dostupnost: dostupnost,
@@ -254,7 +254,7 @@ export default function SlikaPromjena() {
                                     onFocus={() => ocistiGresku('tehnika')}
                                     onBlur={handleBlur}
                                     value={slika.tehnika || ""}
-                                    onChange={(e) => setSlika({ ...slika, tehnika: parseInt(e.target.value) })}
+                                    onChange={(e) => setSlika({ ...slika, tehnika: e.target.value })}
                                 >
                                     <option value="">Odaberi tehniku</option>
                                     {tehnike && tehnike.map((t) => (
