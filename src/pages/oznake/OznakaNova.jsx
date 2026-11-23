@@ -2,15 +2,19 @@ import { Link, useNavigate } from "react-router-dom";
 import OznakaService from "../../services/oznake/OznakaService";
 import { RouteNames } from "../../constanst";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import useLoading from "../../hooks/useLoading";
 
 export default function OznakaNova() {
 
     const navigate = useNavigate()
+    const { showLoading, hideLoading } = useLoading()
 
     async function dodaj(oznaka) {
+        showLoading()
         await OznakaService.dodaj(oznaka).then(() => {
-            navigate(RouteNames.OZNAKE)
+            hideLoading()
         })
+        navigate(RouteNames.OZNAKE)
     }
 
     function obradiSubmit(e) {
@@ -39,7 +43,7 @@ export default function OznakaNova() {
                 <Row className="mt-4">
                     <Col>
                         <Link to={RouteNames.OZNAKE}
-                        className="btn btn-danger">
+                            className="btn btn-danger">
                             Odustani
                         </Link>
                     </Col>
@@ -50,8 +54,8 @@ export default function OznakaNova() {
                         </Button>
                     </Col>
                 </Row>
-                
-             </Form>
+
+            </Form>
         </>
     )
 }

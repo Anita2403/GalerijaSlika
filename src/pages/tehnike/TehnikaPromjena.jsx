@@ -3,6 +3,7 @@ import TehnikaService from "../../services/tehnike/TehnikaService";
 import { RouteNames } from "../../constanst";
 import { Button, Col, Form, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import useLoading from "../../hooks/useLoading";
 
 
 
@@ -11,27 +12,32 @@ export default function TehnikaPromjena() {
 
     const navigate = useNavigate()
     const params = useParams()
-
+    const { showLoading, hideLoading } = useLoading()
     const [tehnika, setTehnika] = useState({})
 
 
-  
+
 
     async function ucitajTehniku() {
+        showLoading()
         await TehnikaService.getBySifra(params.sifra).then((res) => {
             setTehnika(res.data)
         })
+        hideLoading()
     }
 
     useEffect(() => {
+         showLoading()
         ucitajTehniku()
+         hideLoading()
     }, [])
 
     async function promijeni(tehnika) {
+        showLoading()
         await TehnikaService.promijeni(params.sifra, tehnika).then(() => {
-            navigate(RouteNames.TEHNIKE)
+            hideLoading()
         })
-
+        navigate(RouteNames.TEHNIKE)
     }
 
 
@@ -60,30 +66,30 @@ export default function TehnikaPromjena() {
 
                 </Form.Group>
 
-               
-                
-
-           
-
-            <hr />
 
 
-            <Row className="mt-4">
-                <Col>
-                    <Link to={RouteNames.TEHNIKE}
-                    className="btn btn-danger">
-                        Odustani
-                    </Link>
-                </Col>
 
-                <Col>
-                <Button type="submit" variant="success">
-                    Promijeni
-                </Button>
-                </Col>
-            </Row>
-            
-             </Form >
+
+
+                <hr />
+
+
+                <Row className="mt-4">
+                    <Col>
+                        <Link to={RouteNames.TEHNIKE}
+                            className="btn btn-danger">
+                            Odustani
+                        </Link>
+                    </Col>
+
+                    <Col>
+                        <Button type="submit" variant="success">
+                            Promijeni
+                        </Button>
+                    </Col>
+                </Row>
+
+            </Form >
         </>
     )
 

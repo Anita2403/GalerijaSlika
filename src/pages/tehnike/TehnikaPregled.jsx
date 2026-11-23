@@ -19,7 +19,9 @@ export default function TehnikaPregled() {
     }
 
     useEffect(() => {
+        showLoading()
         ucitajTehnike();
+        hideLoading()
     }, []);
 
     async function obrisi(sifra) {

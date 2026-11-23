@@ -3,28 +3,35 @@ import OznakaService from "../../services/oznake/OznakaService";
 import { RouteNames } from "../../constanst";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import useLoading from "../../hooks/useLoading";
 
 export default function OznakaPromjena() {
 
     const navigate = useNavigate()
     const params = useParams()
-
+    const { showLoading, hideLoading } = useLoading()
     const [oznaka, setOznaka] = useState({})
 
     async function ucitajOznaku() {
+        showLoading()
         await OznakaService.getBySifra(params.sifra).then((res) => {
             setOznaka(res.data)
+            hideLoading()
         })
     }
 
     useEffect(() => {
+        showLoading()
         ucitajOznaku()
+        hideLoading()
     }, [])
 
     async function promijeni(oznaka) {
+        showLoading()
         await OznakaService.promijeni(params.sifra, oznaka).then(() => {
-            navigate(RouteNames.OZNAKE)
+            hideLoading()
         })
+        navigate(RouteNames.OZNAKE)
     }
 
     function obradiSubmit(e) {
@@ -45,11 +52,11 @@ export default function OznakaPromjena() {
 
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv</Form.Label>
-                    <Form.Control 
-                        type="text" 
-                        name="naziv" 
-                        defaultValue={oznaka.naziv} 
-                        required 
+                    <Form.Control
+                        type="text"
+                        name="naziv"
+                        defaultValue={oznaka.naziv}
+                        required
                     />
                 </Form.Group>
 
@@ -58,7 +65,7 @@ export default function OznakaPromjena() {
                 <Row className="mt-4">
                     <Col>
                         <Link to={RouteNames.OZNAKE}
-                        className="btn btn-danger">
+                            className="btn btn-danger">
                             Odustani
                         </Link>
                     </Col>
@@ -69,8 +76,8 @@ export default function OznakaPromjena() {
                         </Button>
                     </Col>
                 </Row>
-                
-             </Form>
+
+            </Form>
         </>
     )
 }

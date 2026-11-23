@@ -8,6 +8,7 @@ import OznakaService from "../../services/oznake/OznakaService";
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { ShemaOstaliproizvodi } from "../../schemas/ShemaOstaliproizvodi";
+import useLoading from "../../hooks/useLoading";
 
 
 export default function OstaliProizvodiPromjena() {
@@ -25,10 +26,14 @@ export default function OstaliProizvodiPromjena() {
     const cropperRef = useRef(null);
     const [errors, setErrors] = useState({});
     const [isChecking, setIsChecking] = useState(false);
+    const { showLoading, hideLoading } = useLoading()
+
 
     useEffect(() => {
+        showLoading()
         ucitajMaterijale()
         ucitajOznake()
+        hideLoading()
     }, [])
 
     async function ucitajMaterijale() {
@@ -45,6 +50,7 @@ export default function OstaliProizvodiPromjena() {
     }
 
     async function ucitajOstaliproizvodi(sveOznake) {
+        showLoading()
         await OstaliProizvodiService.getBySifra(params.sifra).then((odgovor) => {
             const s = odgovor.data
             setOstaliProizvodi(s)
@@ -54,6 +60,7 @@ export default function OstaliProizvodiPromjena() {
                 const odabrane = sveOznake.filter(p => s.oznake.includes(p.sifra))
                 setOdabraniOznake(odabrane)
             }
+            hideLoading()
         })
     }
 
@@ -106,9 +113,11 @@ export default function OstaliProizvodiPromjena() {
     }
 
     async function promijeni(ostaliproizvodPodaci) {
+        showLoading()
         await OstaliProizvodiService.promijeni(params.sifra, ostaliproizvodPodaci).then(() => {
-            navigate(RouteNames.OSTALIPROIZVODI)
+            hideLoading()
         })
+        navigate(RouteNames.OSTALIPROIZVODI)
     }
 
     function obradiSubmit(e) {

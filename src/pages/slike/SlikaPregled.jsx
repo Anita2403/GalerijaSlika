@@ -19,8 +19,10 @@ export default function SlikaPregled() {
     const { showLoading, hideLoading } = useLoading()
 
     useEffect(() => {
+        showLoading()
         ucitajSlike();
         ucitajTehnike();
+        hideLoading()
     }, []);
 
     async function obrisi(sifra) {

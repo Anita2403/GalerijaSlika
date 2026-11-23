@@ -8,6 +8,7 @@ import OznakaService from "../../services/oznake/OznakaService";
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { ShemaSlika } from "../../schemas/ShemaSlika";
+import useLoading from "../../hooks/useLoading";
 
 export default function SlikaPromjena() {
     const navigate = useNavigate()
@@ -24,10 +25,14 @@ export default function SlikaPromjena() {
     const cropperRef = useRef(null);
     const [errors, setErrors] = useState({});
     const [isChecking, setIsChecking] = useState(false);
+    const { showLoading, hideLoading } = useLoading()
+
 
     useEffect(() => {
+        showLoading()
         ucitajTehnike()
         ucitajOznake()
+        hideLoading()
     }, [])
 
     async function ucitajTehnike() {
@@ -44,6 +49,7 @@ export default function SlikaPromjena() {
     }
 
     async function ucitajSliku(sveOznake) {
+        showLoading()
         await SlikaService.getBySifra(params.sifra).then((odgovor) => {
             const s = odgovor.data
             setSlika(s)
@@ -53,6 +59,7 @@ export default function SlikaPromjena() {
                 const odabrane = sveOznake.filter(p => s.oznake.includes(p.sifra))
                 setOdabraniOznake(odabrane)
             }
+            hideLoading()
         })
     }
 
@@ -106,9 +113,11 @@ export default function SlikaPromjena() {
     }
 
     async function promijeni(slikaPodaci) {
+        showLoading()
         await SlikaService.promijeni(params.sifra, slikaPodaci).then(() => {
-            navigate(RouteNames.SLIKE)
+            hideLoading()
         })
+        navigate(RouteNames.SLIKE)
     }
 
     function obradiSubmit(e) {

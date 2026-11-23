@@ -19,7 +19,9 @@ export default function OznakaPregled() {
     }
 
     useEffect(() => {
+        showLoading()
         ucitajOznake();
+        hideLoading()
     }, []);
 
     async function obrisi(sifra) {

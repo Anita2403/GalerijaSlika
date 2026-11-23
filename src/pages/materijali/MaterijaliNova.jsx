@@ -2,19 +2,22 @@ import { Link, useNavigate } from "react-router-dom";
 import MaterijalService from "../../services/materijali/MaterijalService";
 import { RouteNames } from "../../constanst";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import useLoading from "../../hooks/useLoading";
 
 
 
 export default function MaterijalNova() {
 
     const navigate = useNavigate()
+    const { showLoading, hideLoading } = useLoading()
 
 
     async function dodaj(materijal) {
+        showLoading()
         await MaterijalService.dodaj(materijal).then(() => {
-            navigate(RouteNames.MATERIJALI)
+            hideLoading()
         })
-
+        navigate(RouteNames.MATERIJALI)
     }
 
 
@@ -23,7 +26,7 @@ export default function MaterijalNova() {
         const podaci = new FormData(e.target)
         dodaj({
             naziv: podaci.get('naziv')
-            
+
         })
     }
 
@@ -41,28 +44,28 @@ export default function MaterijalNova() {
                     <Form.Control type="text" name="naziv" required />
                 </Form.Group>
 
-                
 
 
-            <hr />
+
+                <hr />
 
 
-            <Row className="mt-4">
-                <Col>
-                    <Link to={RouteNames.MATERIJALI}
-                    className="btn btn-danger">
-                        Odustani
-                    </Link>
-                </Col>
+                <Row className="mt-4">
+                    <Col>
+                        <Link to={RouteNames.MATERIJALI}
+                            className="btn btn-danger">
+                            Odustani
+                        </Link>
+                    </Col>
 
-                <Col>
-                <Button type="submit" variant="success">
-                    Dodaj
-                </Button>
-                </Col>
-            </Row>
-            
-             </Form>
+                    <Col>
+                        <Button type="submit" variant="success">
+                            Dodaj
+                        </Button>
+                    </Col>
+                </Row>
+
+            </Form>
         </>
     )
 

@@ -9,6 +9,7 @@ import 'cropperjs/dist/cropper.css';
 import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { ShemaSlika } from "../../schemas/ShemaSlika";
+import useLoading from "../../hooks/useLoading";
 
 export default function SlikaNova() {
     const [tehnike, setTehnike] = useState([]);
@@ -22,10 +23,13 @@ export default function SlikaNova() {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [isChecking, setIsChecking] = useState(false);
+    const { showLoading, hideLoading } = useLoading()
 
     useEffect(() => {
+        showLoading()
         ucitajTehnike()
         ucitajOznake()
+        hideLoading()
     }, [])
 
     async function ucitajTehnike() {
@@ -41,9 +45,11 @@ export default function SlikaNova() {
     }
 
     async function dodaj(slika) {
+        showLoading()
         await SlikaService.dodaj(slika).then(() => {
-            navigate(RouteNames.SLIKE)
+            hideLoading()
         })
+        navigate(RouteNames.SLIKE)
     }
 
     function dodajOznaka(oznaka) {

@@ -9,6 +9,7 @@ import 'cropperjs/dist/cropper.css';
 import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { ShemaOstaliproizvodi } from "../../schemas/ShemaOstaliproizvodi";
+import useLoading from "../../hooks/useLoading";
 
 export default function OstaliProizvodiNovi() {
     const [materijali, setMaterijali] = useState([]);
@@ -22,10 +23,13 @@ export default function OstaliProizvodiNovi() {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [isChecking, setIsChecking] = useState(false);
+    const { showLoading, hideLoading } = useLoading()
 
     useEffect(() => {
+        showLoading()
         ucitajMaterijale()
         ucitajOznake()
+        hideLoading()
     }, [])
 
     async function ucitajMaterijale() {
@@ -41,9 +45,11 @@ export default function OstaliProizvodiNovi() {
     }
 
     async function dodaj(ostaliproizvodi) {
+        showLoading()
         await OstaliProizvodiService.dodaj(ostaliproizvodi).then(() => {
-            navigate(RouteNames.OSTALIPROIZVODI)
+            hideLoading()
         })
+        navigate(RouteNames.OSTALIPROIZVODI)
     }
 
     function dodajOznaka(oznaka) {

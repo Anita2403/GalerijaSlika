@@ -5,18 +5,24 @@ import OperaterService from "../../services/operateri/OperaterService"
 import { ShemaOperater } from "../../schemas/ShemaOperater"
 import { useState } from "react"
 import { FaArrowLeft } from "react-icons/fa"
+import useLoading from "../../hooks/useLoading"
 
 export default function OperaterNovi() {
 
     const navigate = useNavigate()
     const [errors, setErrors] = useState({})
+     const { showLoading, hideLoading } = useLoading()
 
     async function dodaj(operater) {
+          showLoading()
         const rezultat = await OperaterService.dodaj(operater)
         if (rezultat.success) {
+              hideLoading()
             navigate(RouteNames.OPERATERI)
+
         } else {
             alert(rezultat.message || 'Greška pri dodavanju operatera')
+              hideLoading()
         }
     }
 

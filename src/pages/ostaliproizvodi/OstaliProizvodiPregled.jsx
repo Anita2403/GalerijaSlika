@@ -19,8 +19,10 @@ export default function OstaliProizvodiPregled() {
     const { showLoading, hideLoading } = useLoading()
 
     useEffect(() => {
+        showLoading()
         ucitajOstaliProizvodi();
         ucitajMaterijali();
+        hideLoading()
     }, []);
 
     async function obrisi(sifra) {

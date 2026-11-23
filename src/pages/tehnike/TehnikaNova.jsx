@@ -15,7 +15,7 @@ export default function TehnikaNova() {
     async function dodaj(tehnika) {
         showLoading()
         await TehnikaService.dodaj(tehnika).then(() => {
-            showLoading()
+            hideLoading()
         })
         navigate(RouteNames.TEHNIKE)
     }

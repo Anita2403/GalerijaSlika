@@ -4,6 +4,7 @@ import OperaterService from "../../services/operateri/OperaterService"
 import { Form, Button, Row, Col, Container, Card, Alert } from "react-bootstrap"
 import { RouteNames } from "../../constanst"
 import { ShemaPromjenaLozinke } from "../../schemas/ShemaOperater"
+import useLoading from "../../hooks/useLoading"
 
 export default function OperaterPromjenaLozinke() {
 
@@ -11,12 +12,14 @@ export default function OperaterPromjenaLozinke() {
     const params = useParams()
     const [operater, setOperater] = useState({})
     const [errors, setErrors] = useState({})
+     const { showLoading, hideLoading } = useLoading()
 
     useEffect(() => {
         ucitajOperatera()
     }, [])
 
     async function ucitajOperatera() {
+         showLoading()
         const odgovor = await OperaterService.getBySifra(params.sifra)
         if (!odgovor.success) {
             alert('Operater nije pronađen')
@@ -24,6 +27,7 @@ export default function OperaterPromjenaLozinke() {
             return
         }
         setOperater(odgovor.data)
+         hideLoading()
     }
 
     async function promjeniLozinku(novaLozinka) {

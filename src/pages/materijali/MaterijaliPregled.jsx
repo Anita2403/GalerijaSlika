@@ -19,7 +19,9 @@ export default function MaterijalPregled() {
     }
 
     useEffect(() => {
+        showLoading()
         ucitajMaterijali();
+        hideLoading()
     }, []);
 
     async function obrisi(sifra) {

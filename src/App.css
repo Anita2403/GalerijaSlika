@@ -273,6 +273,7 @@ h1, h2, h3 {
   font-family: 'Playfair Display', serif, system-ui;
   color: #3d3232;
 }
+
 .loading-spinner-overlay {
   position: absolute;
   width: 100vw;
@@ -282,4 +283,28 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ==========================================================
+   DODANO: CSS varijable i stilovi za Highcharts grafove u tvojim bojama
+   ========================================================== */
+:root {
+  --chart-color-1: #cb72dd; /* Glavna ljubičasta */
+  --chart-color-2: #b85bc8; /* Tamnija ljubičasta */
+  --chart-color-3: #d15888; /* Ružičasti ton */
+  --chart-color-4: #e5b3cb; /* Pastelno ružičasta */
+  --chart-color-5: #df89ef; /* Svjetlija ljubičasta */
+  --chart-color-6: #c46cd4;
+  --chart-color-7: #b14fc2;
+}
+
+/* Osigurava da se grafovi skladno uklope unutar kartica ili kontejnera */
+.highcharts-container {
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+.highcharts-title {
+  font-family: 'Playfair Display', serif, system-ui !important;
+  fill: #3d3232 !important;
+  font-weight: normal !important;
 }

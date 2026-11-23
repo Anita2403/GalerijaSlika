@@ -32,7 +32,7 @@ export default function OperaterPregled() {
 
     async function brisanje(sifra) {
         if (!confirm('Sigurno obrisati operatera?')) return
-        
+           showLoading()
         const rezultat = await OperaterService.obrisi(sifra)
         if (rezultat.success) {
             ucitajOperatere()
