@@ -41,11 +41,14 @@ function App() {
 
   return (
     <>
+      <a href="#main-content" className="visually-hidden-focusable position-absolute top-0 start-0 p-2 bg-primary text-white z-3">
+        Preskoči na glavni sadržaj
+      </a>
       <LoadingSpinner />
       <PotvrdaModal />
       <Container>
         <Izbornik />
-        <Container className='app'>
+        <Container as="main" id="main-content" className='app' tabIndex={-1}>
           <Routes>
 
             <Route path={RouteNames.HOME} element={<Home />} />
@@ -94,8 +97,10 @@ function App() {
           </Routes>
 
         </Container>
-        <hr />
-        &copy; {IME_APLIKACIJE}({DATA_SOURCE})
+         <footer aria-label="Podnožje stranice">
+          <hr />
+          <p className="text-center text-muted small mb-0">&copy; {IME_APLIKACIJE}</p>
+        </footer>
       </Container>
     </>
   )
