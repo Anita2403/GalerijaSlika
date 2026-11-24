@@ -10,6 +10,7 @@ import OstaliProizvodiPDFGenerator from "../../components/OstaliProizvodiPDFGene
 import OznakaService from "../../services/oznake/OznakaService";
 import useAuth from "../../hooks/useAuth";
 import useLoading from "../../hooks/useLoading";
+import useModal from "../../hooks/useModal";
 
 export default function OstaliProizvodiPregled() {
     const [ostaliproizvodi, setOstaliProizvodi] = useState([]);
@@ -17,6 +18,7 @@ export default function OstaliProizvodiPregled() {
     const navigate = useNavigate();
     const { isLoggedIn } = useAuth()
     const { showLoading, hideLoading } = useLoading()
+    const { showModal } = useModal()
 
     useEffect(() => {
         showLoading()
@@ -26,11 +28,12 @@ export default function OstaliProizvodiPregled() {
     }, []);
 
     async function obrisi(sifra) {
-        if (!confirm('Jeste li sigurni da želite obrisati ovaj proizvod?')) {
-            return;
-        }
-        await OstaliProizvodiService.obrisi(sifra);
-        ucitajOstaliProizvodi();
+          showModal('Sigurno obrisati ostale proizvode?', async () => {
+            showLoading()
+            await OstaliProizvodiService.obrisi(sifra)
+            ucitajOstaliProizvodi()
+            hideLoading()
+        })
     }
 
     async function ucitajOstaliProizvodi() {

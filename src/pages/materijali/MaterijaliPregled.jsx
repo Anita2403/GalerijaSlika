@@ -5,11 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constanst";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import useLoading from "../../hooks/useLoading";
+import useModal from "../../hooks/useModal";
 
 export default function MaterijalPregled() {
     const [materijali, setMaterijali] = useState([]);
     const navigate = useNavigate();
     const { showLoading, hideLoading } = useLoading();
+    const { showModal } = useModal()
 
     async function ucitajMaterijali() {
         showLoading();
@@ -25,11 +27,12 @@ export default function MaterijalPregled() {
     }, []);
 
     async function obrisi(sifra) {
-        if (!confirm('Jeste li sigurni da želite obrisati ovaj materijal?')) {
-            return;
-        }
-        await MaterijalService.obrisi(sifra);
-        ucitajMaterijali();
+       showModal('Sigurno obrisati materijale?', async () => {
+            showLoading()
+            await MaterijalService.obrisi(sifra)
+            ucitajMaterijali()
+            hideLoading()
+        })
     }
 
     return (

@@ -5,11 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constanst";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import useLoading from "../../hooks/useLoading";
+import useModal from "../../hooks/useModal";
 
 export default function TehnikaPregled() {
     const [tehnike, setTehnike] = useState([]);
     const navigate = useNavigate();
     const { showLoading, hideLoading } = useLoading()
+    const { showModal } = useModal()
 
     async function ucitajTehnike() {
         showLoading();
@@ -25,11 +27,12 @@ export default function TehnikaPregled() {
     }, []);
 
     async function obrisi(sifra) {
-        if (!confirm('Jeste li sigurni da želite obrisati ovu tehniku?')) {
-            return;
-        }
-        await TehnikaService.obrisi(sifra);
-        ucitajTehnike();
+      showModal('Sigurno obrisati tehniku?', async () => {
+            showLoading()
+            await TehnikaService.obrisi(sifra)
+            ucitajTehnike()
+            hideLoading()
+        })
     }
 
     return (

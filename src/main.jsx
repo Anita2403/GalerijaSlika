@@ -4,6 +4,7 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './components/AuthContext.jsx'
 import { LoadingProvider } from './components/LoadingContext.jsx'
+import { ModalProvider } from './components/ModalContext.jsx'
 
 
 createRoot(document.getElementById('root')).render(
@@ -11,7 +12,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <LoadingProvider>
         <AuthProvider>
+           <ModalProvider>
           <App />
+          </ModalProvider>
         </AuthProvider>
       </LoadingProvider>
     </BrowserRouter>

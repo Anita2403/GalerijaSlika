@@ -5,11 +5,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constanst";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import useLoading from "../../hooks/useLoading";
+import useModal from "../../hooks/useModal";
 
 export default function OznakaPregled() {
     const [oznake, setOznake] = useState([]);
     const navigate = useNavigate();
     const { showLoading, hideLoading } = useLoading()
+    const { showModal } = useModal()
 
     async function ucitajOznake() {
         showLoading();
@@ -25,11 +27,12 @@ export default function OznakaPregled() {
     }, []);
 
     async function obrisi(sifra) {
-        if (!confirm('Jeste li sigurni da želite obrisati ovu oznaku?')) {
-            return;
-        }
-        await OznakaService.obrisi(sifra);
-        ucitajOznake();
+         showModal('Sigurno obrisati oznake?', async () => {
+            showLoading()
+            await OznakaService.obrisi(sifra)
+            ucitajOznake()
+            hideLoading()
+        })
     }
 
     return (

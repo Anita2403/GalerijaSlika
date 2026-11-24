@@ -31,6 +31,7 @@ import Login from './pages/login/Login'
 import Registracija from './pages/registracija/Registracija'
 import NadzornaPloca from './pages/NadzornaPloca'
 import LoadingSpinner from './components/LoadingSpinner'
+import PotvrdaModal from './components/PotvrdaModal'
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
   return (
     <>
       <LoadingSpinner />
+      <PotvrdaModal />
       <Container>
         <Izbornik />
         <Container className='app'>

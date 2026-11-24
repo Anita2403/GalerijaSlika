@@ -10,6 +10,7 @@ import OznakaService from "../../services/oznake/OznakaService";
 import SlikePDFGenerator from "../../components/SlikePDFGenerator";
 import useAuth from "../../hooks/useAuth";
 import useLoading from "../../hooks/useLoading";
+import useModal from "../../hooks/useModal";
 
 export default function SlikaPregled() {
     const [slike, setSlike] = useState([]);
@@ -17,6 +18,8 @@ export default function SlikaPregled() {
     const navigate = useNavigate();
     const { isLoggedIn } = useAuth()
     const { showLoading, hideLoading } = useLoading()
+    const { showModal } = useModal()
+
 
     useEffect(() => {
         showLoading()
@@ -26,11 +29,12 @@ export default function SlikaPregled() {
     }, []);
 
     async function obrisi(sifra) {
-        if (!confirm('Jeste li sigurni da želite obrisati ovu sliku?')) {
-            return;
-        }
-        await SlikaService.obrisi(sifra);
-        ucitajSlike();
+          showModal('Sigurno obrisati sliku?', async () => {
+            showLoading()
+            await SlikaService.obrisi(sifra)
+            ucitajSlike()
+            hideLoading()
+        })
     }
 
     async function ucitajSlike() {
