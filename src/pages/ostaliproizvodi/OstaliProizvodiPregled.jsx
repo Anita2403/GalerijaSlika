@@ -103,6 +103,7 @@ export default function OstaliProizvodiPregled() {
                             <div style={{ height: "220px", overflow: "hidden", backgroundColor: "#f8f9fa", borderTopLeftRadius: '4px', borderTopRightRadius: '4px' }} className="position-relative d-flex align-items-center justify-content-center">
                                 {op.image ? (
                                     <Card.Img
+                                    alt="ostaliProizvodi.naziv"
                                         variant="top"
                                         src={op.image}
                                         style={{

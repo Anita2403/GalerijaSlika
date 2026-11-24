@@ -9,6 +9,7 @@ import { FaMemory } from 'react-icons/fa';
 import { GrServer, GrStatusUnknown, GrVirtualStorage } from 'react-icons/gr';
 import useAuth from '../hooks/useAuth';
 import { Button } from 'react-bootstrap';
+import useLoading from '../hooks/useLoading';
 
 
 export default function Izbornik() {
@@ -22,41 +23,54 @@ export default function Izbornik() {
         return <FaMemory title='Memorija' />
       case 'localStorage':
         return <GrVirtualStorage title='Local storage' />
-         case 'firebase':
-                return <GrServer title='Firebase' />
+      case 'firebase':
+        return <GrServer title='Firebase' />
       default:
         return <GrStatusUnknown title='Nepoznato' />
     }
   }
 
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
+    <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" as="nav" aria-label="Glavna navigacija">
       <Container>
-        {izvor()} {IME_APLIKACIJE}
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <span aria-hidden="true">{izvor()}</span>
+        <span style={{ fontWeight: 'bold' }} aria-live="polite" aria-atomic="true">{IME_APLIKACIJE}</span>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" aria-label="Otvori/zatvori navigacijski izbornik" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link
-              onClick={() => navigate(RouteNames.HOME)}
-              eventKey="pocetna"
-            >Početna</Nav.Link>
-
-             {isLoggedIn && (
-              <>
+          <Nav className="me-auto" as="ul">
+            <Nav.Item as="li">
               <Nav.Link
-              onClick={() => navigate(RouteNames.NADZORNA_PLOCA)}
-              eventKey="pocetna"
-            >Nadzorna ploča</Nav.Link>
-              </>
-             )}
+                href={RouteNames.HOME}
+                onClick={(e) => { e.preventDefault(); navigate(RouteNames.HOME); }}
+                eventKey="pocetna"
+              >Početna</Nav.Link>
+            </Nav.Item>
 
-            <NavDropdown title="Proizvodi" id="basic-nav-dropdown">
+            {isLoggedIn && (
+              <>
+                <Nav.Item as="li">
+                  <Nav.Link
+                    href={RouteNames.NADZORNA_PLOCA}
+                    onClick={(e) => { e.preventDefault(); navigate(RouteNames.NADZORNA_PLOCA); }}
+                    eventKey="nadzorna-ploca"
+                  >Nadzorna ploča</Nav.Link>
+                </Nav.Item>
+
+              </>
+            )}
+
+            <NavDropdown title="Programi" id="basic-nav-dropdown" as="li" renderMenuOnMount>
+
               <NavDropdown.Item
-                onClick={() => navigate(RouteNames.SLIKE)}
+                href={RouteNames.SLIKE}
+                onClick={(e) => { e.preventDefault(); navigate(RouteNames.SLIKE); }}
+                eventKey="slike"
               > Slike</NavDropdown.Item>
 
               <NavDropdown.Item
-                onClick={() => navigate(RouteNames.OSTALIPROIZVODI)}
+                href={RouteNames.OSTALIPROIZVODI}
+                onClick={(e) => { e.preventDefault(); navigate(RouteNames.OSTALIPROIZVODI); }}
+                eventKey="ostaliproizvodi"
               > Ostali Proizvodi</NavDropdown.Item>
 
             </NavDropdown>
@@ -66,62 +80,77 @@ export default function Izbornik() {
 
                 <NavDropdown title="Šifrarnici" id="basic-nav-dropdown">
                   <NavDropdown.Item
-                    onClick={() => navigate(RouteNames.TEHNIKE)}
+                    href={RouteNames.TEHNIKE}
+                    onClick={(e) => { e.preventDefault(); navigate(RouteNames.TEHNIKE); }}
+                    eventKey="tehnike"
                   > Tehnike</NavDropdown.Item>
 
                   <NavDropdown.Item
-                    onClick={() => navigate(RouteNames.MATERIJALI)}
+                    href={RouteNames.MATERIJALI}
+                    onClick={(e) => { e.preventDefault(); navigate(RouteNames.MATERIJALI); }}
+                    eventKey="materijali"
                   > Materijali</NavDropdown.Item>
 
 
                   <NavDropdown.Item
-                    onClick={() => navigate(RouteNames.OZNAKE)}
+                    href={RouteNames.OZNAKE}
+                    onClick={(e) => { e.preventDefault(); navigate(RouteNames.OZNAKE); }}
+                    eventKey="oznake"
                   > Oznake</NavDropdown.Item>
                 </NavDropdown>
 
-              {authUser.uloga === 'admin' && (
-                <>
-                <NavDropdown.Divider />
+                {authUser.uloga === 'admin' && (
+                  <>
+                    <NavDropdown.Divider />
 
-                <NavDropdown title="Servisno">
-                  <NavDropdown.Item
-                    onClick={() => navigate(RouteNames.OPERATERI)}
-                  >Operateri</NavDropdown.Item>
-                  <NavDropdown.Item
-                    onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
-                  >Generiraj podatke</NavDropdown.Item>
-                </NavDropdown>
-                </>
-              )}
-                
+                    <NavDropdown title="Servisno">
+                      <NavDropdown.Item
+                        href={RouteNames.OPERATERI}
+                        onClick={(e) => { e.preventDefault(); navigate(RouteNames.OPERATERI); }}
+                        eventKey="operateri"
+                      >Operateri</NavDropdown.Item>
+                      <NavDropdown.Item
+                        href={RouteNames.GENERIRANJE_PODATAKA}
+                        onClick={(e) => { e.preventDefault(); navigate(RouteNames.GENERIRANJE_PODATAKA); }}
+                        eventKey="generiranje podataka"
+                      >Generiraj podatke</NavDropdown.Item>
+                    </NavDropdown>
+                  </>
+                )}
+
               </>
             )}
 
             <Nav.Link
-              onClick={() => { navigate(RouteNames.OAPLIKACIJI) }}
+              href={RouteNames.OAPLIKACIJI}
+              onClick={(e) => { e.preventDefault(); navigate(RouteNames.OAPLIKACIJI); }}
+              eventKey="oaplikaciji"
             >O Aplikaciji</Nav.Link>
 
 
           </Nav>
-           <Nav className="ms-auto">
-                        <div className="btn-group">
-                            {isLoggedIn ? (
-                                <Button
-                                    className="me-2"
-                                    onClick={() => logout()}
-                                >Logout {authUser.email}</Button>
-                            ) : (
-                                <>
-                                    <Button
-                                        className="me-2"
-                                        onClick={() => navigate(RouteNames.REGISTRACIJA)}
-                                    >Registracija</Button>
-                                    <Button
-                                        onClick={() => navigate(RouteNames.LOGIN)}
-                                    >Login</Button>
-                                </>)}
-                        </div>
-                    </Nav>
+          <Nav className="ms-auto">
+            <div className="btn-group" role="group" aria-label="Autentifikacija">
+              {isLoggedIn ? (
+                <Button
+                  className="me-2"
+                  onClick={() => logout()}
+                  aria-label={`Odjava korisnika ${authUser.email}`}
+                >Odjava – {authUser.email}</Button>
+              ) : (
+                <>
+                  <Button
+                    className="me-2"
+                    onClick={() => navigate(RouteNames.REGISTRACIJA)}
+                    aria-label="Registracija novog korisnika"
+                  >Registracija</Button>
+                  <Button
+                    onClick={() => navigate(RouteNames.LOGIN)}
+                    aria-label="Prijava u sustav"
+                  >Login</Button>
+                </>)}
+            </div>
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

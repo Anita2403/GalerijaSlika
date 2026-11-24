@@ -105,6 +105,7 @@ export default function SlikaPregled() {
                             <div style={{ height: "220px", overflow: "hidden", backgroundColor: "#f8f9fa", borderTopLeftRadius: '4px', borderTopRightRadius: '4px' }} className="position-relative d-flex align-items-center justify-content-center">
                                 {slika.image ? (
                                     <Card.Img
+                                    alt={slika.naziv}
                                         variant="top"
                                         src={slika.image}
                                         style={{
