@@ -72,7 +72,7 @@ function App() {
                 <Route path={RouteNames.MATERIJALI_PROMJENA} element={<MaterijalPromjena />} />
                 <Route path={RouteNames.OZNAKE_DODAJ} element={<OznakaNova />} />
                 <Route path={RouteNames.OZNAKE_PROMJENA} element={<OznakaPromjena />} />
-
+                <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
 
                 {authUser.uloga === 'admin' && (
                   <>
@@ -81,7 +81,7 @@ function App() {
                     <Route path={RouteNames.OPERATERI_NOVI} element={<OperaterNovi />} />
                     <Route path={RouteNames.OPERATERI_PROMJENA} element={<OperaterPromjena />} />
                     <Route path={RouteNames.OPERATERI_PROMJENA_LOZINKE} element={<OperaterPromjenaLozinke />} />
-                    <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
+                    
                   </>
                 )}
 

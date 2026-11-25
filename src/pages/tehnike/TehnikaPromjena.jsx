@@ -53,7 +53,7 @@ export default function TehnikaPromjena() {
     return (
         <>
             <h3>
-                Promjeni tehniku
+                Promijeni tehniku
             </h3>
 
 

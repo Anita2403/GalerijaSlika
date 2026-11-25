@@ -51,7 +51,7 @@ export default function MaterijalPromjena() {
     return (
         <>
             <h3>
-                Promjeni materijale
+                Promijeni materijale
             </h3>
 
 

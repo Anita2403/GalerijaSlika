@@ -41,7 +41,7 @@ async function dodaj(operater){
 }
 
 // 3/4 Update od CRUD
-async function promjeni(sifra, operater) {
+async function promijeni(sifra, operater) {
     const index = nadiIndex(sifra)
     if (index === -1) {
         return {success: false, message: "Operater nije pronađen"}
@@ -59,7 +59,7 @@ async function promjeni(sifra, operater) {
 }
 
 // Posebna funkcija za promjenu lozinke
-async function promjeniLozinku(sifra, novaLozinka) {
+async function promijeniLozinku(sifra, novaLozinka) {
     const index = nadiIndex(sifra)
     if (index === -1) {
         return {success: false, message: "Operater nije pronađen"}
@@ -112,8 +112,8 @@ export default{
     get,
     dodaj,
     getBySifra,
-    promjeni,
-    promjeniLozinku,
+    promijeni,
+    promijeniLozinku,
     obrisi,
     prijava
 }

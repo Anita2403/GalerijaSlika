@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { IME_APLIKACIJE } from "../constanst";
+import { IME_APLIKACIJE, RouteNames } from "../constanst";
 import SlikaService from "../services/slike/SlikaService";
 import OstaliProizvodiService from "../services/ostaliproizvodi/OstaliProizvodiService";
+import { Link } from "react-router-dom";
 
 export default function Home() {
     const [statistika, setStatistika] = useState({ slike: 0, proizvodi: 0 });
@@ -39,8 +40,8 @@ export default function Home() {
                             Mjesto gdje se svakodnevica pretvara u platno, a ručni rad unosi dušu i toplinu u svaki prostor.
                         </p>
                         <div className="d-flex gap-3 pt-3">
-                            <a href="/slike" className="btn btn-primary px-4 py-2">Pregledaj galeriju</a>
-                            <a href="/ostaliProizvodi" className="btn btn-success px-4 py-2">Unikatni proizvodi</a>
+                            <Link to={RouteNames.SLIKE} className="btn btn-primary px-4 py-2">Pregledaj galeriju</Link>
+                            <Link to={RouteNames.OSTALIPROIZVODI} className="btn btn-primary px-4 py-2">Unikatni proizvodi</Link>
                         </div>
 
                         {/* Minimalistička statistika umjesto teških kartica */}

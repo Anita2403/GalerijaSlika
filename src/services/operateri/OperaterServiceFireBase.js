@@ -97,7 +97,7 @@ async function promijeni(sifra, operater) {
     }
 }
 
-async function promjeniLozinku(sifra, novaLozinka) {
+async function promijeniLozinku(sifra, novaLozinka) {
     try {
         const hashiranaLozinka = bcrypt.hashSync(novaLozinka, 10);
         const docRef = doc(getFirebaseDB(), PrefixStorage.OPERATERI, sifra);
@@ -153,7 +153,7 @@ export default {
     dodaj,
     getBySifra,
     promijeni,
-    promjeniLozinku,
+    promijeniLozinku,
     obrisi,
     prijava,
     dodajBezHash
